@@ -568,6 +568,7 @@ list=데이터 묶음, 순서가 있음(→ index)
     - 소괄호()를 생략해도 무방함
         ```python
         t4 = 1, 2, 3
+        ```
     - 프로그램이 실행되는 동안 값을 유지해야 한다면 튜플을, 수시로 값을 변경해야 하면 리스트 사용
     - 언패킹 => 변수에 값 할당
     ```python
@@ -682,3 +683,470 @@ list=데이터 묶음, 순서가 있음(→ index)
     - 값 1개 추가하기: add
     - 값 여러 개 추가하기: update
     - 특정 값 제거하기 - remove
+
+## 변수 스코프, 언패킹 & 타입 힌팅의 기초
+### 변수 할당과 스코프의 확장
+- 확장된 가변 언패킹(Extended Iterable Unpacking)
+    - \*연산자를 변수 할당 시 사용하여 남은 요소를 리스트로 다룸
+- 함수 주석(PEP 3107 Function Annotations)
+    - 매개변수와 반환값 뒤에 콜론(:)과 ->를 붙이는 기본 틀이 마련
+- typing 모듈 도입(PEP 484)
+
+## 프로그램의 흐름제어
+
+### if 문 ★★★★★
+
+#### if 문
+
+- 주어진 조건을 판단한 후 그 상황에 맞게 처리해야 할 경우
+
+#### if 문의 기본 구조
+
+- if와 else를 사용한 조건문의 기본 구조
+    ```python
+    if _논리값_:
+        print()
+    else:          # 거짓
+        print()
+    ```
+- 조건문이 참이면 if 블록 수행
+- 조건문이 거짓이면 else 블록 수행
+
+#### 들여쓰기 방법 알아보기
+
+- if 문을 만들 때는 if 조건문 바로 다음 문장부터 모든 문장에 **들여쓰기(indentation)**
+     ```python
+    if 조건문: 
+        수행할_문장1
+        수행할_문장2
+        수행할_문장3
+    
+    if 조건문:
+        수행할_문장1
+        수행할_문장2
+            수행할_문장3         # 에러
+    ```
+- 들여쓰기를 무시하는 경우 오류 발생
+   ```python
+   if 조건문:
+        수행할_문장1
+    수행할_문장2
+        수행할_문장3             # 에러
+    ```
+
+#### 조건문
+
+- if 조건문에서 '조건문'이란 참과 거짓을 판단하는 문장
+- 비교 연산자
+    | 비교 연산자 | 설명 |
+    | :--- | :--- |
+    | x < y | x가 y보다 작다 |
+    | x > y | x가 y보다 크다 |
+    | x == y | x와 y가 같다. |
+    | x != y | x와 y가 같지않다. |
+    | x >= y | x가 y보다 크거나 같다 |
+    | x <= y | x가 y보다 작거나 같다 |
+- and, or, not
+    | 연산자 | 설명 |
+    | :--- | :--- |
+    | x or y | x와 y 둘 중 하나만 참이어도 참이다. |
+    | x and y | x와 y 모두 참이어야 한다. |
+    | not x | x가 거짓이면 참이다. |
+- in, not in
+    | in | not in |
+    | :--- | :--- |
+    | x in 리스트 | x not in 리스트 |
+    | x in 튜플 | x not in 튜플 |
+    | x in 문자열 | x not in 문자열 |
+
+#### 다양한 조건을 판단하는 elif
+
+- if와 else만으로는 조건 판단에 어려움이 있음
+- elif는 개수에 제한 없이 사용 가능
+
+#### 조건부 표현식
+
+- 조건부 표현식
+    - 조건부 표현식<br>
+    변수 = 조건문이_참인_경우의_값 if 조건문 else 조건문이_거짓인_경우의_값
+    - 파이썬의 조건부 표현식(conditional expression) 사용<br>
+        ```python
+        message = "success" if scorre >= 60 else "failure"
+        ```
+
+#### match-case 구문
+
+- 다른 언어의 switch-case와 유사하지만, 단순한 값 비교를 넘어 데이터 구조의 형태(Shape)와 타입, 내부 값까지 복합 패턴으로 매칭할 수 있다.
+
+### while 문
+
+#### while 문의 기본 구조
+
+- 반복해서 문장을 수행해야 할 경우 while 문 사용
+    ```python
+    while 조건문:     # 조건문에서 탈출할 수 있는 로직이 만들어져야 한다.
+        수행할_문장1
+        수행할_문장2
+        수행할_문장3
+        ...
+        + 탈출 로직
+    ```
+- while 문은 조건문이 참인 동안에 while 문에 속한 문장이 반복해서 수행됨
+
+#### while문 강제로 빠져나가기
+
+- 강제로 while문을 빠져나가야 할 때 **break**문 사용
+- break는 반복(루프)을 종료시킨다.
+
+#### while문의 맨 처음으로 돌아가기
+
+- while문을 빠져나가지 않고 while문의 맨 처음(조건문)으로 다시 돌아가야 할 때 **continue** 사용
+
+#### 무한 루프
+
+- 무한히 반복된다는 뜻의 무한 루프(endless loop)
+- 파이썬에서의 무한 루프는 while문으로 구현
+
+### for 문 ★★★★★
+
+#### for문의 기본 구조
+
+```python
+for 변수 in 리스트(또는 튜플, 문자열):
+    수행할_문장1
+    수행할_문장2
+```
+
+**시퀀스 데이터(리스트나 튜플, 문자열)** 의 첫 번째 요소부터 마지막 요소까지 차례로 변수에 대입되어 '수행할 문장1', '수행할 문장2' 등이 수행된다.
+
+#### for문과 continue문
+
+- for문 안의 문장을 수행하는 도중 continue문을 만나면 for문의 처음으로 돌아간다.
+
+#### for문과 함께 자주 사용하는 range 함수
+
+- 숫자 리스트를 자동으로 만들어주는 하뭇
+    - range(10): 0부터 10미만의 숫자를 포함하는 range 객체
+- range(a, b, c)
+    - a: 시작 숫자
+    - b: 끝 숫자(반환 범위에 포함되지 않음: 탈출 숫자)
+    - c: step(숫자 사이의 간격)
+
+#### 리스트 컴프리헨션(list comprehension) 사용하기
+
+- 리스트 안에 for문 포함하기
+    ```python
+    list_c = [1, 2, 3, 4]
+
+    result_2 = [num*3 for num in list_c if num %2==0]
+    print(result_2)                                      # [6, 12]
+    ```
+- 리스트 컴프리헨션 안에 for문과 if조건을 사용할 수 있다.
+- 리스트 컴프리헨션 문법
+    - 'if 조건문' 부분은 생략 가능
+    - for문 여러 개 사용 가능
+        ```python
+        [표현식 for 항목1 in 반복_가능_객체1 if 조건문1
+                for 항목2 in 반복_가능_객체2 if 조건문2
+                for 항목3 in 반복_가능_객체3 if 조건문3]
+        ```
+
+## 함수
+
+### 함수의 구조
+
+- 함수 => 객체로 저장
+- 함수도 객체이므로 memory에 저장한다.
+- 이름(변수) = function
+- 함수는 필요한 데이터들을 (선택적으로) 받아서 데이터를 가공, 처리하고 (선택적으로) 특정값을 반환한다.
+- 함수: 기능 정의
+    - 내가 함수를 정의하고 다른 함수를 읽고 사용할 수 있어야 한다.
+    - AI가 만든 기능 판단
+
+### 함수란 무엇인가?
+
+- 입력 -> 함수(기능) -> 출력
+    - 데이터를 받아서 처리하고 결과를 반환하는 것이 일반적인 함수의 기능이다.
+
+### 함수를 사용하는 이유는 무엇일까?
+
+- 반복되는 부분(코드들)이 있을 경우 '반복적으로 사용되는 부분'을 한 묶음으로 묶어 '약속된 입력 값을 주었을 때 약속된 결과 값을 반환해 준다.'
+    - 프로그램 코드의 가독성 향상: 오류 해결과 유지보수에 좋다.
+- 리팩토링할 때 가장 먼저 하는 일
+    1. 불필요한 변수 삭제
+    2. 공통 코드 찾아서 함수(클래스)로 만들기
+
+### 파이썬 함수의 구조
+
+- **def**: 함수를 만들 때 사용하는 예약어
+- **함수 이름**은 임의로 생성 가능
+- **매개변수**는 함수에 입력 전달되는 값을 받는 변수
+- **return**: 함수의 결과 값(리턴 값)을 돌려주는 명령어(함수의 종료)
+- 예측 타입 정의(매개변수 타입 힌트)
+    - 문법: `변수명: 타입` 형태로 작성
+    - 의미: "이 함수를 쓸 때는 이 변수 자리에 이런 타입의 값을 넣어줄 것으로 예측(기대)해"라고 명시한다.
+- 화살표 정의 -> (반환값 타입 힌트)
+    - 함수 괄호가 끝나는 부분과 콜론(:) 사이에 들어가는 화살표 기호 ->를 의미
+    - 문법: `def 함수명(...) -> 리턴타입:` 형태로 작성
+    - 의미: "이 함수는 실행이 끝나면 결과물(return값)로 이런 타입의 데이터를 내뱉을거야"라고 알려주는 것이다.
+    ```python
+    from typing import List, Union
+
+    # 숫자가 담긴 리스트를 받아서, 결과로 문자열이나 정수를 반환하는 함수
+    def process_data(numbers: List[int]) -> Union[str, int]:
+        if not numbers:
+            return "데이터가 없습니다."
+        return sum(numbers)
+
+    def show_message(message: str) -> None:
+        print(f"[알림] {message}")
+    ```
+
+#### 매개변수와 인수
+
+- 매개변수와 인수는 혼용해서 사용되어 헷갈리는 용어로 잘 구분하는 것이 중요하다.
+- 매개변수(parameter)
+    - 함수에 입력받는 값을 저장하기 위한 변수
+- 인수(arguments)
+    - 함수를 호출할 때 전달하는 값
+
+    ```python
+    def add(a, b):      # a, b는 매개변수
+        return a + b
+    print(add(3, 4))    # 3, 4는 인수
+    ```
+
+#### 입력값과 리턴 값에 다른 함수의 형태
+- 함수는 매개변수를 통해 값을 받은 후 어떤 처리를 하여 적절한 값을 반환해준다.
+- 함수의 형태는 입력 값과 리턴 값의 존재 유무에 따라 구분해서 사용한다.
+    - **매개변수와 return은 선택적으로 사용한다.**
+- 일반적인 함수
+    - 입력값이 있고 리턴값이 있는 함수
+        ```python
+        def 함수_이름(매개변수):
+            수행할_문장
+            ...
+            return 리턴값
+        ```
+- 입력 값이 없는 함수(매개변수가 정의되지 않은 함수)
+    - 입력 값이 없는 함수도 존재한다. → 처리의 목적인 데이터를 받아서 처리하지 않을 때
+    - 매개변수 부분을 나타내는 함수 이름 뒤의 괄호 안이 비어있다.
+    - 함수 사용시 괄호 안에 아무 값도 넣지 않아야 한다.
+        ```python
+        def say():
+            return 'Hi'
+        
+        a = say()
+        print(a)
+        ```
+- 리턴 값이 없는 함수
+    - 리턴 값이 없는 함수는 호출해도 리턴되는 값이 없다.
+        ```python
+        def add(a, b):
+            print("%d, %d의 합은 %d입니다." %(a, b, a + b))
+        add(3, 4)
+        # 3, 4의 합은 7입니다.
+        ```
+    - 리턴 값이 진짜 없을까?
+        - None 데이터 반환 → None: 거짓을 나타내는 자료형
+- 입력 값도, 리턴 값도 없는 함수
+    - 매개변수도 없고 return 문도 없는 함수
+        ```python
+        def say():
+            print('Hi')
+        say()             # Hi
+        ```
+
+#### 매개변수를 지정하여 호출하기
+- 함수 호출 시 매개변수 지정 가능
+    - 매개변수를 지정하여 사용
+        - 매개변수 순서에 상관없이 사용할 수 있는 장점
+        ```python
+        def sub(a, b):
+            return a - b
+        sub(a = 7, b = 3)   # 4
+        sub(b = 3, a = 10)  # 7
+        ```
+
+#### 입력값이 몇 개가 될지 모를 때는 어떻게 해야 할까?
+
+- 파이썬에서의 해결방법
+    - 일반 함수 형태에서 괄호 안의 매개변수 부분이 *매개변수로 바뀐다.
+        ```python
+        def 함수_이름(*매개변수):
+            수행할_문장
+            ...
+        ```
+- 매개변수 이름 앞에 *을 붙이면 입력 값을 전부 모아 튜플로 만들어 준다.
+    ```python
+    def add_many(*args):
+        result = 0
+        for i in args:
+            result += i
+        return result
+
+    result = add_many(1, 2, 3)
+    print(result)                                       # 6
+
+    result = add_many(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+    print(result)                                       # 55
+    ```
+- 매개변수 목록에 단독으로 *를 사용하면, 그 뒤에 오는 매개변수들은 반드시 키워드 인자(name=value) 형태로만 전달받아야 한다.
+    ```python
+    def connect_server(
+            host: str,  # 위치 변수로 전달
+            port: int,
+            *,
+            timeout: int = 30, # * 뒤에는 반드시 기본값이 지정되어야 한다. 키워드 변수로 전달해야 한다.
+            retry: bool = True
+    ):
+        print(host, port, timeout, retry)
+    
+    # 올바른 호출
+    connect_server("localhost", 8080, timeout=10, retry=False)
+
+    # 오류 발생
+    connect_server("localhost", 8080, 10)
+    ```
+
+ #### 키워드 매개변수, kwargs(keyword argument)
+
+ - 매개변수 앞에 별 2개(**)를 붙인다.
+    ```python
+    def print_kwargs(**kwargs):
+        print(kwargs)
+
+    print_kwargs(a=1)                   # {'a': 1}
+
+    print_kwargs(name='foo', age=3)     # {'name': 'foo', 'age': 3}
+    ```
+- 함께 사용할 때의 규칙 (순서★)<br>
+    파이썬 함수에서 일반 매개변수, *args, **kwargs를 같이 쓸 때는 반드시 선언 순서를 지켜야 문법 에러가 나지 않는다. <br>
+    ```일반 매개변수 → *args → 기본값(default) 매개변수 → **kwargs```
+
+#### 함수 호출 시 언패킹(Unpacking) 연산자 확장
+
+- 함수를 호출할 때 *(리스트/튜플 언패킹)와 **(딕셔너리 언패킹)을 한 호출 내에서 횟수 제한 없이 복수로 조합
+
+    ```python
+    def print_coords(x, y, z, w):
+        print(f"x={x}, y={y}, z={z}, w={w}")
+
+    point_a = [1, 2]
+    point_b = [3, 4]
+
+    # 여러 언패킹을 동시에 전달 가능
+    print_coords(*point_a, *point_b)            # x=1, y=2, z=3, w=4
+
+    dict_a = {"x": 10, "y": 20}
+    dict_b = {"z": 30, "w": 40}
+    print_coords(**dict_a, **dict_b)            # x=10, y=20, z=30, w=40
+    ```
+
+#### 위치 전용 매개변수(Positional-Only Parameters /)
+
+- / 기호 앞의 매개변수는 오직 위치(Positional)로만 전달되어야 한다.
+- **완성형 매개변수 배치 순서**: (위치 전용인자) / (일반 인자) * (키워드 전용인자)
+    ```python
+    # [위치 전용] / [일반 인자] * [키워드 전용]
+    def full_spec_func(pos_only, /, standard, *, kw_only):
+        print(f"{pos_only=}, {standard=}, {kw_only=}")
+
+    # 올바른 호출
+    full_spec_func("A", standard="B", kw_only="C")          # pos_only='A', standard='B', kw_only='C'
+    full_spec_func("A", "B", kw_only="C")                   # pos_only='A', standard='B', kw_only='C'
+
+    # 오류 발생(pos_only는 키워드로 전달할 수 없다.)
+    full_spec_func(pos_only="A", standard="B", kw_only="C")
+    ```
+
+#### 함수의 리턴 값은 언제나 하나이다.
+
+- 2개의 입력 인수를 받아 리턴하는 함수
+    - 하나의 튜플 값을 2개의 값으로 분리하여 리턴
+        ```python
+        def add_and_mul(a, b):
+            return a+b, a*b
+
+        result = add_and_mul(3, 4)
+
+        print(result)                                       # (7, 12)
+
+        result1, result2 = add_and_mul(3, 4)
+        print(f"result1 = {result1}, result2 = {result2}")  # result1 = 7, result2 = 12
+        ```
+- return 문을 2번 사용하면 리턴값은 하나뿐
+    - return의 또 다른 의미는 함수의 종료
+        ```python
+        def add_and_mul(a, b):
+            return a + b
+            return a * b
+
+        result = add_and_mul(2, 3)
+        print(result)               # 5
+        ```
+
+#### 매개변수에 초기 값 미리 설정하기
+
+- 매개변수에 초기 값을 미리 설정
+    - man=True처럼 매개변수에 미리 값을 넣어 함수의 매개변수 초기 값을 설정
+        ```python
+        def say_myself(name, age, man=True):
+            print(f"나의 이름은 {name}입니다.")
+            print(f"나이는 {age}입니다.")
+            if man:
+                print("남자입니다.")
+            else:
+                print("여자입니다.")
+        ```
+    - 주의할 점
+        - 초기화하고 싶은 매개변수는 항상 뒤쪽에 놓아야 한다.
+        - say_myself('king', 27)
+            - 파이썬 인터프리터는 27을 man 매개변수와 age 매개변수 중 어느 곳에 대입해야 할지 판단이 어려워 오류 발생
+                ```python
+                def say_myself(name, man=True, age):
+                    print(f"나의 이름은 {name}입니다.")
+                    print(f"나이는 {age}입니다.")
+                    if man:
+                        print("남자입니다.")
+                    else:
+                        print("여자입니다.")
+                
+                # SyntaxError: parameter without a default follows parameter with a default
+                ```
+
+#### 함수 안에서 선언한 지역 변수의 효력 범위
+
+- **매개변수는 함수 안에서만 사용하는 변수**일 뿐, 함수 밖의 변수와는 전혀 상관 없다.
+    ```python
+    a = 1
+    def vartest(a):
+        a = a + 1
+        return a
+
+    print(vartest(a))   # 2
+    print(a)            # 1
+    ```
+- 함수 안에서 선언한 매개변수는 함수 안에서만 사용될 뿐, 함수 밖에서는 사용되지 않는다.
+- print(a)에서 사용한 변수 a는 어디에도 선언되지 않았기 때문에 오류 발생
+    ```python
+    def vartest(a):
+        a = a + 1
+
+    vartest(3)
+    print(a)
+    ```
+
+#### 함수 안에서 함수 밖에서 선언된 변수 사용 방법
+
+- global 명령어 사용하기
+- 단, 함수는 독립적으로 존재하는 것이 좋기 때문에 특정 변수에 의존하지 않도록 해야 한다. → 이 방법은 피하는 것이 좋다.
+    ```python
+    a = 1
+    def vartest():
+        global a
+        a = a + 1
+
+    vartest()
+    print(a)        # 2
+    ```
