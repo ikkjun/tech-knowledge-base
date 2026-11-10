@@ -3,6 +3,9 @@
 ## 📌 질문 (FAQ) 모음
 1. [10을 저장한 x와 10을 저장한 y의 메모리 위치를 비교할 때 왜 동일하게 나올까?](#q-identity-operator)
 2. [왜 리스트는 딕셔너리의 키로 쓸 수 없을까?](#q-dict-hash)
+3. [return과 print의 차이점은 무엇일까?](#q-return-and-print-difference)
+4. [왜 all에 빈 iterable을 전달해도 True가 나올까?](#q-all-empty-iterable)
+
 ## python이란?
 1990년 암스테르담의 귀도 반 로섬(Guido Van Rossum)이 개발한 인터프리터 언어이다.
 
@@ -901,6 +904,18 @@ for 변수 in 리스트(또는 튜플, 문자열):
     def show_message(message: str) -> None:
         print(f"[알림] {message}")
     ```
+<a id="q-return-and-print-difference"></a>Q. return과 print의 차이점은 무엇일까?<br>
+A. 
+- `print()`: 사람이 볼 수 있도록 화면(콘솔/터미널)에 텍스트를 **출력(표시)** 하는 함수
+- `return`: 함수가 실행된 결과 데이터를 **호출한 곳으로 반환(전달)** 하고 함수를 끝내는 키워드
+
+| 구분 | `print()` | `return` |
+| :--- | :--- | :--- |
+| **성격** | 파이썬 내장 **함수(Function)** | 함수 제어용 **키워드(Keyword)** |
+| **주요 목적** | 개발자/사용자가 보게 화면에 단순 표시 | 함수의 연산 결과를 다른 변수나 로직에 넘김 |
+| **반환값** | 화면에 찍기만 하고 실제로는 `None` 반환 | 명시한 데이터 객체를 그대로 전달 |
+| **연속 사용** | 다른 연산(`+`, `*` 등)이나 함수 인자로 재사용 불가 | 반환값을 변수에 저장해 다른 연산에 재사용 가능 |
+| **함수 종료 여부** | 실행 후에도 다음 줄 코드가 계속 실행됨 | 실행되는 즉시 함수를 빠져나감 (함수 즉시 종료) |
 
 ### 매개변수와 인수
 
@@ -1151,3 +1166,551 @@ for 변수 in 리스트(또는 튜플, 문자열):
     vartest()
     print(a)        # 2
     ```
+
+### lambda 예약어
+
+- 함수 이름이 없다 => 익명함수, 간단하게 한 줄로 함수를 정의한다.
+- 함수를 생성할 때 사용하는 예약어
+- 함수를 한 줄로 간결하게 만들 때 사용
+- def와 동일한 역할
+- 함수를 매개변수로 받아서 처리하는 함수에 주로 사용
+- 함수 => 객체 형식으로 저장
+    ```python
+    함수_이름 = lambda 매개변수1, 매개변수2, ... : 매개변수를_이용한_표현식
+    ```
+- 두 개의 인수를 받아 덧셈의 결과를 반환하는 함수
+    ```python
+    add = lambda a, b: a + b
+    result = add(3, 4)
+    print(result)               # 7
+    ```
+
+## 내장함수
+
+### 파이썬 내장 함수
+
+- 파이썬이 설치되면 기본적으로 사용할 수 있는 함수
+- 파이썬 모듈과 달리 import가 필요 없기 때문에 **아무런 설정 없이 바로 사용**할 수 있다.
+- abs
+    - 숫자를 입력 받아 그 숫자의 절대값을 돌려주는 함수
+        ```python
+        abs(3)       # 3
+        abs(-3)      # 3
+        abs(-1.2)    # 1.2
+        ```
+- all
+    - 시퀀스 데이터 x를 입력받아 x의 요소가 모두 참이면 True, 하나라도 거짓이면 False를 리턴
+        ```python
+        print(all([1, 2, 3]))       # True
+        print(all([1, 2, 3, 0]))    # False
+        print(all([]))              # True
+        ```
+        <a id="q-all-empty-iterable"></a>Q. 왜 all에 빈 iterable을 전달해도 True가 나올까?<br>
+        A. all 구현 코드
+        ```python
+        def all(iterable):
+            for element in iterable:
+                if not element:
+                    return False
+            return True
+        ```
+        iterable이 비어 있으면 for문을 돌지 않고 True를 반환하게 된다.
+
+        cf. any 구현 코드
+        ```python
+        def any(iterable):
+            for element in iterable:
+                if element:
+                    return True
+            return False
+        ```
+- any
+    - 시퀀스 데이터 x를 입력받아 x의 요소 중 하나라도 참이면 True, x가 모두 거짓일때만 False를 리턴
+        ```python
+        print(any([1, 2, 3, 0]))    # True
+        print(any([0, ""]))         # False
+        print(any([]))              # False
+        ```
+- chr(i)
+    - 유니코드 숫자 값을 받아 그 코드에 해당하는 문자를 리턴
+        ```python
+        print(chr(97))          # a
+        print(chr(44032))       # 가
+        ```
+- dir
+    - 객체가 지닌 변수나 함수를 보여주는 함수
+        - 리스트와 딕셔너리가 지닌 함수(메서드)<br>
+            ```python
+            dir([])
+
+            # ['__add__',
+            #  '__class__',
+            #  '__class_getitem__',
+            #  '__contains__',
+            #  '__delattr__',
+            # ...
+            #  'insert',
+            #  'pop',
+            #  'remove',
+            #  'reverse',
+            #  'sort']
+            ```
+            cf. '_'로 시작하는 메서드는 '**매직 메서드**'이다.<br>
+            **매직메서드의 특징**
+            - 이미 파이썬 내에 정의되어 있다.
+            - 클래스 내부에서 매직 메소드들을 오버라이딩 하여 사용할 수 있다. 
+            -  직접 호출해서 사용하지 않고, 정해진 규칙에 따라 알아서 호출된다.
+            - 앞 뒤로 언더바가 두 개씩 붙는다.
+- divmod(a, b)
+    - a를 b로 나눈 몫과 나머지를 튜플로 리턴
+        ```python
+        divmod(7, 3)        # (2, 1)
+        ```
+- enumerate
+    - '열거하다'라는 뜻
+    - 시퀀스 데이터(리스트, 튜플, 문자열)를 입력받아 인덱스 값을 포함하는 enumerate 객체 리턴
+        ```python
+        for index, name in enumerate(st_names, start=1):
+        print(index, name)
+
+        # 1 king
+        # 2 scott
+        # 3 son
+        # 4 lee
+        ```
+- hex
+    - 정수 값을 입력받아 16진수 (hexadecimal) 문자열로 리턴
+        ```python
+        print(hex(234))     # 0xea
+        print(hex(3))       # 0x3
+        ```
+- id
+    - 객체(object)를 입력 받아 객체 고유 주소 값(레퍼런스)을 리턴
+        ```python
+        a = 3
+        print(id(3))        # 140711847021048
+        ```
+- 고차함수: 매개변수로 함수를 받아서 사용하는 함수
+    - filter(fn, iterable)
+        - '무언가를 걸러 낸다'는 뜻
+            ```python
+            filter(함수, 반복_가능한_데이터)
+            ```
+        - 함수: 리스트의 요소 값 하나를 받아서 처리하고 논리값을 반환하는 기능
+        - 반복 가능한 데이터(iterable): list
+        - 시퀀스 데이터의 요소 값을 순서대로 함수에 전달하며 함수를 호출했을 때 리턴값이 참인 것만 묶어서(걸러 내서) 리턴
+            ```python
+            # filter함수를 사용해 간단하게 작성
+            def positive_fn(x: int) -> list:
+                return x>0                                          # 논리값
+
+            list(filter(positive_fn, [3, 10, -8, 0, 10, -2, 7]))    # [3, 10, 10, 7]
+
+            # lambda를 사용해 더욱 간단하게 작성
+            list(filter(lambda x: x>0, [3, 10, -8, 0, 10, -2, 7]))
+            ```
+    - map(f, iterable)
+        - 함수(f)와 시퀀스 데이터를 입력받는다.
+        - 입력받은 데이터의 각 요소를 함수 f에 전달하고 결과를 리턴 받아 결과값들을 리스트로 반환한다.
+        - lambda 활용 가능
+        - 원본 리스트의 값을 이용해서 새로운 값으로 리스트를 생성한다.
+            ```python
+            def two_times(x):
+                return x * 2
+            list(map(two_times, [1, 2, 3, 4]))          # [2, 4, 6, 8]
+            list(map(lambda x : x * 2, [1, 2, 3, 4]))   # [2, 4, 6, 8]
+            ```
+- int
+    - 문자열 형태의 숫자나 소수점이 있는 숫자를 정수로 리턴
+    - radix 진수로 표현된 문자열 x를 10진수로 변환하여 리턴
+        ```python
+        int('3')        # 3
+        int(3.4)        # 3
+        int('11', 2)    # 3
+        int('1A', 16)   # 26
+        ```
+- str
+    - 문자열 형태로 객체를 변환하여 리턴하는 함수
+        ```python
+        str(3)      # '3'
+        str('hi')   # 'hi'
+        ```
+- list
+    - 시퀀스 데이터를 입력받아 리스트로 만들어 리턴
+        ```python
+        list("python")  # ['p', 'y', 't', 'h', 'o', 'n']
+        list((1, 2, 3)) # [1, 2, 3]
+        ```
+- tuple
+    - 시퀀스 데이터를 튜플로 바꾸어 리턴하는 함수
+    - 입력이 튜플인 경우 그대로 리턴
+        ```python
+        tuple([1, 2, 3])    # (1, 2, 3)
+        tuple((1, 2, 3))    # (1, 2, 3)
+        ```
+- max
+    - 시퀀스 값을 입력 받아 그 최대 값을 리턴
+        ```python
+        max([1, 2, 3])  # 3
+        max("python")   # 'y' ← 문자열의 경우, 유니코드 값이 가장 큰 문자를 리턴
+        ```
+- min
+    - 시퀀스 데이터를 입력받아 그 최소값을 리턴
+        ```python
+        min([1, 2, 3])  # 1
+        min("python")   # 'h'
+        ```
+- sum
+    - 입력 데이터의 합을 리턴하는 함수
+        ```python
+        sum([1, 2, 3])  # 6
+        sum((4, 5, 6))  # 15
+        ```
+- sorted
+    - 입력 데이터를 정렬한 후 그 결과를 리스트로 리턴하는 함수
+        ```python
+        sorted([3, 1, 2])           # [1, 2, 3]
+        sorted(['a', 'c', 'b'])     # ['a', 'b', 'c']
+        ```
+- len
+    - 입력의 길이(요소의 전체 개수)를 리턴
+        ```python
+        len("python")       # 6
+        len([1, 2, 3])      # 3
+        len((1, 'a'))       # 2
+        ```
+- type
+    - 입력 값의 자료형이 무엇인지 알려주는 함수
+        ```python
+        type("abc")                 # str ← "abc"는 문자열 자료형
+        type([])                    # list ← [ ]는 리스트 자료형
+        type(open("test", "w"))     # _io.TextIOWrapper ← 파일 자료형
+        ```
+- round(number[, ndigits])
+    - 숫자를 입력받아 반올림해 리턴하는 함수
+    - ,ndigits는 반올림하여 표시하고 싶은 소수점의 자리수를 의미한다.
+        ```python
+        round(4.6)          # 5
+        round(4.11111, 3)   # 4.111
+        ```
+
+## 예외처리
+
+### 예외: 에러 발생 상황
+
+- 처리 가능: 코드를 이용해 에러 처리 가능
+- 처리 불가능: 전원, H/W, OS
+- 에러의 종류: TypeError, NameError, IndexError → Type으로 정의 <br>→ 에러도 클래스이므로 객체로 생성된다.
+
+- 예외 처리: 비정상적인 종료를 막고 프로그램의 흐름을 유지시킨다.
+
+### 오류 예외 처리 기법
+- try-except문
+    1. try-except만 쓰는 방법
+        - 오류 종류에 상관없이 오류가 발생하면 except 블록을 수행한다.
+            ```python
+            try:
+                ...     # 에러 발생하면
+            except:     # IndexError, TypeError, NameError
+                ...     # 여기로 온다.
+                        # 에러 처리 코드
+            ```
+    2. 발생 오류만 포함한 except문
+        - 오류가 발생했을 때 except문에 미리 정해 놓은 오류와 동일할 때만 except 블록을 수행한다는 뜻이다.
+            ```python
+            try:
+                ...                # 어떤 에러가 발생했는지 객체 생성
+            except 발생_오류:       # IndexError
+                ...
+            except 발생_오류:       # NameError
+                ...
+            except 발생_오류:       # TypeError
+                ...
+            ```
+    3. 발생 오류와 오류 변수까지 포함한 except문
+        ```python
+        try:
+            ...
+        except 발생_오류 as 오류_변수:
+            ...
+        ```
+        - 오류가 발생했을 때 except문에 미리 정해 놓은 오류와 동일할 때만 except 블록을 수행
+            ```python
+            try:
+                10/0
+            except ZeroDivisionError as e:
+                print(e)
+            ```
+- try-finally문
+    - finally 절은 try문 수행 도중 예외 발생 여부에 상관없이 항상 수행된다.
+    - 보통 finally절은 사용한 리소스를 close해야 할 때 많이 사용한다.
+        ```python
+        try:
+            f = open("foo.txt", "w")
+            # 무언가를 수행
+        finally:
+            f.close()                   # 중간에 오류가 발생하더라도 무조건 실행
+        ```
+- 여러 개의 오류 처리하기
+    - try문 안에서 여러 개의 오류를 처리하기 위한 방법
+        ```python
+        try:
+            a = [1, 2]
+            print(a[3])
+            4 / 0
+        except ZeroDivisionError:
+            print("0으로 나눌 수 없습니다.")
+        except IndexError:
+            print("인덱싱할 수 없습니다.")
+        # 인덱싱할 수 없습니다.
+        ```
+    - 오류 메시지 가져오기
+    - 2개 이상의 오류를 동일하게 처리하기 위해 괄호를 사용하여 함께 묶어 처리
+        ```python
+        try:
+            a = [1, 2]
+            print(a[3])
+            4 / 0
+        except ZeroDivisionError as e:
+            print(e)                    # division by zero
+        except IndexError as e:
+            print(e)                    # list index out of range
+        # 결과: list index out of range
+        ```
+- try-else문
+    ```python
+    try:
+        age = int(input("나이를 입력하세요: "))
+    except:
+        print("입력이 정확하지 않습니다.")
+    else:                                       # 오류가 없을 경우에만 수행
+        if age <= 18:
+            print("미성년자는 출입금지입니다.")
+        else:
+            print("환영합니다.")
+    # 30 → "환영합니다."
+    ```
+
+### 오류 회피하기
+
+- 특정 오류가 발생할 경우 그냥 통과시키는 방법
+    ```python
+        try:
+            open('test.txt')
+        except FileNotFoundError:   # 파일이 없더라도 오류가 발생하지 않고 통과
+            pass
+    ```
+    - try 문 안에서 FileNotFoundError가 발생할 경우, pass를 사용하여 오류를 그냥 회피한다.
+
+
+### 오류 강제 발생시키기
+
+- raise 명령어를 사용해 오류를 강제로 발생시킬 수 있다.
+    - raise MyError(): 에러 객체 생성
+    - raise NotImplementedError
+- 강제로 발생시키는 이유: 논리적 오류를 알려줘야 프로그램이 안정적으로 돌아간다.
+
+### 사용자 정의 예외 만들기
+
+- 파이썬 내장 클래스인 Exception 클래스를 상속하여 생성할 수 있다.
+    ```python
+    class MyError(Exception):
+        pass
+
+    # 별명을 출력해주는 함수에서 MyError 적용
+    def say_nick(nick):
+        if nick == "바보":
+            raise MyError()
+        print(nick)
+
+    say_nick("바보")            # MyError
+    ```
+    - MyError에서 __str__메서드 구현하여 오류 메시지 사용하기
+        ```python
+        class MyError(Exception):
+            def __str__(self):
+                return "허용되지 않는 별명입니다."
+        try:
+            say_nick("천사")
+            say_nick("바보")
+        except MyError as e:
+            print(e)
+
+        # 천사
+        # 허용되지 않는 별명입니다.
+        ```
+
+## 클래스와 객체지향
+
+### 클래스와 객체
+
+- 클래스(class)
+    - **똑같은 무언가를 계속 만들어 낼 수 있는 설계 도면**(→ 변수, 함수 정의 필요)
+    - 틀 → 규칙 → 설계도
+    - 변수들과 함수들을 묶어서 객체를 만들기 위한 설계도
+- 객체(object)
+    - **클래스로 만든 결과물**
+    - 객체 안에는 변수들과 함수들이 있다. <br>→ 클래스에 변수들과 함수들을 정의해야 한다.<br>→ 메모리에 변수, 함수가 로드된 상태가 `객체가 됐다`고 한다.
+    - 클래스를 이용해서 클래스의 멤버들(변수, 함수)을 메모리에 올려 놓은 것
+- 클래스로 만든 객체의 특징
+    - 객체마다 고유한 성격을 가진다.
+    - 동일한 클래스로 만든 객체들은 서로 전혀 영향을 주지 않는다.
+    - 객체를 만들어서 프로그래밍 한다.
+        - class 정의(변수, 함수) → 객체 생성(ex. `클래스_이름()`)
+- 파이썬 클래스의 가장 간단한 예
+    - Cookie 클래스의 객체를 만드는 방법
+        ```python
+        class Cookie:
+            pass
+        a = Cookie()
+        b = Cookie()
+        ```
+
+### 사칙연산 클래스 만들기
+
+- 클래스를 어떻게 만들지 먼저 구상하기
+    - 사칙연산을 가능하게 하는 FourCal클래스 만들기
+        - setData메서드
+        - add 메서드
+        - sub 메서드
+        - mul 메서드
+        - div 메서드
+- 클래스 구조 만들기
+    - pass라는 문장만을 포함한 FourCal 클래스 만들기
+    - FourCal 클래스는 아무 변수나 함수도 포함하지 않지만 객체를 만들 수 있는 기능이 있다.
+
+    ```python
+    class FourCal:
+        pass
+    
+    a = FourCal()
+    type(a)         # __main__.FourCal 객체 a의 타입은 FourCal 클래스이다.
+    ```
+- 객체에 연산할 숫자 지정하기
+    - 더하기, 곱하기, 빼기 등의 기능을 하는 객체 만들기
+    - 우선 우선 객체에 사칙 연산을 할 때 사용할 2개의 숫자를 알려주어야 한다.
+    - pass 문장을 삭제하고 setData함수 정의
+    - self라는 함수는 객체 자신을 가르키는 주소를 가지는 변수
+        ```python
+        class FourCal:
+            def setData(self, first: int, second: int):
+                self.first = first
+                self.second = second
+        ```
+    - 메서드(method): 클래스 안에 구현된 함수
+        - 일반적인 함수
+    - 메서드도 클래스에 포함되어 있다는 점만 제외하면 일반 함수와 같다.
+    - 클래스로 만든 객체의 변수는 다른 객체의 객체변수와 상관없이 독립적인 값을 유지한다.
+    1. setData 메서드의 매개변수
+        - self, first, second 3개의 입력값
+        - 일반 함수와는 달리 메서드의 첫 번째 매개변수 self는 특별한 의미를 가진다.
+        - self를 넣는 이유: 숫자 두 개를 받아서 연산할 때 (n1, n2)로 처리를 했다면, 메서드에서 객체를 찾아가려면 객체의 주소로 가야 한다. 
+        - self는 자기 자신의 객체를 가리키는 역할을 한다.
+        - a 객체를 만들고 a 객체를 통해 setData메서드 호출하기
+            ```python
+            a = FourCal()
+            a.setData(4, 2)
+            ```
+        - setData 메서드의 첫 번째 매개변수 self에는 setData 메서드를 호출한 객체 a가 자동으로 전달된다.
+    2. setData 메서드의 수행문
+        - a 객체에 객체변수 first와 second가 생성되고 지정된 값이 저장됨
+    ```python
+    class FourCal:
+
+        def setData(self, first, second):
+            self.first = first
+            self.second = second
+
+        def add(self):
+            return self.first + self.second
+
+        def sub(self):
+            return self.first - self.second
+
+        def mul(self):
+            return self.first * self.second
+
+        def div(self):
+            return self.first / self.second
+    ```
+
+### 생성자
+
+- Attribute 오류
+    - FourCal 클래스의 객체 a에 setData 메서드를 수행하지 않고 add메서드를 수행하면, AttributeError: 'FourCal' object has no attribute 'first' 오류가 발생한다.
+    - setData 메서드를 수행해야 객체 a의 객체변수 first와 second가 생성되기 때문이다.
+        ```python
+        a = FourCal()
+        a.add()
+
+        # Traceback (most recent call last)
+        # AttributeError: 'FourCal' object has no attribute 'first'
+        ```
+        - AttributeError 속성 에러 => first라는 속성을 가지지 못한 것이다.<br>
+        => setData가 우선적으로 정의되어야 한다.<br>
+        => 클래스는 객체가 반드시 가져야 하는 변수가 있다면 초기화 기능을 제공한다.<br>
+        => 객체를 생성할 때 초기화해주면 된다.<br>
+        파이썬에서는 초기화 기능을 제공하는 매직 메서드 __init__을 제공한다.<br>
+        => 매직 메서드를 재구성해주는 것을 오버라이딩이라고 한다.
+- 생성자(constructor)
+    - 객체가 생성될 때 자동으로 호출되는 메서드
+    - 메서드명으로 \_\_init__ 사용
+    - 객체에 초기 값을 설정해야 할 필요가 있을 때 생성자를 구현하는 것이 안전한 방법이다.
+    - 객체 생성 시 생성자의 배개변수에 해당하는 값을 전달해야 한다.
+    - \_\_init__ 메서드의 매개변수에 전달되는 값
+    - 생성자: 초기화함수 => 객체 생성시에 한 번 호출, return이 없다.
+        ```python
+        class FourCal:
+            def __init__(self, first: int, second: int):
+                self.first = first
+                self.second = second   
+        
+        a = FourCal(4, 2)
+        a.first             # 4
+        a.second            # 2
+        ```
+
+### 클래스의 상속
+
+#### 상속(Inheritabce)
+
+- '물려받다'라는 뜻이다.
+- 어떤 클래스를 만들 때 다른 클래스의 기능을 물려받을 수 있게 만든 것이다.
+- 상위 클래스를 상속받으면 상위 클래스의 모든 기능을 사용할 수 있어야 한다.
+    ```python
+    class 클래스_이름(상속할_클래스_이름)
+    ```
+- FourCal 클래스를 상속하는 MoreFourCal 클래스
+    ```python
+    class MoreFourCal(FourCal):
+        pass
+    ```
+- 상속의 목적
+    1. 새로운 클래스 정의
+    2. 가이드 역할 → 확장 시키는 역할
+    3. 라이브러리 모듈을 상속해서 사용할 수 있다.
+
+### 메서드 오버라이딩(method overriding)
+
+- 부모 클래스(상속한 클래스)에 있는 메서드를 동일한 이름으로 다시 만드는 것
+
+```python
+class MoreFourCal(FourCal):
+    # 새로운 메서드 추가
+    def pow(self):
+        return self.first ** self.second
+
+    # 오버라이딩
+    def div(self):
+        if self.second == 0:
+            return 0
+        return self.first / self.second
+
+    def __str__(self):
+        return f"{self.first}과 {self.second}을 이용한 사칙연산과 제곱 연산을 하는 객체"
+
+a = MoreFourCal(10, 0)
+
+a.div()                  # 0
+print(a)                 # 10과 0을 이용한 사칙연산과 제곱 연산을 하는 객체
+```
