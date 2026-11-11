@@ -5,6 +5,7 @@
 2. [왜 리스트는 딕셔너리의 키로 쓸 수 없을까?](#q-dict-hash)
 3. [return과 print의 차이점은 무엇일까?](#q-return-and-print-difference)
 4. [왜 all에 빈 iterable을 전달해도 True가 나올까?](#q-all-empty-iterable)
+5. [왜 모듈의 확장자는 ipynb가 아니라 py여야 할까?](#q-module-file-extender)
 
 ## python이란?
 1990년 암스테르담의 귀도 반 로섬(Guido Van Rossum)이 개발한 인터프리터 언어이다.
@@ -865,6 +866,14 @@ for 변수 in 리스트(또는 튜플, 문자열):
 - 함수: 기능 정의
     - 내가 함수를 정의하고 다른 함수를 읽고 사용할 수 있어야 한다.
     - AI가 만든 기능 판단
+- 프로그램의 구성요소
+    - 변수
+    - 흐름제어
+    - 함수
+        - 함수를 만드는 이유: 공통 코드를 하나로 묶어서 사용한다.
+    - 클래스(객체) → Type으로 정의. 필요시에 객체로 만들어서 사용
+        - 변수
+        - 함수
 
 ### 함수란 무엇인가?
 
@@ -1714,3 +1723,747 @@ a = MoreFourCal(10, 0)
 a.div()                  # 0
 print(a)                 # 10과 0을 이용한 사칙연산과 제곱 연산을 하는 객체
 ```
+
+## 모듈
+
+### 모듈 만들기
+
+- 모듈
+    - 함수나 변수 또는 클래스를 모아 놓은 **파일**
+    - 다른 파이썬 프로그램에서 불러와 사용할 수 있도록 만든 **파이썬 파일**
+    - c나 java는 main메서드가 시작점이 되지만, python은 시작점이 정해지지 않고 시작하는 모듈이 시작점이 된다.
+    - 여러 모듈을 가지고 있는 디렉토리를 패키지라고 한다.
+- add와 sub 함수만 있는 파일(모듈) mod1.py
+    ```python
+    def add(a, b):
+        return a + b
+
+    def sub(a, b):
+        return a - b
+    ```
+
+<a id="q-module-file-extender"></a>Q. 왜 모듈의 확장자는 ipynb가 아니라 py여야 할까?<br>
+A. 
+| 비교 항목 | `.py` (파이썬 스크립트) | `.ipynb` (주피터 노트북) |
+| :--- | :--- | :--- |
+| **파일 내부 포맷** | 순수 파이썬 소스 코드 (Plain Text) | JSON 구조의 메타데이터 (셀, 실행 결과, 마크다운 등 포함) |
+| **인터프리터 인식** | - `import` 시스템이 표준 탐색 경로(`sys.path`)에서 즉시 인식 <br>- 파이썬 표준 `import` 시스템은 검색 경로(`모듈명.path`)에서 `모듈명.py`, 컴파일된 바이트코드(`모듈명.pyc`), C 확장 모듈 등을 탐색한다.| 표준 모듈로 인식하지 못한다(그대로 읽을 경우 JSON 문법 에러 발생). |
+| **실행 및 파싱** | 인터프리터가 소스 코드를 한 줄씩 읽어 바이트코드로 바로 컴파일 | 주피터 런타임/서버가 JSON 구조를 해석해 각 셀을 실행해야 함 |
+| **주요 사용 목적** | 재사용 가능한 모듈·패키지 제작, 프로덕션 서비스 배포 | 데이터 분석, 모델 실험, 시각화, 셀 단위 대화형(Interactive) 개발 |
+| **모듈 재사용 방법** | `import 파일명`으로 어디서나 바로 호출 가능 | `.py` 파일로 변환(Export) 후 호출하거나 특수 패키지(`ipynb`) 설치 필요 |
+
+### 모듈 불러오기
+
+#### 대화형 인터프리터에서 mod1.py 불러오기
+
+- '**import** mod1'이라고 입력하여 mod.py 불러오기
+- mod1.py 파일에 있는 add 함수를 사용<br>
+    → 모듈 이름(mod1) 뒤에 도트 연산자(.)를 붙이고 함수 이름을 입력
+
+    ```python
+    import mod1
+
+    print(mod1.add(3, 4))   # 7
+    print(mod1.sub(4, 2))   # 2
+    ```
+
+#### import
+
+- 이미 만들어 놓은 파이썬 모듈을 사용할 수 있게 해주는 명령어
+- mod1.py에서 확장자 .py를 제거한 mod1만이 모듈 이름
+    ```python
+    import 모듈_이름
+    ```
+- mod1.add, mod1.sub처럼 쓰지 않고 모듈 이름 없이 함수 이름만 쓰고 싶은 경우
+    ```python
+    from mod1 import add    # from 모듈_이름 import 모듈_함수
+    add(3, 4)               # 7
+    ```
+- 모듈의 함수르 ㄹ여러 개 불러오고 싶은 경우
+    1. 쉼표(,)로 구분하여 필요한 함수 불러오기
+        ```python
+        from mod1 import add, sub
+        ```
+    2. \* 문자 사용하기
+        ```python
+        from mod1 import *
+        ```
+        \*문자는 '모든 것'이라는 뜻으로, 모듈의 모든 함수를 불러와 사용하겠다는 의미
+- mod폴더 안에 mod1이 있는 경우
+    ```python
+    import mod.mod1 as mod1
+
+    print(mod1.add(3, 4))   # 7
+    print(mod1.sub(4, 2))   # 2
+    print(mod1.PI)          # 3.14
+    ```
+### if \_\_name__ == "\_\_main__": 의 의미
+
+- mod1.py 파일을 다음과 같이 수정
+    - mod1 모듈을 import할 때 mod1.py 파일이 실행되어 결과값을 출력하는 문제
+- mod1.py 파일을 \_\_name__ == "\_\_main__":을 사용하여 수정
+    - mod1.py을 실행하면
+        - \_\_name__ 변수에 \_\_main__ 값이 저장된다.
+        - \_\_name__ == "\_\_main__" 문은 실행된다.
+            - 이 모듈을 실행할 때만 테스트할 수 있으므로 단위 테스트를 할 수 있다. 
+    - 다른 파일에서 이 모듈을 불러와 사용할 경우
+        - \_\_name__ 변수에 모듈 이름 mod1이 저장된다.
+        - \_\_name__ == "\_\_main__" 문은 실행되지 않는다.
+
+## 표준 라이브러리
+
+표준 라이브러리 = 표준 모듈
+
+### 파이썬 표준 라이브러리
+
+- 라이브러리(library) = 도서관(원하는 정보를 찾아보는 곳)
+- 파이썬 라이브러리는 전 세계의 파이썬 고수들이 만든 유용한 프로그램을 모아 놓은 것
+- 파이썬을 설치할 때 자동으로 컴퓨터에 설치됨
+- 자주 사용되고 꼭 알아두면 좋은 라이브러리 소개
+
+### 표준 라이브러리 종류
+
+#### datetime.date
+
+- 연, 원, 일로 날짜를 표현할 때 사용하는 함수
+    ```python
+    import datetime
+
+    day1 = datetime.date(2021, 12, 14)
+    day2 = datetime.date(2023, 4, 5)
+
+    diff = day2 - day1
+    diff.days                           # 477
+    ```
+
+#### time
+
+- time.time(): 에포크 이후 초를 나타내는 시간을 부동 소수점 숫자로 반환한다.
+    ```python
+    time.time()                                         # 1794365138.6845083
+    ```
+- time.localtime():
+    ```python
+    time.localtime(time.time())                         # time.struct_time(tm_year=2026, tm_mon=11, tm_mday=11, tm_hour=11, tm_min=45, tm_sec=46, tm_wday=2, tm_yday=315, tm_isdst=0)
+    ```
+- time.asctime():
+    ```python
+    time.asctime(time.localtime(time.time()))           # 'Wed Nov 11 11:46:13 2026'
+    ```
+- time.ctime():
+    ```python
+    time.ctime()                                        # 'Wed Nov 11 11:47:34 2026'
+    ```
+- time.strftime():
+    ```python
+    time.strftime('%x', time.localtime(time.time()))    # '11/11/26'
+    time.strftime('%c', time.localtime(time.time()))    # 'Wed Nov 11 11:48:36 2026'
+    ```
+- time.sleep():
+    ```python
+    time.sleep(2)
+    ```
+
+#### random
+
+- 난수(규칙이 없는 임의의 수)를 발생시키는 모듈
+
+    1. random.random
+        ```python
+        import random as r
+        r.random() * 10                             # 9.187217163919888
+        ```
+    2. random.randint
+        ```python
+        r.randint(1, 10)                            # 양쪽 끝을 포함하는 범위
+
+        # 난수를 이용해서 리스트를 생성
+        list_score = []
+
+        for s in range(0, 10):
+            list_score.append(r.randint(60, 100))
+        print(list_score)                           # [72, 87, 67, 94, 71, 78, 96, 65, 66, 65]
+        ```
+    3. random.choice
+        ```python
+        r.choice(list_score)                        # 65
+        ```
+    4. random.sample
+        ```python
+        r.sample(list_score, 3)                     # [71, 72, 67]
+        ```
+    
+#### OS
+
+- 환경 변수나 디렉터리, 파일 등의 OS자원을 제어할 수 있게 해 주는 모듈
+
+1. os.environ
+    ```python
+    os.environ
+    # environ{'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': ...생략...}
+
+    os.environ.get("PATH")  # 'c:\\python_project\\.venv\\Scripts;C:\\python_project\\.venv\\Scripts;(...생략...)'
+    ```
+2. os.chdir
+    ```python
+    os.chdir("C:\\WINDOWS")
+    ```
+3. os.getcwd
+    ```python
+    os.getcwd()     # 'c:\\\python_project'
+    ```
+4. os.system
+5. os.popen
+6. os.mkdir / os.rmdir
+    ```python
+    # 폴더 생성 -> 삭제
+    os.mkdir('test')
+    os.rmdir('test')
+    ```
+7. os.remove
+8. os.rename
+
+#### json
+
+- JSON 데이터를 쉽게 처리하고자 사용하는 모듈
+    ```json
+    {
+        "name": "Ikjun",
+        "birth": "0722",
+        "age": 30
+    }
+    ```
+    ```python
+    import json
+
+    with open('myinfo.json') as f:
+        data = json.load(f)
+
+    type(data)  # dict
+    data        # {'name': 'Ikjun', 'birth': '0722', 'age': 30}
+    ```
+- JSON 문자열 출력
+    ```python
+    with open('myinfo.json', 'r', encoding="utf-8") as f:
+        data_obj = json.load(f)
+        print(data_obj)         # {'name': 'Ikjun', 'birth': '0722', 'age': 30}
+        print(type(data_obj))   # <class 'dict'>
+    ```
+- 딕셔너리 자료형을 JSON 형태로 생성
+    ```python
+    data = {
+        "name": "Ikjun",
+        "birth": "0722",
+        "age": 30
+    }
+
+    with open('myinfo.json', 'w') as f:
+        json.dump(data, f)
+    ```
+- 파이썬 자료형을 JSON 문자열로 만드는 방법
+    ```python
+    # obj => str(JSON)
+
+    json_data = json.dumps(data_obj)
+    print(json_data)            # '{"name": "Ikjun", "birth": "0722", "age": 30}'
+    print(type(json_data))      # str
+    ```
+- JSON 문자열을 딕셔너리로 변환
+    ```python
+    json.loads(json_data)   # {'name': 'Ikjun', 'birth': '0722', 'age': 30}
+    ```
+
+#### 정규 표현식
+
+```python
+import re
+
+text = '저의 개인 연락처는 010-1234-5678이고, 사무실 연락처는 02-987-5432입니다.'
+
+# 전화번호의 패턴: 숫자(2~3) - 숫자(3~4) -숫자(4)
+phone_pattern = r'\d{2,3}-\d{3,4}-\d{4}'    # 쉼표(,) 뒤 띄어쓰기가 없어야 한다.
+
+# search: 패턴으로 찾은 데이터 중 첫 번째로 만난 데이터를 반환
+first_match = re.search(phone_pattern, text)
+if first_match:
+    print(first_match.group())              # 010-1234-5678
+
+# findall: 패턴과 일치하는 모든 문자열을 반환 => list
+all_match = re.findall(phone_pattern, text)
+print(all_match)                            # ['010-1234-5678', '02-987-5432']
+```
+
+## 외부 모듈
+
+- 표준 라이브러리 = 내장 모듈
+- 외부 모듈: 파이썬에서 제공하는 것이 아니라 외부 회사(기관, 단체)에서 특정 기능을 하는 라이브러리를 제공하는 것
+
+### 넘파이(Numpy) 라이브러리
+
+- 넘파이는 수치 계산에 특화된 라이브러리
+- 다차원 배열 객체인 ndarray를 중심으로 작성<br>
+    → 고성능 다차원 배열 객체를 제공하며, 요소의 데이터 타입을 통일
+- 다양한 함수 지원<br>
+    → 배열 연산, 선형 대수, 푸리에 변환, 난수 생성 등 **다양한 수학적 기능을 제공**
+
+#### 주요 기능과 문법
+
+- 배열 생성
+    - np.array(), npzeros(), np.ones(), np.arange(), np.linspace() 등
+        ```python
+        arr = np.array([1, 2, 3, 4, 5])
+        print(arr, type(arr))
+
+        np.zeros((3, 5))        # 3행(row), 5열(column)
+                                # array([[0., 0., 0., 0., 0.],
+                                #        [0., 0., 0., 0., 0.],
+                                #        [0., 0., 0., 0., 0.]])
+
+
+        np.ones((3, 5))         # array([[1., 1., 1., 1., 1.],
+                                #        [1., 1., 1., 1., 1.],
+                                #        [1., 1., 1., 1., 1.]])
+                            
+        np.arange(10)           # array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+
+        np.linspace(1, 10, 4)   # array([ 1.,  4.,  7., 10.])
+        ```
+- 배열 연산
+    - +, -, *, /과 같은 기본 연산과 np.dot()(행렬 곱), np.sum(), np.mean() 등 통계 연산
+- 배열 변형
+    - reshape(), flatten(), transpose()
+- 브로드캐스팅
+    - 배열 크기가 달라도 호환 가능하면 연산 수행
+
+#### 기본 문법
+
+- 넘파이(Numpy)는 배열(ndarray)을 중심으로 이루어져 있다.
+    - 배열 생성, 조작, 계산 등을 이해하면 넘파이를 쉽게 다룰 수 있다.
+
+1. 넘파이 배열 생성
+    - 기본 배열 생성
+        - np.array(): 넘파이 배열 생성
+        - Python 리스트를 배열로 변환
+            ```python
+            # 1D 배열 생성
+            arr = np.array([1, 2, 3, 4, 5])
+            print(arr, type(arr))               # [1 2 3 4 5] <class 'numpy.ndarray'>
+
+            # 2D 배열 생성
+            arr2 = np.array([[1, 2], [3, 4]])
+            print(arr2)
+            # [[1 2]
+            #  [3 4]]
+            ```
+    - 특별한 배열 생성
+        - 배열 생성에 유용한 함수를 제공
+            ```python
+            # 0으로 채워진 배
+            np.zeros((3, 5))    # 3행(row), 5열(column) 
+            # array([[0., 0., 0., 0., 0.],
+            #        [0., 0., 0., 0., 0.],
+            #        [0., 0., 0., 0., 0.]])
+
+            # 1로 채워진 배열
+            np.ones((3, 5))
+            # array([[1., 1., 1., 1., 1.],
+            #        [1., 1., 1., 1., 1.],
+            #        [1., 1., 1., 1., 1.]])
+
+            # 연속적인 숫자로 배열 생성
+            # 0부터 10까지 2간격으로 생성
+            np.arange(0, 10, 2)   # array([0, 2, 4, 6, 8])
+
+            # 일정 범위에서 동일 간격으로 숫자 생성
+            # 0부터 1까지 5개로 나눔
+            np.linspace(1, 10, 4)   # array([ 1.,  4.,  7., 10.])
+            ```
+2. 배열의 속성 확인
+    - 배열의 크기, 차원, 데이터 타입 확인
+        ```python
+        print(arr1)                             # [[1 2 3]
+                                                # [4 5 6]]
+        print("배열의 모양: ", arr1.shape)       # 배열의 모양:  (2, 3) # 배열의 모양을 확인할 수 있다.
+        print("차원: ", arr1.ndim)              # 차원:  2
+        print("모든 자원의 수: ", arr1.size)     # 모든 자원의 수:  6
+        print("타입: ", arr1.dtype)             # 타입:  int64
+        ```
+3. 배열의 인덱싱과 슬라이싱
+    - 인덱싱
+        - Python 리스트처럼 배열의 특정 위치에 접근
+        - 2D 배열에서는 행과 열을 지정하여 접근
+            ```python
+            arr = np.array([10, 20, 30, 40])
+            print(arr[0])           # 10
+            print(arr[-1])          # 40
+
+            arr = np.array([[1, 2, 3], [4, 5, 6]])
+            print(arr[0, 1])        # 2
+            print(arr[1, -1])       # 6
+            ```
+    - 슬라이싱
+        - 배열의 일부분을 추출
+        - 2D 배열에서도 슬라이싱
+            ```python
+            arr = np.array([10, 20, 30, 40, 50])
+            print(arr[1:4])     # [20 30 40]
+            print(arr[:3])      # [10 20 30]
+            print(arr[::3])     # [10 40]
+
+            arr = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+            print(arr[:2, 1:])  # [[2 3]
+                                # [5 6]]
+            print(arr[1:, :2])  # [[4 5]
+                                # [7 8]]
+            ```
+4. 배열의 연산
+    - 기본 연산
+        - 배열 간 연산은 요소 별로 수행
+            ```python
+            arr1 = np.array([1, 2, 3])
+            arr2 = np.array([4, 5, 6])
+
+            print(arr1 + arr2)          # [5 7 9]
+            print(arr1 * arr2)          # [ 4 10 18]
+            print(arr1 ** 2)            # [1 4 9]
+            ```
+    - 브로드캐스팅
+        - 크기가 다른 배열 간의 연산
+            ```python
+            arr = np.array([[1, 2, 3], [4, 5, 6]])
+
+            print(arr + 10)                             # [[11 12 13]
+                                                        # [14 15 16]]
+            ```
+5. 배열의 형태 변경
+    - 배열 형태 변경(reshape)
+        - 배열의 크기를 변경
+            ```python
+            arr = np.array([1, 2, 3, 4, 5, 6])
+
+            reshaped = arr.reshape(2, 3)        # 2행 3열로 변경
+            print(reshaped)
+            ```
+    - 배열 펼치기(flatten)
+        - 다차원 배열을 1차원 배열로 변환
+            ```python
+            arr = np.array([[1, 2, 3], [4, 5, 6]])
+
+            flattened = arr.flatten()
+            print(flattened)
+            ```
+6. 유용한 함수들
+    - 통계함수
+        ```python
+        arr = np.array([1, 2, 3, 4, 5])
+
+        filtered = arr[arr > 3]
+        print(filtered)                     # [4 5]
+        ```
+    - 랜덤 데이터 생성
+        - 난수 생성: AI 모델의 초기 가중치나 무작위 데이터 생성에 사용
+            ```python
+            # 0에서 1사이의 랜덤 값
+            random_values = np.random.rand(3)                       # 생성할 배열의 형태(Shape, 개수나 차원)
+            print(random_values)                                    # [0.55958767 0.16024204 0.11125548]
+
+            # 정수 난수 생성
+            random_ints = np.random.randint(1, 10, size=(2, 3))
+            print(random_ints)                                      # [[1 1 6]
+                                                                    # [6 6 5]]
+            ```
+#### 인공지능 모델 개발에 필요한 기능
+
+### 판다스(Pandas) 라이브러리
+
+#### 판다스(Pandas)
+
+- 판다스는 데이터 분석과 조작에 특화된 라이브러리
+- 구조화된 데이터를 처리하는 데 유용
+    - **Series**(1차원)와 **DataFrame**(2차원)이라는 두 가지 데이터 구조를 중심
+- 구조화된 데이터 처리 
+    - 행(row)과 열(column) 기반의 데이터 프레임 구조를 사용
+- 다양한 데이터 소스 지원 - CSV, Excel, SQL, JSON 등 다양한 형식-의 보고서를 읽고 쓰기
+- 다양한 데이터 소스 지원
+    - CSV, Excel, SQL, JSON등 다양한 형식의 데이터 읽고 긿기
+- 편리한 데이터 조작
+    - 필터링, 그룹화, 집계, 결측값 처리 등을 간단히 수행
+
+#### 판다스의 핵심 기본적인 문법
+1. 데이터 구조
+    - Series
+        - 1차원 데이터 구조
+        - 값(value)과 인덱스(index)
+    - DataFrame
+        - 2차원 데이터 구조<br>
+            행(row)과 열(column)로 구성된 테이블 형식의 데이터
+        - 다양한 형태의 데이터를 저장할 수 있다.
+            ```python
+            data = {
+                'Name': ['Alice', 'Bob', 'Charlie'],
+                'Age': [25, 30, 35],
+                'Score': [90, 85, 95]
+            }
+
+            df = pd.DataFrame(data)
+            print(df)
+            ```
+2. 데이터 확인
+    - 데이터의 기본 정보를 빠르게 확인
+        ```python
+        print(df.head()) # 기본적으로 상위 5개 행 출력
+        #       Name  Age  Score
+        # 0    Alice   25     90
+        # 1      Bob   30     85
+        # 2  Charlie   35     95
+
+        print(df.tail(2)) # 하위 2개 행 출력
+        #       Name  Age  Score
+        # 1      Bob   30     85
+        # 2  Charlie   35     95
+
+        print(df.shape)         # (3, 3)
+
+        print(df.info())
+        # <class 'pandas.DataFrame'>
+        # RangeIndex: 3 entries, 0 to 2
+        # Data columns (total 3 columns):
+        #  #   Column  Non-Null Count  Dtype
+        # ---  ------  --------------  -----
+        #  0   Name    3 non-null      str  
+        #  1   Age     3 non-null      int64
+        #  2   Score   3 non-null      int64
+        # dtypes: int64(2), str(1)
+        # memory usage: 204.0 bytes
+        # None
+
+        print(df.describe())
+        #       Age	    Score
+        # count	3.0	    3.0
+        # mean	30.0	90.0
+        # std	5.0	    5.0
+        # min	25.0	85.0
+        # 25%	27.5	87.5
+        # 50%	30.0	90.0
+        # 75%	32.5	92.5
+        # max	35.0	95.0
+
+        ```
+3. 열 선택
+    - 특정 열(컬럼)을 선택
+        ```python
+        print(df['Name'])
+        # 0      Alice
+        # 1        Bob
+        # 2    Charlie
+        # Name: Name, dtype: str
+        print(df[['Name', 'Score']])
+        #       Name  Score
+        # 0    Alice     90
+        # 1      Bob     85
+        # 2  Charlie     95
+        ```
+    - 특정 행을 선택할 때는 loc와 iloc를 사용한다.
+        - loc: 라벨(이름) 기반 인덱싱
+        - iloc: 정수 기반 인덱싱
+            ```python
+            # loc: 이름 기반
+            print(df.loc[0])            # 첫 번째 행 출력
+            # Name     Alice
+            # Age         25
+            # Score       90
+            # Name: 0, dtype: object
+            print(df.loc[:, 'Name'])    # 모든 행에서 Name열만 출력
+            # 0      Alice
+            # 1        Bob
+            # 2    Charlie
+            # Name: Name, dtype: str
+
+            # iloc: 정수 기반
+            print(df.iloc[1])           # 두 번째 행 출력
+            # Name     Bob
+            # Age       30
+            # Score     85
+            # Name: 1, dtype: object
+            print(df.iloc[:, 1])        # 모든 행에서 두 번째 열 출력
+            # 0    25
+            # 1    30
+            # 2    35
+            # Name: Age, dtype: int64
+            ```
+    - 조건 필터링
+        - 틀정 조건을 만족하는 행만 선택
+            ```python
+            high_scores = df[df['Score'] >= 90]
+            print(high_scores)
+
+            #       Name  Age  Score
+            # 0    Alice   25     90
+            # 2  Charlie   35     95
+            ```
+4. 데이터 조작
+    - 열 추가
+        - 새로운 열을 추가
+            ```python
+            # Passed 열 추가
+            df['Passed'] = df['Score'] >= 90
+            print(df)
+
+            #       Name  Age  Score  Passed
+            # 0    Alice   25     90    True
+            # 1      Bob   30     85   False
+            # 2  Charlie   35     95    True
+            ```
+    - 행 추가
+        - 새로운 행을 추가하려면 **append**를 사용
+        ```python
+        new_row = {'Name': 'David',
+                'Age': 28,
+                'Score': 88,
+                'Passed': False}
+        df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
+        print(df)
+        #       Name  Age  Score  Passed
+        # 0    Alice   25     90    True
+        # 1      Bob   30     85   False
+        # 2  Charlie   35     95    True
+        # 3    David   28     88   False
+
+        new_row = {'Name': 'Ethan',
+                'Age': 24,
+                'Score': 70,
+                'Passed': False}
+        df.loc[len(df)] = new_row
+        print(df)
+        #       Name  Age  Score  Passed
+        # 0    Alice   25     90    True
+        # 1      Bob   30     85   False
+        # 2  Charlie   35     95    True
+        # 3    David   28     88   False
+        # 4    Ethan   24     70   False
+        ```
+    - 데이터 수정
+        - 특정 값이나 열을 수정
+            ```python
+            # 특정 값 수정
+            df.loc[0, 'Score'] = 95
+            # 열 전체 수정
+            df['Passed'] = df['Score'] >= 90
+            print(df)
+            #       Name  Age  Score  Passed
+            # 0    Alice   25     95    True
+            # 1      Bob   30     85   False
+            # 2  Charlie   35     95    True
+            ```
+5. 결측값 처리
+    - 결측값(NaN)을 처리하는 방법
+        ```python
+        # 결측값 생성
+        df.loc[1, 'Score'] = None
+
+        # 결측값 확인
+        print(df.isnull())  # True는 결측값을 의미
+        #    Name    Age  Score  Passed
+        # 0  False  False  False   False
+        # 1  False  False   True   False
+        # 2  False  False  False   False
+        print(df.count())
+        Name      3
+        Age       3
+        Score     2
+        Passed    3
+        dtype: int64
+
+        # 결측값 채우기
+        df['Score'] = df['Score'].fillna(0)
+        # 	Name	Age	Score	Passed
+        # 0	Alice	25	95.0	True
+        # 1	Bob	30	0.0	False
+        # 2	Charlie	35	95.0	True
+
+        # 결측값 제거
+        df = df.dropna()
+        # 	Name	Age	Score	Passed
+        # 0	Alice	25	95.0	True
+        # 2	Charlie	35	95.0	True
+        ```
+6. 데이터 정렬
+    - 데이터를 특정 열을 기준으로 정렬
+        ```python
+        # 오름차순 정렬
+        sorted_df = df.sort_values(by='Score')
+        print(sorted_df)
+        #       Name  Age  Score  Passed
+        # 1      Bob   30    0.0   False
+        # 0    Alice   25   90.0    True
+        # 2  Charlie   35   95.0    True
+
+        # 내림차순 정렬
+        sorted_df = df.sort_values(by='Score', ascending=False)
+        print(sorted_df)
+        #       Name  Age  Score  Passed
+        # 2  Charlie   35   95.0    True
+        # 0    Alice   25   90.0    True
+        # 1      Bob   30    0.0   False
+        ```
+7. 데이터 그룹화
+    - 데이터를 그룹화하고, 집계 작업
+        ```python
+        # 데이터 생성
+        data = {
+            'Team': ['A', 'A', 'B', 'B'],
+            'Score': [85, 90, 78, 88]
+        }
+        df = pd.DataFrame(data)
+        print(df)
+        #   Team  Score
+        # 0    A     85
+        # 1    A     90
+        # 2    B     78
+        # 3    B     88
+
+        # 팀별 평균 점수 계산
+        grouped = df.groupby('Team')['Score'].mean()
+        print(grouped)
+        # Team
+        # A    87.5
+        # B    83.0
+        # Name: Score, dtype: float64
+        ```
+8. 데이터 입출력
+    - 데이터 읽기
+        - CSV 파일 등 다양한 파일 읽기
+            ```python
+            read_df = pd.read_csv('output.csv')
+            read_df
+
+            # Name	    Age	Score	Passed
+            # 0	Alice	25	95.0	True
+            # 1	Bob	    30	0.0	    False
+            # 2	Charlie	35	95.0	True
+            ```
+    - 데이터 저장
+        - 가공한 데이터를 파일로 저장
+            ```python
+            df.to_csv('output.csv', index=False)
+            ```
+
+#### 인공지능 프로그래밍에 판다스(Pandas) 활용
+
+- 핵심 개념
+    - 데이터 구조
+        - Series: 1차원 데이터 구조(인덱스 + 값)
+        - DataFrame: 2차원 데이터 구조(행 + 열)
+    - 데이터 조작 기능
+        - 데이터 필터링, 그룹화, 결합, 결측값 처리, 정렬 등
+    - 데이터 입출력
+        - CSV, Excel, SQL, JSON 등 다양한 파일 형식을 지원
+- 인공지능에서 판다스의 활용
+    - 데이터 탐색
+        - 데이터를 요약하고 확인
+    - 데이터 전처리
+        - 결측값 처리, 데이터 필터링, 변환
+    - 특징 엔지니어링
+        - 새로운 열 추가, 기존 데이터를 변형
+    - 훈련 데이터 준비
+        - 데이터를 AI 모델에 맞는 형태로 가공
