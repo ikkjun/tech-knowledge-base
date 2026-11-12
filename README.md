@@ -14,6 +14,7 @@ A personal archive of technical reading, system/security training, and engineeri
 | **DevOps** | 그림과 실습으로 배우는 도커 & 쿠버네티스<br><sub>오가사와라 시게타카 저 · 위키북스</sub> | - | `Planned` | - |
 | **Cloud** | 그림으로 이해하는 AWS 구조와 기술<br><sub>오가사와라 시게타카 저 · 길벗</sub> | - | `Planned` | - |
 | **Cloud** | AWS 교과서<br><sub>김원일, 서종호, 김석필 저 · 길벗</sub> | - | `Planned` | - |
+| **ML / DL** | [혼자 공부하는 머신러닝 + 딥러닝](./books/혼자_공부하는_머신러닝_딥러닝.md)<br><sub>박해선 · 한빛미디어</sub> | - | `Planned` | - |
 | **ML / DL** | Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow 3e<br><sub>Aurélien Géron · 한빛미디어</sub> | - | `Planned` | - |
 | **GenAI** | 그림으로 배우는 생성형 AI<br><sub>프리양카 베르가디아,발리아파 락시마난 저 · 한빛미디어</sub> | - | `Planned` | - |
 | **GenAI** | Prompt Engineering for Generative AI<br><sub>James Phoenix · 한빛미디어</sub> | - | `Planned` | - |
