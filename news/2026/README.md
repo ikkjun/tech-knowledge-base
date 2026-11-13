@@ -4,10 +4,7 @@
 
 ## 📊 전체 스크랩 목록
 
-| Date | Category | Headline & Link | Key Takeaway |
-| :---: | :--- | :--- | :--- |
+| Date | Category | Headline | Source | Keywords |
+| :---: | :---: | :--- | :--- | :--- |
 | **11월** | | | |
-| 11.14 | `Vuln` | [오픈소스 패키지 신규 CVE 취약점 분석](./11/20261114_python_cve.md) | 서드파티 의존성 관리 및 패치 프로세스 |
-| 11.13 | `Cloud` | [클라우드 IAM 설정 오류와 권한 탈취](./11/20261113_cloud_iam.md) | 최소 권한 원칙(PoLP) 적용의 중요성 |
-
-<!-- 12월 기사 작성 시 아래에 행을 추가하세요 -->
+| 2026.11.14 | `Vuln` | [CISA, 시스코 브로드웍스·오픈웨이브 결함 악용 경고](/news/2026/11/cisa_cisco_openwave_exploit.md) | 보안뉴스 | 브로드웍스 결함(CVE-2026-20320), 오픈웨이브 결함(CVE-2026-111793) |

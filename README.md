@@ -35,5 +35,9 @@ A personal archive of technical reading, system/security training, and engineeri
 > 🗂️ **전체 뉴스 아카이브 보기:** [News Directory](./news/README.md)
 
 ### 2026.11
-| Date | Category | Headline | Key Takeaway |
-| :---: | :--- | :--- | :--- |
+
+| Date | Category | Headline | Source | Keywords |
+| :---: | :---: | :--- | :--- | :--- |
+| 2026.11.14 | `Vuln` | [CISA, 시스코 브로드웍스·오픈웨이브 결함 악용 경고](/news/2026/11/cisa_cisco_openwave_exploit.md) | 보안뉴스 | 브로드웍스 결함(CVE-2026-20320), 오픈웨이브 결함(CVE-2026-111793) |
+
+
