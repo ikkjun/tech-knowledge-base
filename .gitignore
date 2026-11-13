@@ -1,4 +1,4 @@
 markdown_shortcut.md
 
 .venv/
-venv/
+__pycache__/
