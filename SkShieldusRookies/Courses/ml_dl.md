@@ -629,7 +629,7 @@ for item in soup.find_all('a'):
     - 테이블 저장 코드
         - CREATE TABLE IF NOT EXISTS: 테이블이 없을 경우에만 생성한다.
         - PRIMARY KEY AUTOINCREMENT: 기본 키로 자동 증가 값을 사용한다.
-        - `연결 → cursor → execute → close`
+        - 순서 주의: `연결 → cursor → execute → close`
 
             ```python
             import sqlite3
