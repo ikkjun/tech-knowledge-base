@@ -3,6 +3,9 @@
 ## 📑 목차
 - [1. 데이터 수집](#data_collect)
 
+## 📌 질문  모음
+1. [connect와 cursor 객체의 차이점은 무엇일까?](#q-cursor-connect-difference)
+
 ## <a id="data_collect"></a> 1. 데이터 수집
 
 ### 인공지능 데이터 처리 프로세스
@@ -706,6 +709,63 @@ for item in soup.find_all('a'):
             # 연결 종료
             connection.close()
             ```
+5. 데이터 수정
+    ```python
+    # 데이터베이스 연결
+    connection = sqlite3.connect("example.db")
+    cursor = connection.cursor()
+
+    # 데이터 수정
+    cursor.execute("UPDATE users SET age = ? WHERE name = ?", (31, "Alice"))
+
+    # 변경사항 저장
+    connection.commit()
+    print("데이터가 수정되었습니다")
+
+    # 연결 종료
+    connection.close()
+
+    # [(1, 'Alice', 31, 'New York'),
+    #  (2, 'Bob', 25, 'Los Angeles'),
+    #  (3, 'Charlie', 35, 'Chicago'),
+    #  (4, 'Diana', 28, 'Houston')]
+    ```
+6. 데이터 삭제
+    ```python
+    # 데이터베이스 연결
+    connection = sqlite3.connect("example.db")
+    cursor = connection.cursor()
+
+    # 데이터 삭제
+    cursor.execute("DELETE FROM users WHERE name = ?", ("Bob",))
+
+    # 변경사항 저장
+    connection.commit()
+    print("데이터가 삭제되었습니다.")
+
+    # 연결 종료
+    connection.close()
+
+    # [(1, 'Alice', 31, 'New York'),
+    #  (3, 'Charlie', 35, 'Chicago'),
+    #  (4, 'Diana', 28, 'Houston')]
+    ```
+
+<a id="q-cursor-connect-difference"></a>Q. connect와 cursor 객체의 차이점은 무엇일까?<br>
+A.
+1. Connect와 Cursor의 핵심 역할 비교
+
+    | 구분 | `Connection` (연결 객체) | `Cursor` (커서 객체) |
+    | :--- | :--- | :--- |
+    | **역할 비유** | 파이썬과 데이터베이스를 이어주는 **'고속도로(통로)'** | 도로 위를 오가며 데이터를 나르는 **'트럭(작업자)'** |
+    | **핵심 권한** | 통로 연결 및 종료, 최종 데이터 확정(`commit`) 및 되돌리기(`rollback`) | SQL 문장 실행(`execute`), 조회된 결과 데이터 가져오기(`fetchall`)<br><br>데이터베이스에서 트랜잭션(작업 단위)을 관리하고 확정 짓는 권한이 커서(Cursor)가 아닌 커넥션(Connection)에 있기 때문에 cursor로는 commit을 하지 못한다. <br><br>또한, 파이썬 환경에서는 하나의 연결(`connection`) 안에서 여러 개의 커서(`cursor`)를 만들어 복잡한 작업을 나누어 수행하기도 한다. 만약 커서마다 각자 따로 커밋을 할 수 있다면 데이터베이스 상태가 뒤죽박죽 꼬일 위험이 있다.|
+
+2. 주요 메서드 상세 비교 (`execute` & `close`)
+
+    | 비교 항목 | 공통점 및 핵심 차이점 |
+    | :--- | :--- |
+    | **명령 실행**<br>`.execute()` |  **[공통점]** 둘 다 작성한 SQL 쿼리문을 데이터베이스에 전달하고 성공적으로 실행한다.<br><br>**[차이점]** `cursor.execute()`는 파이썬 데이터베이스 표준 규약(DB-API)을 따르는 **정석 방식**이다. 반면 `connection.execute()`는 `sqlite3` 라이브러리에서만 편의상 제공하는 **단축키(Shortcut)**로, 실행 시 내부적으로 임시 커서를 알아서 생성한 뒤 쿼리를 처리한다. 다른 DB(MySQL 등)로 넘어갈 때를 대비해 가급적 `cursor` 방식을 쓰는 것이 좋다. |
+    | **리소스 종료**<br>`.close()` | **[차이점]** `cursor.close()`는 현재 쿼리를 실행하던 개별 '작업 공간'만 깔끔하게 정리한다. 이 경우 메인 통로는 열려있으므로 필요하면 새로운 커서를 다시 만들 수 있다.<br><br>반면 `connection.close()`는 **데이터베이스와의 메인 연결 통로 자체를 완전히 끊어버린다.** 이 명령이 실행되면 기존에 열려있던 모든 커서도 즉각 사용 불능 상태가 된다. |
 
 #### Pandas와 Database의 결합
 
@@ -714,4 +774,35 @@ for item in soup.find_all('a'):
         - 데이터프레임 내용을 DB 테이블로 즉시 적재
     - pd. read_sql(query, conn)
         - SQL 쿼리 실행 결과를 데이터프레임 객체로 즉시 반환
+    ```python
+    import sqlite3
+    import pandas as pd
 
+    # 새 커넥션 연결
+    conn = sqlite3.connect(':memory:')
+    # ':memory:'는 하드디스크(SSD)에 실제 .db 파일을 생성하지 않고, 컴퓨터의 RAM(주기억장치) 위에 임시로 데이터베이스를 만들어 사용하겠다는 뜻의 특수 예약어이다. 데이터베이스 연결이 끊기자마자 생성된 데이터베이스는 사라진다.
+    
+    # 1. Pandas DataFrame 생성
+    df_source = pd.DataFrame({
+        'Title': ['영화A', '영화B', '영화C'],
+        'Rating': [8.5, 9.2, 7.8],
+        'Votes': [1200, 3400, 800]
+    })
+
+    # 2. to_sql을 통해 DB에 테이블로 적재 (if_exists='replace': 기존 테이블이 있으면 덮어쓰기)
+    df_source.to_sql('movies', conn, index=False, if_exists='replace')
+
+    # 3. read_sql을 통해 평점 8.0 이상인 영화 조회
+    query = "SELECT Title, Rating FROM movies WHERE Rating >= 8.0"
+    df_filtered = pd.read_sql(query, conn)
+
+    print("=== DB 쿼리 조회 결과 DataFrame ===")
+    print(df_filtered)
+
+    # === DB 쿼리 조회 결과 DataFrame ===
+    #   Title  Rating
+    # 0   영화A     8.5
+    # 1   영화B     9.2
+
+    conn.close()
+    ```
