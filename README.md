@@ -28,7 +28,7 @@ A personal archive of technical reading, system/security training, and engineeri
 
 | Domain | Program name | Duration | Status | Key Topics Covered |
 | :--- | :--- | :--- | :--- | :--- |
-| **Cloud & Security** | [Sk 쉴더스 루키즈 36기](./SkShieldusRookies/README.md) | 2026.11.05 ~ | `In Progress` | Cloud Security, Generative AI |
+| **Cloud & Security** | [Sk 쉴더스 루키즈 36기](./SkShieldusRookies/README.md) | 2026.11.05 ~ | `In Progress` | Cyber Security, Generative AI |
 
 ## 📰 Daily Security News
 매일 보안 동향을 파악하고 핵심 인사이트를 요약합니다. 
