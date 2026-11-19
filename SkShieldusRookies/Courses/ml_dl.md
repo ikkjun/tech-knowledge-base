@@ -1089,7 +1089,10 @@ A.
     - 왜도 < 0(음의 왜도): 데이터가 왼쪽으로 꼬리가 길게 늘어난다.
     - 왜도 = 0: 데이터가 대칭적이다(정규분포).
 - 왜도가 심하면 정규분포로 만들어주는 처리를 해야 한다.
-![1794552865781](image/ml_dl/1794552865781.png)
+    <p align="left">
+        <img src="image/ml_dl/1794552865781.png">
+    </p>
+    <!-- ![1794552865781](image/ml_dl/1794552865781.png) -->
 - 특징
     - 왜도를 통해 분포의 비대칭성을 파악
     - 양의 왜도: 평균 > 중앙값 > 최빈값
@@ -1118,10 +1121,10 @@ A.
 
 #### 그룹별 집계(Grouping and Aggregation)
 
-- 데이터를 특정 기준으로 묶은 후(그룹화) 각 그룹에 대해 합계, 평균, 최대값 등 다양한 연산(집계)을 수행
+- 데이터를 특정 기준으로 묶은 후(그룹화) 각 그룹에 대해 합계, 평균, 최대값 등 다양한 연산(집계)을 수행한다.
 - 언제 사용할까?
-    - 대량의 데이터를 요약하고 패턴을 파악
-    - 데이터를 시각적으로 이해하거나 보고서를 작성
+    - 대량의 데이터를 요약하고 패턴을 파악할 때 사용한다.
+    - 데이터를 시각적으로 이해하거나 보고서를 작성할 때 사용한다.
 - 사용 예시
     - 쇼핑몰 매출 데이터를 분석해 카테고리별 총 매출
     - 회사의 직원 데이터를 부서별로 나누어 평균 급여
@@ -1311,8 +1314,8 @@ A.
         import matplotlib.pyplot as plt
 
         # 데이터 준비
-        x = [1, 2, 3, 4, 5]     # x축 데이터
-        y = [2, 3, 5, 7, 11]    # y축 데이터
+        x = [1, 2, 3, 4, 5]                 # x축 데이터
+        y = [2, 3, 5, 7, 11]                # y축 데이터
 
         # 그래프 생성
         plt.plot(x, y, marker='o', linestyle='-', color='b', label='Prime Numbers')
@@ -1430,16 +1433,16 @@ sns.pairplot(data)
 
 ### 데이터 탐색적 분석(Exploratory Data Analysis, EDA)
 
-- EDA는 데이터 분석 과정에서 데이터를 이해하고 통찰(insights)을 얻기 위한 초기 분석 단계
-    - 데이터셋의 구조와 특성을 탐색
-    - 문제가 되는 부분을 확인
-    - 분석 방향을 설정하는 데 필수적인 과정
-- 데이터를 "알아가는" 과정
+- EDA는 데이터 분석 과정에서 데이터를 이해하고 통찰(insights)을 얻기 위한 초기 분석 단계이다.
+    - 데이터셋의 구조와 특성을 탐색한다.
+    - 문제가 되는 부분을 확인한다.
+    - 분석 방향을 설정하는 데 필수적인 과정이다.
+- 데이터를 "알아가는" 과정이다.
 
 #### EDA의 주요 목적
 
-- 데이터의 기본 특성 이해
-    - 데이터를 시각적으로 관찰하고, 수치로 요약하고 데이터분포, 이상치, 결측치 등을 확인
+- 데이터의 기본 특성을 이해한다.
+    - 데이터를 시각적으로 관찰하고, 수치로 요약하고 데이터 분포, 이상치, 결측치 등을 확인한다.
 - 데이터 정리
     - 결측값이나 이상치를 처리하고, 데이터를 분석 가능한 상태로 준비
 - 가설 수립 및 데이터 기반 의사 결정
@@ -1457,7 +1460,11 @@ sns.pairplot(data)
     - Python에서 pandas 라이브러리의 head(), info(), describe() 등을 사용
         ```python
         # 데이터 불러오기
-        # 판다스는 메모리를 절약하려 데이터를 청크 단위로 나누어 읽으면서 열의 데이터 타입을 추측하는데, 파일 내부에 여러 타입이 섞여 있으면 청크마다 추론 결과가 달라져 충돌 에러가 발생하므로, low_memory=False를 설정해 파일 전체를 한 번에 메모리에 올려 정확한 타입을 분석하도록 강제하는 것이다.
+        # 판다스는 메모리를 절약하려 데이터를 청크 단위로 나누어 읽으면서 
+        # 열의 데이터 타입을 추측하는데, 파일 내부에 여러 타입이 섞여 있으면
+        # 청크마다 추론 결과가 달라져 충돌 에러가 발생하므로, 
+        # low_memory=False를 설정해 파일 전체를 한 번에 메모리에 올려 
+        # 정확한 타입을 분석하도록 강제하는 것이다.
         df = pd.read_csv("full_data.csv", encoding="cp949", low_memory=False)
 
         print(df.head())
@@ -1671,7 +1678,7 @@ sns.pairplot(data)
 
 #### Python을 활용한 기초 통계량 계산
 
-- 평균: 데이터 전체의 균형점. 예를 들어 시험 점수 평균이 85라면, 대부분의 데이터가 이 근처에 분포한다고 볼 수 있다.
+- 평균: 데이터 전체의 균형점. 예를 들어 시험 점수 평균이 85점이라면, 대부분의 데이터가 이 근처에 분포한다고 볼 수 있다.
 - 중앙값: 극단값(이상치)의 영향을 받지 않는 대표값. 데이터가 치우쳐 있을 때 평균 대신 중앙값을 사용한다.
 - 최빈값: 빈도가 가장 높은 값으로, 특정값이 얼마나 자주 나타나는지 확인할 수 있다.
 - 분산과 표준편차: 데이터가 얼마나 흩어져 있는지 측정한다. 표준편차가 크면 데이터의 변동성이 크다는 뜻이다.
@@ -1717,7 +1724,7 @@ sns.pairplot(data)
     - 1사분위수(Q1): 하위25% 데이터값
     - 3사분위수(Q3): 상위25% 데이터값
     - IQR(Interquartile Range): Q3 - Q1 (데이터 변동성 측정)
-    - 이상치(Outliers): Q1 - 1.5×IQR 이하, 또는 Q3 + 1.5×IQR 이상값
+    - 이상치(Outliers): Q1 - 1.5 × IQR 이하, 또는 Q3 + 1.5 × IQR 이상값
         ```python
         # 부서별 월급 데이터
         departments = ['HR', 'IT', 'Finance']
@@ -2705,6 +2712,10 @@ df_mission
 
 ### 지도학습의 개념 및 지도학습 vs 비지도학습
 
+- 머신러닝
+    - 지도학습 → 정답o → 결과 예측, 분류
+    - 비지도 학습 → 정답x → 군집분석, 클러스터링
+
 #### 지도학습(Supervised Learning)
 
 - 데이터와 함께 해당 데이터에 대한 정답(라벨)을 제공하여 모델이 학습하도록 하는 머신러닝 방법이다.<br>
@@ -3395,3 +3406,853 @@ df_mission
     # R2 Score: 0.23335039815872138
     ```
     ![1795014098991](image/ml_dl/1795014098991.png)
+
+### 회귀 분석 비교 모델
+
+#### Linear Regression (선형 회귀)
+
+- 특징: 입력 변수(X)와 출력 변수(y) 사이의 선형 관계를 가정한다.
+- 모델 형태: 직선(1차 함수)
+- 장점: 빠르고 해석이 쉽다.
+- 한계: 복잡한 비선형 관계를 표현하지 못한다. 과적합에 취약하다.
+
+#### Lasso Regression (라쏘 회귀)
+
+- 특징: 선형 회귀 + L1 정규화 (계수의 절댓값 합 제어하여 과적합 방지)
+- 규제 항 추가: α × (계수 절댓값 합)
+- 장점: 불필요한 변수의 계수를 0으로 만들어 변수를 선택할 수 있다.
+- 한계: 관련 변수 중 일부만 선택될 수 있어 불안정성이 존재한다.
+
+#### Ridge Regression (릿지 회귀)
+
+- 특징: 선형 회귀 + L2 정규화 (계수의 크기를 제어하여 과적합 방지)
+- 규제 항 추가: 손실 함수에 α × (계수 제곱합)을 더한다.
+- 장점: 다중공선성 해결, 안정적인 예측
+- 한계: 모든 변수의 계수를 0에 가깝게 만들지만 제거하지는 않는다.
+
+#### ElasticNet
+
+> **"L1(Lasso)과 L2(Ridge)의 장점만 쏙쏙 골라 합친 선형 회귀의 최종 진화형"**
+- 변수 선택 기능이 있는 L1 규제와 모델을 안정적으로 만들어주는 L2 규제를 동시에 사용한다.
+- 데이터의 특성(Feature)이 너무 많고 서로 상관관계가 높은 변수들이 얽혀있을 때 아주 강력한 힘을 발휘한다.
+
+⚙️ **주요 파라미터 설명**
+
+- `alpha=0.1`: **전체 규제의 강도**를 조절한다. 값이 클수록 규제가 강해져 모델이 단순해진다.
+- `l1_ratio=0.5`: 전체 규제 중 **L1(Lasso) 규제가 차지하는 비율**이다. `0.5`면 L1과 L2를 반반씩 섞겠다는 뜻이다. (`0`이면 순수 Ridge, `1`이면 순수 Lasso)
+- `random_state=42`: 결과를 항상 동일하게 재현하기 위한 난수 고정값이다.
+
+#### Decision Tree Regression (의사결정트리)
+
+- 특징: 데이터를 조건에 따라 분할하며 예측한다.
+- 예측값: 리프 노드의 평균 값
+- 장점: 비선형 관계를 학습하기 쉽다. 해석이 쉽다.
+- 한계: 깊은 트리는 과적합 가능성이 높다.
+
+#### Random Forest Regression (랜덤 포레스트)
+
+- 특징: 여러 결정 트리를 훈련시키고 평균 내어 예측한다.
+- 앙상블 학습 방식
+- 장점: 과적합을 줄이고 성능을 향상시킨다. 비선형 문제에 강하다.
+- 한계: 해석이 어렵고 느릴 수 있다.
+
+#### Random Forest
+
+> **"나무(Decision Tree)를 모아 울창한 숲을 이룬, 실패 없는 든든한 벤치마크"**
+- 여러 개의 의사결정나무를 독립적으로 학습시킨 뒤, 그 예측값들을 평균 내어 최종 결과를 낸다(배깅 방식).
+- 기본 성능이 훌륭하고 **과적합(Overfitting)에 강해 새로운 데이터셋을 만났을 때 기준으로 삼기 가장 좋다.**
+
+⚙️ **주요 파라미터 설명**
+
+- `n_estimators=100`: 숲을 만들 **의사결정나무의 총 개수**입니다. 나무가 많을수록 안정적이지만 연산(학습) 시간이 길어진다.
+- `max_depth=12`: 각 나무의 최대 깊이(층수)입니다. 너무 깊어지면 과적합이 일어날 수 있으므로 적절히 제한한다.
+- `n_jobs=-1`: 컴퓨터의 **모든 CPU 코어를 총동원**하여 병렬 연산을 수행하겠다는 설정이다. (속도가 빨라진다.)
+- `random_state=42`: 모델 생성의 무작위성을 제어하여 매번 같은 결과를 보장한다.
+
+#### XGBoost (eXtreme Gradient Boosting)
+
+> **"한 단계씩 오차를 고쳐나가는, 오랫동안 왕좌를 지켜온 캐글의 치트키"**
+- 이전 나무가 틀린 오차를 다음 나무가 보완하는 방식(부스팅)이다.
+- 연산 효율을 극대화하여 **속도**가 빠르고 성능이 매우 뛰어나 데이터 분석 대회에서 오랫동안 필수 모델로 자리 잡고 있다.
+
+⚙️ **주요 파라미터 설명**
+
+- `n_estimators=100`: 순차적으로 만들 트리의 개수(반복 횟수)이다.
+- `max_depth=6`: 각 트리의 최대 깊이이다. 부스팅 모델은 대개 깊이를 깊게 주지 않는 것이 특징이다.
+- `learning_rate=0.1`: 학습률(보폭)이다. 이전 트리의 오차를 얼마나 강하게 반영할지 결정하며, 보통 `n_estimators`와 트레이드오프(Trade-off) 관계이다.
+- `n_jobs=-1`: 모든 CPU 코어를 사용하여 병렬 처리를 수행한다.
+- `random_state=42`: 결과 재현성을 위한 설정이다.
+
+#### LightGBM (Light Gradient Boosting Machine)
+
+> **"리프 중심(Leaf-wise) 성장으로 대용량 데이터도 순식간에 해치우는 속도광"**
+- 다른 모델들이 나무의 층을 균형 있게 맞추며 자랄 때(Level-wise), LightGBM은 오차가 가장 큰 노드만 골라서 비대칭적으로 깊게 자란다(Leaf-wise). 이 덕분에 메모리를 훨씬 적게 쓰고, **속도**가 압도적으로 빠르다.
+
+⚙️ **주요 파라미터 설명**
+
+- `n_estimators=100`: 순차적으로 만들 트리의 개수이다.
+- `max_depth=6`: 트리의 최대 깊이를 제한하여 리프 중심 성장이 너무 과도해져 과적합되는 것을 막습니다.
+- `learning_rate=0.1`: 각 트리의 예측 결과를 반영하는 비율(학습률)이다.
+- `n_jobs=-1`: 병렬 학습을 위해 CPU 코어를 모두 사용한다.
+- `verbose=-1`: 학습 도중 출력되는 경고나 로그 메시지를 숨겨 화면을 깔끔하게 유지한다.
+- `random_state=42`: 결과 재현성을 위한 설정이다.
+
+#### CatBoost (Categorical Boosting)
+
+> **"텍스트나 범주형(Categorical) 변수가 많다면 묻지도 따지지도 말고 선택해야 할 모델"**
+- 원-핫 인코딩 같은 번거로운 전처리 없이도 **텍스트나 범주형 데이터를 알아서 완벽하게 처리**해 준다. 부스팅 모델의 고질적인 문제인 과적합을 구조적으로 방지(Symmetric Tree 사용)하여, 튜닝을 거의 안 해도 기본 성능이 매우 강력하다.
+
+⚙️ **주요 파라미터 설명**
+
+- `iterations=100`: 타 모델의 `n_estimators`와 같은 개념으로, 만들 트리의 개수(반복 횟수)이다.
+- `depth=6`: 각 트리의 깊이이다. (CatBoost는 기본값 `6`이 대개 가장 잘 작동한다.)
+- `learning_rate=0.1`: 모델의 학습 보폭을 결정하는 학습률이다.
+- `verbose=0`: 학습 과정 중 나타나는 복잡한 이력(Loss 등) 출력을 모두 끄고 조용히 학습한다.
+- `random_state=42`: 결과 재현성을 위한 설정이다.
+
+#### Support Vector Regression (SVR)
+
+- 특징: 마진 내 오차는 무시하고, 마진 밖의 오차만 최소화한다.
+    - 커널을 사용하여 비선형 회귀도 가능하다(RBF, poly 등).
+- 장점: 복잡한 패턴에도 적용할 수 있다. 일반화 성능이 우수하다.
+- 한계: 데이터 크면 느리고, 파라미터 튜닝에 민감하다.
+
+### 모델 선택 가이드라인
+
+#### **1. 데이터의 상태(조건)에 따른 모델 선택**
+
+내가 가진 데이터가 어떻게 생겼는지에 따라 출발점이 달라진다.
+
+- **"표에 글자(범주형 변수)가 너무 많고, 전처리하기 귀찮아요."**
+    - **CatBoost** 선택!
+    - 범주형 데이터를 내부적으로 가장 완벽하게 처리하며, 기본 성능이 매우 뛰어나다.
+- **"데이터 양이 수십만~수백만 건으로 너무 많아서 컴퓨터가 멈추려고 해요."**
+    - **LightGBM** 선택!
+    - 계산 속도가 압도적으로 빠르고 메모리를 적게 먹기 때문에 대용량 데이터의 구원투수이다.
+- **"데이터 특성(Feature)이 너무 많고, 변수들끼리 서로 얽혀있어요(다중공선성)."**
+    - **ElasticNet** 선택!
+    - 불필요한 변수는 알아서 제거하고, 연관된 변수들은 안정적으로 묶어서 단순한 선형 모델을 만들어준다.
+- **"데이터 양이 적당하고, 일단 안전하게 중간 이상 가는 성능을 뽑고 싶어요."**
+    - **Random Forest** 선택!
+    - 과적합이 잘 일어나지 않고 다루기 가장 무난하여 '기준점(Benchmark)'으로 삼기 좋다.
+- **"성능을 극한으로 끌어올려 데이터 분석 대회에서 우승하고 싶어요."**
+    - **XGBoost** 선택!
+    - 세밀한 튜닝을 통해 예측 성능을 최대한으로 쥐어짜 낼 수 있다.
+
+#### **2. 결과 지표(에러/평가 상태)에 따른 대처 방법**
+
+모델을 돌려보고 나온 결과(오차나 학습 상태)를 보고 다음 단계로 업그레이드하는 방법이다.
+
+**상태 1: 훈련 데이터는 백점인데, 테스트 데이터에선 빵점일 때 (과적합, Overfitting)**
+
+모델이 공부는 안 하고 기출문제 정답만 달달 외운 상태이다. 모델을 더 '단순하고 엄격하게' 만들어야 한다.
+
+- **ElasticNet 처방:** `alpha` 값을 높여서 규제를 더 강하게 주거나, `l1_ratio`를 조정해 불필요한 변수를 더 많이 탈락시킨다.
+- **트리 모델군(RF, XGB, LGBM, CatBoost) 처방:** * 나무가 지나치게 깊게 자라지 않도록 `max_depth`(또는 `depth`)를 줄인다.
+    - 부스팅 모델의 경우 `learning_rate`를 낮추고 트리 개수를 조절한다.
+
+**상태 2: 훈련 데이터든 테스트 데이터든 둘 다 점수가 낮을 때 (과소적합, Underfitting)**
+
+모델이 데이터의 복잡한 패턴을 전혀 잡지 못하고 있는 상태이다. 모델을 더 '똑똑하고 복잡하게' 만들어야 한다.
+
+- **선형 모델(ElasticNet)에서 막혔다면:** 데이터가 직선 형태가 아닐 확률이 높다. 선형 회귀를 포기하고 **Random Forest** 같은 트리 모델로 갈아탄다.
+- **트리 모델군 처방:**  나무가 더 깊게 공부할 수 있도록 `max_depth`를 늘려준다.
+    - 배깅(Random Forest)에서 한계가 왔다면, 오차를 집중 학습하는 부스팅 모델(**XGBoost, LightGBM**)로 체급을 올린다.
+
+**한 눈에 보는 요약 가이드**
+
+| **상황/조건** | **추천 모델** | **조절할 핵심 파라미터** |
+| --- | --- | --- |
+| **텍스트/범주형 데이터가 많음** | `CatBoost` | `depth`, `learning_rate` |
+| **데이터가 너무 많아 속도가 생명** | `LightGBM` | `max_depth`, `learning_rate` |
+| **변수가 너무 많고 얽혀있음** | `ElasticNet` | `alpha`, `l1_ratio` |
+| **가장 무난한 시작점 필요** | `Random Forest` | `n_estimators`, `max_depth` |
+| **정밀한 성능 극대화 필요** | `XGBoost` | `learning_rate`, `max_depth` |
+
+### 회귀알고리즘의 문제해결
+
+**회귀 알고리즘에서 정규화** → 정규화 기법을 통해서 과적합 문제를 방지한다.
+
+**회귀알고리즘에서 변수 선택** 
+→ 과적합을 방지하기 위해 독립변수(특성, 피처)를 선택하거나, 불필요한 특성을 제거하는 것이다.
+
+#### 비교 예제 코드
+
+```python
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+from sklearn.datasets import make_regression
+from sklearn.model_selection import train_test_split
+
+from sklearn.linear_model import LinearRegression, Ridge, Lasso
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.svm import SVR
+
+from sklearn.metrics import mean_squared_error, r2_score
+
+# 간단한 회귀용 데이터 생성
+X, y = make_regression(
+	n_samples=200, 
+	n_features=1, 
+	noise=15, 
+	random_state=42)
+
+# 데이터 분리
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y,
+    test_size=0.2, 
+    random_state=42)
+
+# 사용할 회귀 모델들 정의 : dict
+models = {
+    "Linear": LinearRegression(),
+    "Ridge": Ridge(alpha=1.0),
+    "Lasso": Lasso(alpha=0.1),
+    "Decision Tree": DecisionTreeRegressor(max_depth=3),
+    "Random Forest": RandomForestRegressor(n_estimators=100),
+    "SVR": SVR()
+}
+
+# 3. 학습 및 예측 결과 저장
+results = []
+
+plt.figure(figsize=(12, 8))
+plt.scatter(X_test, y_test, color='gray', alpha=0.5, label="Actual")
+
+for name, model in models.items():
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+    
+    mse = mean_squared_error(y_test, y_pred)
+    r2 = r2_score(y_test, y_pred)
+    
+    results.append({
+        'Model': name,
+        'MSE': mse,
+        'R2': r2
+    })
+    
+    # 예측선 시각화
+    sorted_idx = np.argsort(X_test[:, 0])
+    plt.plot(X_test[sorted_idx], y_pred[sorted_idx], label=name)
+
+plt.rc("font", family="Malgun Gothic")
+plt.rc('axes', unicode_minus=False)
+plt.title("회귀 모델 예측 비교")
+plt.xlabel("X")
+plt.ylabel("y")
+plt.legend()
+plt.grid(True)
+plt.show()
+
+# 4. 모델 성능 비교 출력
+df_results = pd.DataFrame(results).sort_values(by='R2', ascending=False)
+print(df_results)
+
+#            Model          MSE        R2
+# 0         Linear   246.121793  0.968085
+# 2          Lasso   246.499305  0.968036
+# 1          Ridge   248.485451  0.967779
+# 4  Random Forest   444.951018  0.942303
+# 3  Decision Tree   653.587642  0.915249
+# 5            SVR  4789.737580  0.378915
+```
+![1795053187371](image/ml_dl/1795053187371.png)
+
+위 결과 그래프를 보면 선형과 비선형 형식의 그래프를 확인할 수 있다.<br>
+**⇒ Random Forest Regression (랜덤 포레스트 회귀) 가 가장 적합해 보인다. 다만 계단식으로 되어 있어 노이즈에 민감하고 과적합된 듯 보인다.**
+
+| 모델 | 특징 |
+| --- | --- |
+| Linear | 직선, 단순한 선형 모델 |
+| Ridge | 직선, L2 정규화로 과적합 완화 |
+| Lasso | 직선, L1 정규화로 중요하지 않은 계수를 0으로 |
+| Decision Tree | 계단형 곡선, 트리 기반 모델의 특징 |
+| Random Forest | 계단형 곡선, 여러 트리의 평균으로 안정적 |
+| SVR | 완만한 곡선, 마진 내 오차 허용하며 일반화 |
+
+#### 최종 비교
+
+**Linear Regression (또는 Lasso)**
+
+→ 평가 지표 점수가 높은 편이고, 그래프에서 실제 데이터의 추세를 잘 따라 가고 있다.
+
+### 지도학습 - 분류 알고리즘
+
+#### 분류 문제의 개념
+
+- 분류(Classification)
+    - 주어진 데이터를 특정 범주(Category)나 클래스(Class)로 분류하는 작업이다.
+    - 지도학습(Supervised Learning)의 한 유형 → **데이터에 레이블(정답)이 존재**한다.
+    - 모델은 이 레이블을 학습하여 새로운 데이터가 주어졌을 때 올바른 클래스를 예측하도록 훈련된다.
+- 분류의 주요 목표
+    - 정확한 예측: 데이터가 어떤 클래스에 속하는지 최대한 정확히 예측한다.
+    - 실용적 적용: 실제 문제에서 유용한 정보를 제공한다.<br>
+    예: 스팸 필터링 모델은 높은 정확도와 낮은 오탐(False Positive)을 목표로 한다.
+- 분류 문제의 특징
+    - **입력 데이터** - 다양한 특징(feature)을 가진 데이터. ( 예: 이메일 본문의 단어들)
+    - **출력 데이터** - 데이터가 속한 범주 또는 클래스. ( 예: 이메일이 "스팸"인지"스팸 아님"인지)
+    - **클래스 개수**
+        - 이진 분류(Binary Classification)<br>
+        : 두 개의 클래스만 예측한다(예: True/False, 0/1).
+        - 다중 클래스 분류(Multi -Class Classification)<br>
+        : 세 개 이상의 클래스를 예측한다(예: 고양이, 강아지, 새).
+- 분류의 작동 방식
+    1. 데이터 수집 및 전처리
+        - 데이터를 수집하고, 결측값 처리, 스케일링, 정규화 등을 통해 준비한다.
+    2. 모델 학습
+        - 입력 데이터(특징, Features)와 레이블(정답, Labels)을 활용해 모델을 학습시킨다.<br>
+        예: 키와 몸무게를 입력으로 받아 성별을 예측하는 모델.
+    3. 모델 예측
+        - 새로운 데이터가 들어오면 학습한 모델이 예측값을 출력한다.<br>
+        예: "이메일은 스팸이다" 또는 "이 환자는 암이 아니다.“
+    4. 평가
+        - 모델의 예측 결과를 평가하여 성능 지표(정확도, Precision, Recall 등)로 측정한다.
+
+#### 로지스틱 회귀(Logistic Regression)
+
+- 분류 문제를 해결하기 위한 지도 학습 알고리즘이다.
+- 이름에" 회귀"가 포함되어 있지만, 실제로는 연속적인 값을 예측하는 것이 아니라 데이터를 클래스로 분류하는 데 사용한다.
+- 로지스틱 회귀는 **이진 분류 문제**에서 가장 널리 사용되는 기법 중 하나이다.
+- 데이터를 분석하고 특정 데이터가 특정 클래스에 속할 확률을 예측한다.<br>
+    예) 로지스틱 회귀는 "이 이메일이 스팸일 확률이 85%"와 같은 값을 출력하며,
+이 확률에 따라 특정 클래스에 할당한다.
+
+#### 로지스틱 회귀(Logistic Regression)의 작동 원리
+
+1. 선형 회귀의 확장
+- 로지스틱 회귀는 먼저 선형 회귀처럼 데이터를 학습한다.
+- 선형회귀의예측값(연속값)을분류문제에적합하도록변환
+- 문제: 선형회귀는0에서1 사이의확률값을보장하지않음.
+2. 시그모이드함수적용
+- 선형회귀의예측값(z=wX+b)을확률범위인0과1 사이의값으로변환하기위해시그모이드(Sigmoid) 함수를통과시킴
+- 로지스틱회귀는예측값𝑧를**시그모이드함수를사용해0과1 사이의값(확률)으로변환**
+- 시그모이드함수
+    - $$\sigma(z) = \frac{1}{1 + e^{-z}}$$
+𝑧=𝑤1𝑥1+𝑤2𝑥2+⋯+ 𝑤𝑛𝑥𝑛+𝑏 : 입력특징들의가중함.
+시그모이드함수의출력값은항상 **0 ≤ 𝜎(𝑧) ≤ 1**
+3. 클래스결정
+- 시그모이드함수의결과(확률값)가0.5 이상이면1, 그렇지않으면0으로분류→ 임계값변경가능
+
+**핵심 요약: 그래프 기반의 판단 원리**
+![1795055431293](image/ml_dl/1795055431293.png)
+1. 초기 $w, b$ 설정: (S-곡선이 데이터에 잘 맞지 않는다.)
+2. 손실 함수 그래프에서 기울기 계산: 현 위치의 Loss 기울기를 구한다.
+3. 기울기 반대 방향 이동: $w, b$ 값을 조정하여 손실 값이 감소한다.
+4. 최솟값 도달: 최적의 S-곡선(확률 곡선) 완성, 최적의 $w, b$ 확보
+
+#### 로지스틱 회귀(Logistic Regression) 의 학습과정
+
+1. 가설 설정
+    - 입력데이터의특징을선형결합하여𝑧를계산하고, 이를시그모이드함수에통과시켜확률을계산
+- 모델출력ℎ𝜃(𝑥)=𝜎(𝑧)
+2. 손실함수정의
+    - 로지스틱회귀는로그손실함수(Log Loss)를사용
+    - $$J(\theta) = -\frac{1}{m} \sum_{i=1}^{m} [y_i \log(h_\theta(x_i)) + (1 - y_i) \log(1 - h_\theta(x_i))]$$
+    <br>여기서𝑦𝑖 는실제값, ℎ𝜃(𝑥𝑖)는예측값
+    <br>목표: 손실함수값을최소화하여모델성능최적화.
+3. 모델학습
+    - 경사하강법(Gradient Descent)을사용하여가중치와절편값을업데이트.
+    - 모델이점점더정확하게데이터를분류하도록학습.
+
+#### 성능 평가 지표(정확도, Precision, Recall(재현율), F1-Score)
+
+보안에서는 재현율을 주의 깊게 봐야 한다.
+
+- **성능 평가 지표**
+    - 분류 모델의 성능을 평가하기 위해 다양한 평가 지표가 사용
+    - 각각의 지표는 모델의 성능을 다양한 관점에서 분석하며, 특정 문제에 더 적합한 지표를 선택해야 한다.
+    - **혼동 행렬 (Confusion Matrix)**
+        - 모든 평가지표는 혼동행렬(Confusion Matrix)을 기반으로 계산한다.
+    - 지표 종류
+        - 정확도(Accuracy)
+        - 정밀도(Precision)
+        - 재현율(Recall)
+        - F1-Score
+- 혼동(오차) 행렬(Confusion Matrix)
+    | 항목 | 실제 Positive | 실제 Negative |
+    | --- | --- | --- |
+    | 예측 Positive | True Positive (TP) | False Positive (FP) |
+    | 예측 Negative | False Negative (FN) | True Negative (TN) |
+    - 문제 상황
+        - Positive: 암환자(실제 암환자)
+        - Negative: 암이 아닌 환자(실제 암이 아닌 환자)
+        - 모델은 각 환자에 대해 암 여부를 **"양성(Positive)"** 또는 **"음성(Negative)"** 으로 예측
+    - 혼동 행렬 구성 요소
+        - True Positive (TP) : 모델이 암 환자를 암이라고 정확히 예측한 경우
+        - True Negative (TN) : 모델이 암이 아닌 환자를 암이 아니라고 정확히 예측한 경우
+        - False Positive (FP) : (Type I Error)모델이 암이 아닌 환자를 암이라고 잘못 예측한 경우
+        - False Negative (FN): (Type II Error)모델이 암환자를 암이 아니라고 잘못 예측한 경우
+- 모델이100명의환자데이터를예측한결과
+    | 항목 | 실제 Positive | 실제 Negative |
+    | --- | --- | --- |
+    | 예측 Positive | 30 (TP) | 10 (FP) |
+    | 예측 Negative | 10 (FN) | 50 (TN) |
+    - 실제암환자(Positive): 40명
+    - 실제암이아닌사람(Negative): 60명
+    - 모델의예측결과<br>
+        » TP = 30명(암환자40명중30명을정확히예측)<br>
+        » TN = 50명(암이아닌사람60명중50명을정확히예측)<br>
+        » FP = 10명(암이아닌사람60명중10명을암으로잘못예측)<br>
+        » FN = 10명(암환자40명중10명을암이아니라고잘못예측)
+- 정확도(Accuracy)
+    - 정확도는 모델이 올바르게 예측한 비율을 의미한다.<br>
+    $$Accuracy = \frac{TP + TN}{TP + TN + FP + FN} \qquad \frac{30 + 50}{30 + 50 + 10 + 10} = 0.8(80\%)$$
+    - 장점: 전체적인 예측 성능을 간단히 측정할 수 있다.
+    - 단점: **데이터의 클래스 불균형(Positive와 Negative의 비율이 크게 차이날 때)에서 신뢰도가 낮아질 수 있다.**
+    - 예시<br>
+    암진단에서 대부분의 환자가 건강(99%)이라면, 모델이 항상 "건강"이라고 예측해도 99% 정확도를 얻을 수 있지만 이는 의미있는 성능이 아니다.
+- 정밀도(Precision)
+    - 정밀도는 모델이 Positive로 예측한 것들 중에서 실제로 Positive인 비율이다.<br>
+        $$Precision = \frac{TP}{TP + FP} \qquad \frac{30}{30 + 10} = 0.75(75\%)$$
+    - 장점: False Positive를 줄이는 데 중점을 둔다.<br>
+    예: 스팸 필터링에서 정밀도가 높을수록, 스팸이 아닌 이메일을 스팸으로 잘못 분류할 가능성이 낮아진다.
+    - 단점: **Positive 데이터를 놓칠 수 있다(Recall이 낮아질 수 있다).**
+- **재현율**(Recall, Sensitivity, TPR)
+    - **재현율은 실제 Positive 중에서 모델이 Positive로 올바르게 예측한 비율이다.**<br>
+    $$Recall = \frac{TP}{TP + FN} \qquad \frac{30}{30 + 10} = 0.75(75\%)$$
+    - 보안 쪽에서는 재현율을 기준으로 보는 경우가 많다.
+    - 장점: False Negative를 줄이는 데 중점을 둔다.<br>
+    예: **암 진단 모델에서 재현율이 높으면, 암환자를 놓칠 확률이 낮아진다(정밀도가 낮아진다).**
+    - 단점: Positive로 예측하는 경향이 커져 정밀도가 낮아질 수 있다.
+- F1-Score
+    - 정밀도(Precision)와 재현율(Recall)의 조화 평균(Harmonic Mean)으로, 두 지표의 균형을 평가한다.
+    $$F1\text{-}Score = 2 \cdot \frac{Precision \cdot Recall}{Precision + Recall} \qquad 2 \times \frac{0.75 \times 0.75}{0.75 + 0.75} = 0.75(75\%)$$
+    - 장점: 정밀도와 재현율 중 어느 하나에 치우치지 않고, 종합적인 성능 평가를 할 수 있다.
+    - 단점: **클래스 불균형이 심한 데이터에서는 추가적인 분석이 필요하다.**
+- 지표선택기준
+    - 정확도(Accuracy) : 클래스가 균형 잡혀 있을 때 적합하다.
+        - 예: 시험 점수 채점 모델.
+    - 정밀도(Precision) : False Positive가 중요한 경우.
+        - 예: 스팸 이메일 분류(정상 이메일이 스팸으로 분류되면 안 된다).
+    - 재현율(Recall) : False Negative가 중요한 경우.
+        - 예: 암 진단(암 환자를 놓치는 일이 없어야 한다).
+    - F1-Score : 정밀도와 재현율의 균형이 중요할 때.
+        - 예: 자연어 처리에서 키워드 추출.
+
+#### 사이킷런을 이용한 분류 성능 평가 예제
+
+```python
+# 필요한 라이브러리 불러오기
+from sklearn.datasets import load_breast_cancer             # 유방암 데이터셋 로드
+from sklearn.model_selection import train_test_split        # 학습용/테스트용 데이터 분리
+from sklearn.linear_model import LogisticRegression         # 로지스틱 회귀 모델
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix, classification_report    # 평가 지표
+from sklearn import set_config
+set_config(display='text')
+
+# 1. 데이터셋 로드 및 분리
+data = load_breast_cancer()     # 유방암 데이터셋 로드
+X = data.data                   # 특징 데이터(환자의 다양한 세포 정보)
+y = data.target                 # 레이블 데이터(0: 음성, 1: 양성)
+print(f"data.target_names = {data.target_names}")
+
+# 학습용 데이터와 테스트용 데이터로 나누기
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+# test_size=0.2: 데이터의 20%는 테스트용으로 사용
+# random_state=42: 실행할 때마다 동일한 데이터 분리 결과를 얻기 위해 설정
+
+# 2. 로지스틱 회귀 모델 학습
+model = LogisticRegression(max_iter=10000)                  # 로지스틱 회귀 모델 생성(최대 반복 횟수 설정)
+model.fit(X_train, y_train)                                 # 학습 데이터로 모델 훈련
+
+# 3. 테스트 데이터 예측
+y_pred = model.predict(X_test)                              # 테스트 데이터를 사용하여 결과 예측
+
+# 4. 평가 지표 계산
+accuracy = accuracy_score(y_test, y_pred)                   # 정확도 계산
+precision = precision_score(y_test, y_pred, pos_label=0)    # 정밀도 계산
+recall = recall_score(y_test, y_pred, pos_label=0)          # 재현율 계산
+f1 = f1_score(y_test, y_pred, pos_label=0)                  # F1-Score 계산
+
+# 5. 결과 출력
+print("정확도(Accuracy):", accuracy)                        # 정확도 출력
+print("정밀도(Precision):", precision)                      # 정밀도 출력
+print("재현율(Recall):", recall)                            # 재현율 출력
+print("F1-Score:", f1)                                      # F1-Score 출력
+
+# 혼동 행렬 출력
+print("\n혼동 행렬(Confusion Matrix):\n", confusion_matrix(y_test, y_pred))
+# 혼동 행렬을 통해 TP, TN, FP, FN 값 확인
+
+# 분류 보고서 출력
+print("\n분류 보고서(Classification Report):\n", classification_report(y_test, y_pred))
+# Classificatoin Report로 각 클래스에 대한 평가 지표 확인
+
+# data.target_names = ['malignant' 'benign']
+# 정확도(Accuracy): 0.956140350877193
+# 정밀도(Precision): 0.975
+# 재현율(Recall): 0.9069767441860465
+# F1-Score: 0.9397590361445783
+
+# 혼동 행렬(Confusion Matrix):
+#  [[39  4]
+#  [ 1 70]]
+
+# 분류 보고서(Classification Report):
+#                precision    recall  f1-score   support
+
+#            0       0.97      0.91      0.94        43
+#            1       0.95      0.99      0.97        71
+
+#     accuracy                           0.96       114
+#    macro avg       0.96      0.95      0.95       114
+# weighted avg       0.96      0.96      0.96       114
+```
+
+- 지표 값 출력
+    - 정확도: 모델이전체데이터중95%를정확히예측.
+    - 정밀도: 양성으로예측한데이터중94%가실제로양성.
+    - 재현율: 실제양성데이터중98%를정확히양성으로예측.
+    - F1-Score : 정밀도와재현율의조화평균(균형).
+- 혼동 행렬 출력
+    - 39: 실제음성데이터를음성으로예측(TN).
+    - 4 : 실제음성데이터를양성으로잘못예측(FP).
+    - 1 : 실제양성데이터를음성으로잘못예측(FN).
+    - 70: 실제양성데이터를양성으로예측(TP).
+- 분류 보고서 출력
+    - 클래스0(양성)
+    정밀도97%, 재현율91%, F1-Score 94%.
+    - 클래스1(음성)
+    정밀도95%, 재현율99%, F1-Score 97%.
+    - 매크로평균: 각클래스의단순평균.
+    - 가중평균: 클래스비율에따라가중치를둔평균.
+
+#### 데이터 불균형(Data Imbalance) 문제 해결
+
+- 실무에서는 사기 탐지(사기 거래 0.1%), 불량률 진단(불량 0.5%) 등 소수 클래스(Minority Class)의 감지가 훨씬 중요한 경우가 많다.
+- 대처 방안
+- **Class Weight 조절**
+    - 모델 학습 시 소수 클래스의 오차에 대해 더 높은 가중치를 주어 손실을 크게 계산하게 한다(예: class_weight='balanced').
+- **임계값(Threshold) 조절**
+    - 확률 임계값을 0.5가 아닌 0.3 등으로 낮추어 **재현율(Recall)을 극대화**한다.
+- **재샘플링 (Oversampling / Undersampling)**
+    - 오버샘플링 (Oversampling): 양이 적은 소수 클래스의 데이터를 복제하거나 새롭게 생성하여 데이터의 양을 늘리는 방식이다.
+    - 언더샘플링 (Undersampling): 양이 많은 다수 클래스의 데이터를 일부 무작위로 삭제하여 데이터의 양을 줄이는 방식이다.
+    - SMOTE(Synthetic Minority Oversampling Technique) 알고리즘 등으로 소수 클래스의 데이터를 합성해 불균형 비율을 강제로 맞춘다.
+- 대처 방안
+    ```python
+    # class_weight 적용 예시
+    log_reg_balanced = LogisticRegression(class_weight='balanced', max_iter=10000)
+    log_reg_balanced.fit(X_train, y_train)
+    y_pred_balanced = log_reg_balanced.predict(X_test)
+
+    print("Bananced F1-Score:", f1_score(y_test, y_pred_balanced))
+    # Bananced F1-Score: 0.9790209790209791
+    ```
+
+### 모델 성능 향상 - K-최근접 이웃(KNN)
+
+#### K-최근접 이웃(KNN) 알고리즘
+
+- KNN은 지도 학습(Supervised Learning) 알고리즘 중 하나이다.
+- KNN의 핵심 아이디어는 **가까운 데이터가 비슷한 특성을 가진다**는 가정이다.<br>
+→ 새로운 데이터 포인트가 주어졌을 때, 이를 가장 가까운 데이터 포인트들의 그룹(이웃)으로 분류하거나 값을 예측하는데 사용한다.
+- KNN은 간단하지만 매우 효과적인 분류(Classification)와 회귀(Regression) 알고리즘
+- KNN을 언제 사용하면 좋을까?
+- 데이터의 패턴이 비선형적이고 복잡할 때 KNN이 좋은 성능을 보일 수 있다.<br>
+단, 데이터가 많거나 고차원일 경우 성능 저하를 겪을 수 있으므로 이런 경우 차원 축소나 데이터 전처리가 필요하다.
+
+#### KNN의 작동 원리
+
+1. 훈련 데이터 준비
+    - 데이터가 여러 개의 특성(feature)으로 구성되어 있다고 가정한다.
+    - 각각의 데이터는 특정 레이블(label, 정답) 또는 값을 가지고 있다.
+2. 거리 계산
+    - 새로운데이터포인트(예측하려는데이터)와훈련데이터사이의거리를계산
+    → 가장흔히사용하는거리는**유클리드거리(Euclidean Distance)**
+    - 유클리드거리공식
+    $$d = \sqrt{\sum_{i=1}^{n} (x_i - y_i)^2}$$
+    여기서 $x_i$와 $y_i$는 각각 두 점의 $i$-번째 특성 값
+3. K개의 이웃 선택
+    - 가장가까운𝐾개의데이터포인트를선택
+    - 𝐾는미리정해진하이퍼파라미터로, 𝐾의값에따라모델의성능이달라짐
+4. 결과 결정
+    - 분류(Classification)
+        - 선택된𝐾개의이웃중가장많은빈도로나타나는레이블을선택(K는 홀수로 설정해야 한다)<br>
+        → 이를다수결(Majority Voting)이라고함
+    - 회귀(Regression)
+        - 선택된𝐾개의이웃의값을평균을내어예측값을결정
+    
+#### KNN의 주요 특징
+
+- 모델 학습이 필요하지 않는다.
+    - KNN은 훈련과정에서 데이터를 저장하기만 하고, 새로운 데이터가 들어올 때 실시간으로 계산한다.
+    - 이 때문에 Lazy Learning(게으른 학습) 알고리즘이라고도 한다.
+- 단순성
+    - 복잡한 수학적 계산 없이 데이터 간 거리를 비교하여 예측을 수행하므로 이해하고 구현하기
+- 다양한 응용
+    - 분류와 회귀 문제 모두에 사용할 수 있다.
+    - 예시
+        - 분류: 이메일 스팸 탐지, 질병 진단
+        - 회귀: 주택 가격 예측
+
+#### 사이킷런 기반 KNN 예제
+
+```python
+# 1. 필요한 라이브러리 임포트
+from sklearn.datasets import load_iris                              # Iris 데이터셋 로드
+from sklearn.model_selection import train_test_split                # 데이터 분리
+from sklearn.neighbors import KNeighborsClassifier                  # KNN 알고리즘 사용
+from sklearn.metrics import classification_report, accuracy_score   # 성능 평가
+
+# 2. 데이터 로드 및 확인
+iris = load_iris()                                                  # Iris 데이터셋 로드
+X = iris.data                                                       # 특성 데이터(꽃입/꽃받침의 길이와 너비)
+y = iris.target                                                     # 레이블 데이터(품종: Setosa, Versicolor, Virginica)
+
+# 데이터 구조 확인
+print(f"특성 데이터 샘플:\n{X[:5]}")                                  # 처음 5개의 샘플 출력
+print(f"레이블 데이터 샘플:\n{y[:5]}")                                # 처음 5개의 레이블 출력
+
+# 3. 데이터 분리(훈련 세트와 테스트 세트)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# 데이터 분리 결과 확인
+print(f"훈련 데이터 크기: {X_train.shape}")
+print(f"테스트 데이터 크기: {X_test.shape}")
+
+# 4. KNN 모델 생성
+k=3                                                                 # 가장 가까운 이웃의 개수
+knn = KNeighborsClassifier(n_neighbors=k)                           # KNN 분류기 생성
+
+# 5. 모델 학습
+knn.fit(X_train, y_train)                                           # 훈련 데이터로 모델 학습
+
+# 6. 모델 평가
+y_pred = knn.predict(X_test)    # 테스트 데이터 예측
+accuracy = accuracy_score(y_test, y_pred)       # 정확도 계산
+print(f"KNN 모델 정확도(K={k}): {accuracy * 100:.2f}%")
+
+# 분류 성능 세부 보고서 출력
+print("\n분류 보고서:")
+print(classification_report(y_test, y_pred, target_names=iris.target_names))
+
+# 7. 새로운 데이터 예측
+new_data = [[5.0, 3.5, 1.3, 0.3]]   # 예측할 새로운 데이터(꽃잎/꽃받침 크기)
+prediction = knn.predict(new_data)  # 예측
+predicted_class = iris.target_names[prediction][0]  # 예측된 품종 이름
+print(f"\n새로운 데이터 {new_data}의 예측 결과: {predicted_class}")
+
+# 특성 데이터 샘플:
+# [[5.1 3.5 1.4 0.2]
+#  [4.9 3.  1.4 0.2]
+#  [4.7 3.2 1.3 0.2]
+#  [4.6 3.1 1.5 0.2]
+#  [5.  3.6 1.4 0.2]]
+# 레이블 데이터 샘플:
+# [0 0 0 0 0]
+# 훈련 데이터 크기: (120, 4)
+# 테스트 데이터 크기: (30, 4)
+# KNN 모델 정확도(K=3): 100.00%
+
+# 분류 보고서:
+#               precision    recall  f1-score   support
+
+#       setosa       1.00      1.00      1.00        10
+#   versicolor       1.00      1.00      1.00         9
+#    virginica       1.00      1.00      1.00        11
+
+#     accuracy                           1.00        30
+#    macro avg       1.00      1.00      1.00        30
+# weighted avg       1.00      1.00      1.00        30
+
+
+# 새로운 데이터 [[5.0, 3.5, 1.3, 0.3]]의 예측 결과: setosa
+```
+
+- 데이터 요약훈련
+    - 데이터: 120개샘플, 4개의특징(꽃받침길이/너비, 꽃잎길이/너비).
+    - 테스트데이터: 30개샘플.
+    - 레이블: [0, 1, 2] 각각setosa, versicolor, virginica를나타냄.
+- KNN 모델 성능
+    - 정확도(Accuracy): 100% (테스트데이터30개모두정확히분류).
+- 분류 보고서 출력
+    - Precision (정밀도): 모든클래스1.00.
+    - Recall (재현율): 모든클래스1.00.
+    - F1-Score: 모든클래스1.00.
+    - Support:setosa: 10개, versicolor: 9개, virginica: 11개.
+- 새로운 데이터 예측
+    - 입력데이터를setosa로정확히예측.
+
+
+#### K값의 선택과 영향
+
+K-회귀, 분류로 찾을 수 있다.
+- 회귀: k개의 이웃을 찾고 각 값의 평균을 반환한다.
+- 분류: k개의 이웃을 찾고 빈도수를 확인하여 가장 많이 발견되는 클래스를 반환한다.
+
+- KNN 알고리즘에서𝐾 값은매우중요한하이퍼파라미터
+    - 𝐾 는모델이예측을할때고려하는가장가까운이웃의수를의미
+    - 𝐾 값의선택은모델의성능에큰영향을미침
+    - 𝐾 는새로운데이터포인트가주어졌을때, 이데이터와가장가까운𝐾개의데이터포인트를기반으로예측을수행
+        - 예<br>
+            𝐾=1: 가장가까운하나의이웃만보고결정.<br>
+            𝐾=3: 가장가까운3개의이웃을보고다수결로결정.
+- K 값이작을때의영향
+    - 장점
+        - 모델이데이터의세부적인패턴을잘잡아냄
+        - 국소적(local) 특징에민감하므로복잡한데이터를처리하는데적합
+    - 단점
+        - 과적합(Overfitting) 위험이증가
+        - 노이즈(잘못된데이터)에의해결과가영향을받을가능성이큼
+        - 작은데이터변화에도모델의결과가달라질수있음
+-  K 값선택시고려사항
+    - 데이터의 크기
+        - 작은데이터셋: 𝐾 값을작게 설정하는것이적합. 예: 데이터가50개라면 𝐾=3 또는𝐾=5
+        - 큰데이터셋: 𝐾 값을더 크게 설정해도됨. 예: 데이터가수천개라면𝐾=15 또는𝐾=20
+    - 홀수 값의 선택
+        - 𝐾는보통홀수로설정하는것이좋음 → 이는동률(Tie)을방지하기위함
+        - 클래스가2개일때𝐾가짝수라면결과가모호해질수있음
+    - 성능 평가를 위한 테스트교차 검증(Cross Validation)
+        - 다양한𝐾 값을시도하면서모델성능(정확도)을비교하여최적의𝐾 값을선택
+        - 과적합과과소적합사이에서적절한균형을찾을수있음
+
+#### K값 선택 실습 코드(사이킷런)
+
+```python
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score
+
+# 1. 데이터 로드 및 분리
+iris = load_iris()
+X_train, X_test, y_train, y_test = train_test_split(iris.data, iris.target, test_size=0.2, random_state=42)
+
+# 2. K값에 따른 정확도 비교
+accuracies = {} # K 값 별 정확도를 저장할 딕셔너리
+
+for k in range(1, 21): # K 값을 1부터 20까지 테스트
+    knn = KNeighborsClassifier(n_neighbors=k)   # KNN 모델 생성
+    knn.fit(X_train, y_train)                   # 모델 학습
+    y_pred = knn.predict(X_test)                # 예측
+    accuracy = accuracy_score(y_test, y_pred)   # 정확도 계산
+    accuracies[k] = accuracy                    # K 값별 정확도 저장
+
+# 3. 결과 출력
+for k, acc in accuracies.items():
+    print(f"K={k}: 정확도={acc * 100:.2f}%")
+
+# 4. 최적의 K값 찾기
+best_k = max(accuracies, key=accuracies.get)    # 정확도가 가장 높은 K값
+print(f"\n최적의 K 값: {best_k}, 정확도: {accuracies[best_k] * 100:.2f}%")
+
+# K=1: 정확도=100.00%
+# K=2: 정확도=100.00%
+# K=3: 정확도=100.00%
+# K=4: 정확도=100.00%
+# K=5: 정확도=100.00%
+# K=6: 정확도=100.00%
+# K=7: 정확도=96.67%
+# K=8: 정확도=100.00%
+# K=9: 정확도=100.00%
+# K=10: 정확도=100.00%
+# K=11: 정확도=100.00%
+# K=12: 정확도=100.00%
+# K=13: 정확도=100.00%
+# K=14: 정확도=100.00%
+# K=15: 정확도=100.00%
+# K=16: 정확도=100.00%
+# K=17: 정확도=100.00%
+# K=18: 정확도=100.00%
+# K=19: 정확도=100.00%
+# K=20: 정확도=100.00%
+
+# 최적의 K 값: 1, 정확도: 100.00%
+```
+
+#### 모델의 성능 향상 및 하이퍼파라미터 튜닝
+
+- 모델의 성능 향상 및 하이퍼파라미터 튜닝
+    - KNN 알고리즘의 성능은 다양한 요소에 의해 영향을 받는다.<br>
+        → 성능을 최적화하려면 데이터 전처리, 거리 계산 방식, 그리고 하이퍼파라미터(특히 𝐾 값과 거리 계산 방식)를 신중히 조정해야 한다.
+- 모델 성능 향상 방법
+    - 데이터 전처리<br>
+        스케일링, 이상치 제거, 특성 선택.
+    - 거리 계산 방식<br>
+        유클리드, 맨해튼, 민코프스키등을 데이터 특성에 맞게 선택한다.
+    - 하이퍼파라미터 튜닝<br>
+        최적의 𝐾 값을 교차 검증으로 선택한다. 가중치를 부여하여 더 나은 성능을 도출할 수 있다.
+
+#### 모델의 성능 향상 및 하이퍼파라미터 튜닝 예제
+
+```python
+# 1. 필요한 라이브러리 임포트
+from sklearn.datasets import load_iris                                      # Iris 데이터셋 로드
+from sklearn.model_selection import train_test_split, cross_val_score       # 데이터 분리 및 교차 검증
+from sklearn.neighbors import KNeighborsClassifier                          # KNN 알고리즘 사용
+from sklearn.preprocessing import StandardScaler                            # 데이터 스케일링
+from sklearn.metrics import accuracy_score, classification_report           # 성능 평가
+
+# 2. 데이터 로드 및 분리
+iris = load_iris()      # Iris 데이터셋 로드
+X = iris.data   # 특성 데이터(꽃잎/꽃받침의 길이와 너비)
+y = iris.target # 레이블 데이터(품종: Setosa, Versicolor, Virginica)
+
+# 훈련 세트와 테스트 세트로 데이터 분리(80% 훈련, 20% 테스트)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# 3. 데이터 스케일링(KNN은 거리 기반 알고리즘이므로 중요)
+scaler = StandardScaler()   # 스케일러 생성
+X_train_scaled = scaler.fit_transform(X_train)                              # 훈련 데이터 스케일링
+X_test_scaled = scaler.transform(X_test)                                    # 테스트 데이터 스케일링
+
+# 4. K값 튜닝(교차 검증 사용)
+best_k = 1                                                                  # 최적의 K값 초기화
+best_score = 0                                                              # 최적의 정확도 초기화  
+
+# 다양한 K값을 테스트하며 최적의 K 값 찾기
+for k in range(1, 21):                                                      # K=1부터 K=20까지 테스트
+    knn = KNeighborsClassifier(n_neighbors=k)                               # KNN 모델 생성
+    scores = cross_val_score(knn, X_train_scaled, y_train, cv=5)            # 5-fold 교차 검증
+    mean_score = scores.mean()                                              # 교차 검증 정확도의 평균
+    if mean_score > best_score:                                             # 가장 높은 정확도를 갱신
+        best_k = k
+        best_score = mean_score
+
+print(f"최적의 K 값: {best_k}, 교차 검증 정확도: {best_score * 100:.2f}%")
+
+# 5. 거리 계산 방식 변경 및 가중치 추가
+# 최적의 K값과 다른 거리 계산 앙식을 사용하여 모델 생성
+final_knn = KNeighborsClassifier(n_neighbors=best_k, weights='distance', metric='manhattan')
+final_knn.fit(X_train_scaled, y_train)  # 최적의 하이퍼파라미터로 모델 학습
+
+# 6. 최적화된 모델 평가
+y_pred = final_knn.predict(X_test_scaled)                                   # 테스트 데이터로 예측
+accuracy = accuracy_score(y_test, y_pred)                                   # 정확도 계산
+print(f"최적화된 KNN 모델 정확도: {accuracy * 100:.2f}%")
+# 세부적인 성능 보고서 출력
+print("\n분류 보고서:")
+print(classification_report(y_test, y_pred, target_names=iris.target_names))
+
+# 7. 새로운 데이터 예측
+new_data = [[5.0, 3.5, 1.3, 0.3]]                                           # 예측할 새로운 데이터(꽃잎/꽃받침 크기)
+new_data_scaled = scaler.transform(new_data)                                # 새로운 데이터 스케일링
+prediction = final_knn.predict(new_data_scaled)                             # 예측
+predicted_class = iris.target_names[prediction][0]                          # 예측된 품종 이름
+print(f"\n새로운 데이터 {new_data}의 예측 결과: {predicted_class}")
+
+# 최적의 K 값: 3, 교차 검증 정확도: 95.00%
+# 최적화된 KNN 모델 정확도: 100.00%
+
+# 분류 보고서:
+#               precision    recall  f1-score   support
+
+#       setosa       1.00      1.00      1.00        10
+#   versicolor       1.00      1.00      1.00         9
+#    virginica       1.00      1.00      1.00        11
+
+#     accuracy                           1.00        30
+#    macro avg       1.00      1.00      1.00        30
+# weighted avg       1.00      1.00      1.00        30
+
+
+# 새로운 데이터 [[5.0, 3.5, 1.3, 0.3]]의 예측 결과: setosa
+```
