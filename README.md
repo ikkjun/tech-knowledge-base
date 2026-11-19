@@ -44,3 +44,4 @@ A personal archive of technical reading, system/security training, and engineeri
 | 2026.11.16 | `Vuln` | [“쌓여있는 메일, 24시간 뒤 삭제"... 마이크로소프트 365 장애 틈탄 피싱 메일 기승](/news/2026/11/ms365_outage_phishing.md) | 보안뉴스 | 마이크로소프트 365 장애, 피싱(Phishing), 익스체인지 온라인, 센드그리드(SendGrid) 우회 |
 | 2026.11.17 | `Vuln` | [[긴급] PHP2Shell 이어 이번엔 'Node2Shell'...Node.js 치명적 취약점, 인증 없이 서버 장악 위험](/news/2026/10/node2shell_vulnerability.md) | 데일리시큐 | Node2Shell(CVE-2026-111497), 브로틀리(Brotli) 압축, 메모리 손상, Express 5 |
 | 2026.11.18 | `Vuln` | [[자바 취약점 비상] “패치 나와도 어디 깔렸는지 모른다”... ‘자바4셸’이 드러낸 오픈소스 공급망 사각지대](/news/2026/11/java4shell_supply_chain_blindspot.md) | 보안뉴스 | 자바4셸(CVE-2026-114938), JVM, 내장형 자바, SBOM, OBOM |
+| 2026.11.19 | `Vuln` | [[긴급] “로그인 없이 서버에서 코드 실행"...티오리·Xint, 엔진엑스 취약점 5건 공개](/news/2026/11/nginx2root_vulnerability.md) | 데일리시큐 | NGINX2Root, CVE-2026-123007, HTTP/2, AI 취약점 분석 |
