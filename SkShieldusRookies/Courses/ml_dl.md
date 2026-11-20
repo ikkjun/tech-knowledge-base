@@ -5,6 +5,7 @@
 - [2. 기초통계와 데이터과학](#statistics_and_data_science)
 - [3. 데이터 전처리](#data-preprocessing)
 - [4. 머신러닝 기초 - 지도학습](#machine-learning-basic-supervised)
+- [5. 머신러닝 기초 - 비지도학습](#machine-learning-basic-unsupervised)
 
 ## 📌 질문  모음
 1. [connect와 cursor 객체의 차이점은 무엇일까?](#q-cursor-connect-difference)
@@ -1784,8 +1785,8 @@ sns.pairplot(data)
 - 목적: 여러 변수 간의 상관관계를 확인
 - 사용 사례: 학생들의 시험 점수 데이터에서 과목 간 상관관계를 확인.
 - 학생 점수 상관관계
-    - 현재 데이터에서는 과목 간 상관관계가 제한적이며, 영어와 과학의 상관관계(1)는 데이터 패턴의 제한된 특성에서 비롯된 것
-    -  보다 신뢰성 있는 결론을 위해 데이터의 크기와 다양성을 확장하고 이상치를 처리하는 과정이 필요
+    - 현재 데이터에서는 과목 간 상관관계가 제한적이며, 영어와 과학의 상관관계(1)는 데이터 패턴의 제한된 특성에서 비롯된 것이다.
+    -  보다 신뢰성 있는 결론을 위해 데이터의 크기와 다양성을 확장하고 이상치를 처리하는 과정이 필요하다.
         ```python
         # 데이터 생성
         data = pd.DataFrame({
@@ -1806,31 +1807,31 @@ sns.pairplot(data)
         ```
         ![1794808223703](image/ml_dl/1794808223703.png)
 - 데이터 해석
-    - Math(수학)는다른과목과거의독립적
-    - Math-English 상관계수0.014는 수학 점수와 영어 점수 간의 관계가 거의 없음을 의미
-    - Math-Science 상관계수0.083은 약간의 양의 상관관계를 보여주지만, 실제 데이터 상에서는 거의 무시할 만한 수준
+    - Math(수학)는 다른 과목과 거의 독립적이다.
+    - Math-English 상관계수 0.014는 수학 점수와 영어 점수 간의 관계가 거의 없음을 의미한다.
+    - Math-Science 상관계수 0.083은 약간의 양의 상관관계를 보여주지만, 실제 데이터 상에서는 거의 무시할 만한 수준이다.
     - English(영어)와 Science(과학)는 상관계수가 1로 동일한 값을 갖는다.  이는 두 과목 점수가 동일한 패턴을 보이거나 데이터 자체에서 값들이 강하게 일치한 결과로 나타났을 가능성이 크다.
 
-#### 페어플롯 (Pair Plot)
+#### 페어플롯(Pair Plot)
 
-    - 변수 간 관계를 한 눈에 확인
-    - 데이터셋의 모든 수치형 변수 간의 관계를 시각화
-    - 사용 사례: 주택 데이터 분석
-        - 방 개수가 많을수록 면적이 커지고, 가격도 높아지는 경향을 관찰할 수 있다.
-        ```python
-        # 데이터
-        data = pd.DataFrame({
-            'Area': [50, 60, 70, 80, 90],
-            'Rooms': [1, 2, 3, 3, 4],
-            'Price': [200, 250, 300, 350, 400]
-        })
+- 변수 간 관계를 한 눈에 확인
+- 데이터셋의 모든 수치형 변수 간의 관계를 시각화
+- 사용 사례: 주택 데이터 분석
+    - 방 개수가 많을수록 면적이 커지고, 가격도 높아지는 경향을 관찰할 수 있다.
+    ```python
+    # 데이터
+    data = pd.DataFrame({
+        'Area': [50, 60, 70, 80, 90],
+        'Rooms': [1, 2, 3, 3, 4],
+        'Price': [200, 250, 300, 350, 400]
+    })
 
-        # 페어플롯 생성
-        sns.pairplot(data)
-        plt.suptitle("주택 데이터 변수 간 관계", y=1.02)
-        plt.show()
-        ```
-        ![1794808545980](image/ml_dl/1794808545980.png)
+    # 페어플롯 생성
+    sns.pairplot(data)
+    plt.suptitle("주택 데이터 변수 간 관계", y=1.02)
+    plt.show()
+    ```
+    ![1794808545980](image/ml_dl/1794808545980.png)
 
 #### 카운트플롯(Count Plot)
 
@@ -1865,6 +1866,7 @@ sns.pairplot(data)
 
 - 상관계수(Pearson Correlation Coefficient, r)란?
     - **"두 변수가 단위와 관계없이 얼마나 일정한 직선(선형) 방향으로 함께 움직이는가?"**
+    
     $$ r = \frac{cov(x,y)}{s_x \cdot s_y} = \frac{\sum(x_i - \bar{x})(y_i - \bar{y})}{(n-1) \cdot s_x \cdot s_y} $$
     - 값의 범위: −1.0 ≤𝑟≤+1.0
         - 𝑟>0: 양의 상관(한쪽이 커지면 다른 쪽도 커짐)
@@ -4267,3 +4269,210 @@ print(f"\n새로운 데이터 {new_data}의 예측 결과: {predicted_class}")
 | **Naive Bayes** | 조건부 확률 기반의 간단한 분류기.<br>각 특성이 독립이라는 전제를 가짐.<br>학습과 예측이 매우 빠름.<br>텍스트 분류(스팸 필터 등)에 강점. |
 | **Decision Tree** | 조건 분기 구조를 사용한 규칙 기반 모델.<br>시각화 및 해석이 쉬움.<br>과적합 가능성이 크고 일반화 성능이 낮을 수 있음. |
 | **Logistic Regression** | 확률 기반의 선형 분류기.<br>결정 경계가 선형일 때 빠르고 해석이 쉬움.<br>복잡한 데이터(비선형)에 약함. |
+
+## <a id="machine-learning-basic-unsupervised"></a>5. 머신러닝 기초 - 비지도학습
+
+### 비지도학습 소개
+
+#### 머신러닝 비지도학습의 정의와 활용 분야
+
+- **비지도학습**
+    - 비지도학습은 정답(레이블)이 없는 데이터를 기반으로 학습하는 머신러닝의 한 방법이다.
+        - 데이터의 목표 변수(정답 라벨y) 없이, 오직 **특성 데이터(X)의 분포 패턴, 군집 상태, 상관관계를 기반으로 데이터 내부의 숨겨진 구조와 규칙성을 스스로 분석해내는 방법론**이다.
+    - 입력 데이터에 포함된 숨겨진 패턴이나 데이터의 구조를 파악하는데 초점을 맞춘다.<br>
+        → 즉, 모델이 데이터를 보고 스스로 규칙을 발견하거나 데이터를 특정 기준에 따라 그룹으로 나누는 것이다.
+        - 지도학습: "이 데이터는 고양이야" 같은 정답이 주어진 상태에서 학습한다.
+        - 비지도학습: "이 데이터들이 어떻게 나뉠 수 있을까?"를 스스로 학습한다.
+- **비지도학습의 활용 분야**
+    - **군집화(Clustering)**: 데이터들을 비슷한 특성을 가진 그룹으로 묶는 작업이다.
+        - 고객 구매 행동 패턴에 기반한 **세그먼트 분류**, **이상탐지(Anomaly Detection)**, 문서 주제별 자동 분류
+    - **차원 축소(Dimensionality Reduction)**: 데이터를 더 간결하고 유용한 형태로 변환한다.
+        - 데이터 시각화, 노이즈 제거, 데이터 압축
+    - **이상치 탐지(Anomaly Detection)**: 정상적인 패턴에서 벗어나는 데이터(이상치)를 탐지
+        - 신용카드 사기 탐지, 기계 고장 예측
+    - **추천 시스템(Recommendation System)**: 비슷한 데이터를 기반으로 사용자에게 추천을 제공한다.
+        - 영화 추천, 상품 추천
+
+#### 지도학습과 비지도학습의 차이점
+
+- 학습데이터
+    - 지도학습: 데이터에 정답(레이블)이 포함되어 있다.
+        - 예를 들어, 사진 데이터에 "고양이", "강아지"라는 라벨이 붙어 있다.
+        - 목적: 예측이 목적이다. 입력 데이터와 정답 사이의 관계를 학습하여, 새 데이터를 예측한다.
+    - 비지도학습: **데이터에 레이블이 없다**.
+        - 데이터만 제공되고, 모델이 데이터를 스스로 분석하고 *숨겨진 패턴을 발견*한다.
+        - 목적: 탐색이 목적이다. 입력 데이터의 구조나 그룹화를 파악한다.
+- 활용 관점에서 본 차이점
+    | 구분 | 지도학습 | 비지도학습 |
+    | :--- | :--- | :--- |
+    | **레이블 유무** | 정답(레이블)이 제공됨 | 레이블 없이 입력 데이터만 제공됨 |
+    | **데이터 구조 이해** | 데이터-정답 관계 학습 | 데이터 간의 패턴과 관계를 스스로 파악 |
+    | **결과물** | 새로운 데이터의 정답 예측 | 데이터의 그룹, 축소된 데이터 표현. |
+    | **적용 사례** | 예측 모델<br>(스팸 이메일 분류, 가격 예측) | 데이터 탐색<br>(고객 세분화, 시각화). |
+
+#### 비지도학습의 주요 기법: 군집화와 차원 축소
+
+- 군집화(Clustering)
+    - **K-Means**, Hierarchical Clustering, **DBSCAN (Density-Based Spatial Clustering of Applications with Noise)**
+- 차원축소(Dimensionality Reduction)
+    - **PCA (Principal Component Analysis)**, t-SNE (t-Distributed Stochastic Neighbor Embedding), UMAP (Uniform
+Manifold Approximation and Projection)
+- 이상치탐지(Anomaly Detection)
+    - **Isolation Forest**, LOF (Local Outlier Factor), **Autoencoder**
+
+### 군집화(Clustering) 기초
+
+#### 군집화의 개념과 활용 (고객 세분화, 이미지 세그멘테이션 등)
+
+- **군집화(Clustering)**
+    - 군집화는 주어진 데이터에서 유사한 특성을 가진  데이터  포인트들을        그룹으로 묶는 것이다.
+        - 이때 각 그룹을 **클러스터(Cluster)** 라고 한다.
+        - 데이터를 사전에 분류하지 않고, 데이터를 살펴보며 그룹을 형성한다.
+    - 군집화의 주요 목표
+        - 데이터 구조 파악: 데이터를 시각화하거나 그룹화하여 숨겨진 패턴을 발견한다.
+        - 유사성 기반 그룹화: 데이터 포인트들 간의 유사성을 기준으로 분류하여 각 그룹이 내포하는 의미를 이해한다.
+    - 군집화의 작동 방식
+    - 유사성 측정: 데이터 포인트 간의 유사성을 측정하기 위해 거리 계산(예: 유클리드 거리)을 사용한다.
+    - 그룹화: 유사한 데이터 포인트들을 같은 그룹으로 묶는다.
+- 군집화(Clustering) 의활용
+    - 고객 세분화(Customer Segmentation)
+        - 고객 데이터를 분석하여 유사한 구매 패턴, 관심사, 행동을 가진 그룹으로 나눈다.
+        - 효과: 각 그룹에 맞는 마케팅 전략을 세우고, 고객 만족도를 높일 수 있다.
+            - 자주 구매하는 고객 그룹(충성 고객)
+            - 할인에 민감한 고객 그룹
+            - 특정 상품에 집중하는 고객 그룹
+    - 이미지 세그멘테이션(Image Segmentation)
+        - 이미지의 픽셀을 비슷한 색상이나 질감을 가진 영역으로 나눈다.
+        - 효과: 물체 탐지, 의료 영상 분석, 자율주행차의 객체 인식 등에 활용한다.
+            - CT 스캔 이미지에서 장기와 조직 분리
+            - 위성 이미지에서 건물, 숲, 강 구분
+    - 문서 분류 및 정보 검색
+        - 문서를 주제별로 그룹화하여 검색 및 추천 시스템에 활용한다.
+        - 효과: 효율적인 데이터 관리와 검색 결과를 개선한다.
+        - 뉴스 기사 데이터를 스포츠, 정치, 기술 등으로 자동 분류한다.
+    - 이상치 탐지(Anomaly Detection)
+        - 대부분의 데이터와 크게 다른 이상 데이터를 감지한다.
+        - 효과: 금융 사기 탐지, 네트워크 보안 등에 활용한다.
+        - 정상적인 거래와 사기 거래 구분하거나 네트워크에서 비정상적인 패킷을 탐지한다.
+    - 추천 시스템(Recommendation System)
+        - 유사한 관심사나 행동 패턴을 가진 사용자들을 그룹화하여 추천 항목을 생성한다.
+        - 효과: 사용자 맞춤형 추천으로 사용자 만족도가 증가한다.
+        - 음악 추천(스포티파이, 유튜브), 상품 추천(아마존, 쿠팡)
+
+#### K-Means 알고리즘 원리와 적용
+
+- **K-Means 알고리즘**
+    - 데이터를 사전에 정의된 K개의 군집(Cluster)으로 묶는 대표적인 거리 기반 군집화 알고리즘이다.
+    - K-Means는 데이터 군집화에서 가장 널리 사용되는 알고리즘 중 하나이다.
+    - 주어진 데이터를 K개의 클러스터로 나누는 비지도 학습 방법이다.<br>
+        → 반복적이고 간단한 방식으로 데이터를 그룹화하며, 각 클러스터는 하나의 중심(centroid)으로 설정한다.
+    - 활용
+        - **고객 세분화** : 고객 데이터를 K-Means로 클러스터링 하여, 비슷한 소비 행동을 가진 그룹으로 분류한다.
+            - 예: 충성 고객, 신규 고객, 할인 선호 고객 그룹화.
+        - **이미지 압축** : K-Means로 픽셀 색상을 클러스터링하여 주요 색상만 유지한다.
+        - **문서 분류** : 텍스트 데이터를 클러스터링하여 문서를 주제별로 분류한다.
+- **K-Means 알고리즘의 원리**
+    1. 초기 클러스터 중심(Centroid) 설정
+        - 클러스터의 개수 K를 사용자가 미리 설정, 초기 클러스터 중심은 무작위로 설정하거나 데이터를 기반으로 선택한다.
+    2. 데이터 포인트(군집) 할당(Assignment)
+        - 각 데이터 포인트를 가장 가까운 클러스터 중심에 할당 → 가까운 중심에 속하는 데이터 포인트들이 하나의 클러스터를 형성한다.
+        - 데이터 포인트와 클러스터 중심 사이의 거리는 일반적으로 유클리드 거리(Euclidean Distance)를 사용하여 계산한다.
+    3. 클러스터 중심 재계산(Update)
+        - 각 클러스터에 속한 데이터 포인트들의 평균 위치를 계산하여 새로운 클러스터 중심으로 설정한다.<br>
+        여기서 $xi$는 클러스터 내 데이터 포인트, $n$은 데이터 포인트의 개수
+    4. 반복
+        - 데이터 포인트를 다시 가장 가까운 클러스터 중심에 할당하고, 클러스터 중심을 재계산한다.
+        - 클러스터 중심이 더 이상 변하지 않거나(수렴), 최대 반복 횟수에 도달하면 알고리즘이 종료한다.
+- **K-Means 알고리즘의 적용**
+    1. 데이터 준비
+        - 군집화를 수행할 데이터 준비 및 정규화(데이터의 크기가 클 경우 정규화가 중요).
+    2. K 값 선택
+        - 원하는 클러스터 개수 𝐾를 결정한다.
+    3. 알고리즘 실행
+        - K-Means 알고리즘을 적용하여 데이터를 클러스터링한다.
+    4. 결과 평가 및 시각화
+        - 각 클러스터의 품질을 평가하고, 시각적으로 확인한다.
+
+#### 클러스터 수(k) 선택 방법
+
+- **K 값 선택 방법**
+    - 엘보우 방법(Elbow Method)를통해최적의𝐾 값을선택
+        - 여러 𝐾 값에 대해 K-Means를 실행하고, 각 경우의 클러스터 내 데이터의 거리 합(WCSS, Within-Cluster Sum of Squares)을 계산한다.
+        - 𝐾 값에 따른 WCSS를 그래프로 그려, 그래프의 기울기가 급격히 완화되는 지점(엘보우 포인트)에서 최적의 𝐾를 선택한다.
+            - Inertia (군집 내 오차 제곱합)<br>
+            » 각 데이터 포인트와 해당 군집의 중심점 간 거리를 제곱하여 모두 합산한 수치이다.
+            - 군집 수 K가 커질수록 Inertia는 지속적으로 감소하지만, 군집이 데이터 구조에 비해 과도하게 쪼개지면 감소 폭이 둔화된다.
+            - 팔꿈치(Elbow)처럼 그래프가 꺾여 Inertia 감소율이 급격히 줄어드는 지점이 최적의 군집 수 K를 의미한다.
+
+                ```python
+                # 필요한 라이브러리 import
+                import numpy as np
+                import matplotlib.pyplot as plt
+                from sklearn.cluster import KMeans
+                from sklearn.datasets import make_blobs
+
+                # 1. 데이터 생성
+                # make_blobs: 군집화에 적합한 샘플 데이터를 생성하는 함수
+                # n_samples: 데이터 포인트 수, centers: 클러스터 수, random_state: 재현성을 위한 시드값
+                n_samples = 300
+                n_clusters = 3
+                X, y = make_blobs(n_samples=n_samples, centers=n_clusters, cluster_std=1.0, random_state=42)
+
+                # 2. 데이터 시각화(군집화 전)
+                plt.scatter(X[:, 0], X[:, 1], s=30, c='grey', label="Original Data")
+                plt.title("Data before Clustering")
+                plt.xlabel("Feature 1")
+                plt.ylabel("Feature 2")
+                plt.legend()
+                plt.show()
+
+                # 3. K-Means 모델 생성 및 학습
+                # KMeans 클래스: 사이킷런에서 제공하는 K-Means 구현
+                # n_clusters: 클러스터 개수, random_state: 결과 재현성을 위한 시드값
+                kmeans = KMeans(n_clusters=n_clusters, random_state=42)
+
+                # fit_predict: 데이터를 클러스터링하고 각 데이터 포인트의 클러스터 레이블을 반환한다.
+                cluster_labels = kmeans.fit_predict(X)
+
+                # 4. 군집화 결과 시각화
+                # 각 데이터 포인트의 클러스터에 따라 색을 지정한다.
+                plt.scatter(X[:, 0], X[:, 1], c=cluster_labels, cmap='viridis', s=30, label="Clusterd Data")
+                # 클러스터 중심 시각화
+                plt.scatter(kmeans.cluster_centers_[:,0], kmeans.cluster_centers_[:,1], s=200, c='red', label='Centroids', marker='X')
+                plt.title('Data after Clustering')
+                plt.xlabel("Feature 1")
+                plt.ylabel("Feature 2")
+                plt.legend()
+                plt.show()
+
+                # 5. 모델 세부 정보 확인
+                # kmeans.cluster_centers_: 클러스터 중심 좌표
+                # kmeans.inertia_: 클러스터 내 거리 합(WCSS)
+                print("Cluster Centers:\n", kmeans.cluster_centers_)
+                print("Inertia(WCSS):", kmeans.inertia_)
+
+                # Cluster Centers:
+                #  [[-2.63323268  9.04356978]
+                #  [-6.88387179 -6.98398415]
+                #  [ 4.74710337  2.01059427]]
+                # Inertia(WCSS): 566.8595511244131
+
+                # 6. 최적의 K 값을 찾기 위한 엘보우 방법(추가 분석)
+                # 다양한 K 값에 대한 Inertia 계산
+                wcss = []
+                K_range = range(1, 10)
+                for k in K_range:
+                    kmeans_temp = KMeans(n_clusters=k, init='k-means++', random_state=42)
+                    kmeans_temp.fit(X)
+                    wcss.append(kmeans_temp.inertia_)
+
+                # 엘보우 그래프 그리기
+                plt.plot(K_range, wcss, marker='o')
+                plt.title("Elbow Method for Optimal K")
+                plt.xlabel("Number of Clusters(K)")
+                plt.ylabel("WCSS(Within-Cluster Sum of Squares)")
+                plt.show()
+                ```
+                ![1795142884689](image/ml_dl/1795142884689.png)
+                ![1795142893281](image/ml_dl/1795142893281.png)
+                ![1795142898751](image/ml_dl/1795142898751.png)
