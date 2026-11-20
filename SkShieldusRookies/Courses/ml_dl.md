@@ -1866,8 +1866,11 @@ sns.pairplot(data)
 
 - 상관계수(Pearson Correlation Coefficient, r)란?
     - **"두 변수가 단위와 관계없이 얼마나 일정한 직선(선형) 방향으로 함께 움직이는가?"**
-    
-    $$ r = \frac{cov(x,y)}{s_x \cdot s_y} = \frac{\sum(x_i - \bar{x})(y_i - \bar{y})}{(n-1) \cdot s_x \cdot s_y} $$
+
+    $$
+    r = \frac{cov(x,y)}{s_x \cdot s_y} = \frac{\sum(x_i - \bar{x})(y_i - \bar{y})}{(n-1) \cdot s_x \cdot s_y}
+    $$
+
     - 값의 범위: −1.0 ≤𝑟≤+1.0
         - 𝑟>0: 양의 상관(한쪽이 커지면 다른 쪽도 커짐)
         - 𝑟<0: 음의 상관(한쪽이 커지면 다른 쪽은 작아짐)
