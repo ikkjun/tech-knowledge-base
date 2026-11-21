@@ -3809,7 +3809,9 @@ print(df_results)
         » FN = 10명(암 환자 40명 중 10명을 암이 아니라고 잘못 예측)
 - 정확도(Accuracy)
     - 정확도는 모델이 올바르게 예측한 비율을 의미한다.<br>
-    $$Accuracy = \frac{TP + TN}{TP + TN + FP + FN} \qquad \frac{30 + 50}{30 + 50 + 10 + 10} = 0.8(80\%)$$
+    ```math
+    Accuracy = \frac{TP + TN}{TP + TN + FP + FN} \qquad \frac{30 + 50}{30 + 50 + 10 + 10} = 0.8(80\%)
+    ```
     - 장점: 전체적인 예측 성능을 간단히 측정할 수 있다.
     - 단점: **데이터의 클래스 불균형(Positive와 Negative의 비율이 크게 차이날 때)에서 신뢰도가 낮아질 수 있다.**
     - 예시<br>
@@ -3927,11 +3929,11 @@ print("\n분류 보고서(Classification Report):\n", classification_report(y_te
     - 70: 실제 양성 데이터를 양성으로 예측(TP).
 - 분류 보고서 출력
     - 클래스0(양성)
-    정밀도97%, 재현율91%, F1-Score 94%.
+    정밀도 97%, 재현율 91%, F1-Score 94%.
     - 클래스1(음성)
-    정밀도95%, 재현율99%, F1-Score 97%.
-    - 매크로평균: 각클래스의단순평균.
-    - 가중평균: 클래스비율에따라가중치를둔평균.
+    정밀도 95%, 재현율 99%, F1-Score 97%.
+    - 매크로 평균: 각 클래스의 단순 평균.
+    - 가중 평균: 클래스 비율에 따라 가중치를 둔 평균.
 
 #### 데이터 불균형(Data Imbalance) 문제 해결
 
@@ -3980,14 +3982,14 @@ print("\n분류 보고서(Classification Report):\n", classification_report(y_te
     $$d = \sqrt{\sum_{i=1}^{n} (x_i - y_i)^2}$$
     여기서 $x_i$와 $y_i$는 각각 두 점의 $i$-번째 특성 값
 3. K개의 이웃 선택
-    - 가장 가까운 𝐾개의 데이터포인트를 선택한다.
-    - 𝐾는 미리 정해진 하이퍼파라미터로, 𝐾의 값에 따라 모델의 성능이 달라진다.
+    - 가장 가까운 $K$개의 데이터포인트를 선택한다.
+    - $K$는 미리 정해진 하이퍼파라미터로, $K$의 값에 따라 모델의 성능이 달라진다.
 4. 결과 결정
     - 분류(Classification)
-        - 선택된 𝐾개의 이웃 중 가장 많은 빈도로 나타나는 레이블을 선택(K는 홀수로 설정해야 한다)한다.<br>
+        - 선택된 $K$개의 이웃 중 가장 많은 빈도로 나타나는 레이블을 선택(K는 홀수로 설정해야 한다)한다.<br>
         → 이를 다수결(Majority Voting)이라고 한다.
     - 회귀(Regression)
-        - 선택된 𝐾개의 이웃의 값을 평균을 내어 예측값을 결정한다.
+        - 선택된 $K$개의 이웃의 값을 평균을 내어 예측값을 결정한다.
     
 #### KNN의 주요 특징
 
@@ -4097,13 +4099,13 @@ K-회귀, 분류로 찾을 수 있다.
 - 회귀: k개의 이웃을 찾고 각 값의 평균을 반환한다.
 - 분류: k개의 이웃을 찾고 빈도수를 확인하여 가장 많이 발견되는 클래스를 반환한다.
 
-- KNN 알고리즘에서 𝐾 값은 매우 중요한 하이퍼파라미터이다.
-    - 𝐾 는 모델이 예측을 할  때 고려하는 가장 가까운 이웃의 수를 의미한다.
-    - 𝐾 값의 선택은 모델의 성능에 큰 영향을 미친다.
-    - 𝐾 는 새로운 데이터 포인트가 주어졌을 때, 데이터와 가장 가까운 𝐾개의 데이터 포인트를 기반으로 예측을 수행한다.
+- KNN 알고리즘에서 $K$ 값은 매우 중요한 하이퍼파라미터이다.
+    - $K$ 는 모델이 예측을 할  때 고려하는 가장 가까운 이웃의 수를 의미한다.
+    - $K$ 값의 선택은 모델의 성능에 큰 영향을 미친다.
+    - $K$ 는 새로운 데이터 포인트가 주어졌을 때, 데이터와 가장 가까운 $K$개의 데이터 포인트를 기반으로 예측을 수행한다.
         - 예<br>
-            𝐾=1: 가장가까운하나의이웃만보고결정.<br>
-            𝐾=3: 가장가까운3개의이웃을보고다수결로결정.
+            $K$=1: 가장가까운하나의이웃만보고결정.<br>
+            $K$=3: 가장가까운3개의이웃을보고다수결로결정.
 - K 값이 작을 때의 영향
     - 장점
         - 모델이 데이터의 세부적인 패턴을 잘 잡아낸다.
@@ -4114,13 +4116,13 @@ K-회귀, 분류로 찾을 수 있다.
         - 작은 데이터 변화에도 모델의 결과가 달라질 수 있다.
 -  K 값 선택 시 고려 사항
     - 데이터의 크기
-        - 작은 데이터셋: 𝐾 값을 **작게 설정**하는 것이 적합하다. 예: 데이터가  50개라면 𝐾=3 또는 𝐾=5이다.
-        - 큰 데이터셋: 𝐾 값을 더 크게 설정해도 된다. 예: 데이터가 수천 개라면 𝐾=15 또는 𝐾=20이다.
+        - 작은 데이터셋: $K$ 값을 **작게 설정**하는 것이 적합하다. 예: 데이터가  50개라면 $K$=3 또는 $K$=5이다.
+        - 큰 데이터셋: $K$ 값을 더 크게 설정해도 된다. 예: 데이터가 수천 개라면 $K$=15 또는 $K$=20이다.
     - 홀수 값의 선택
-        - 𝐾는 보통 홀수로 설정하는 것이 좋다. → 이는 동률(Tie)을 방지하기 위함이다.
-        - 클래스가 2개일 때 𝐾가 짝수라면 결과가 모호해질 수 있다.
+        - $K$는 보통 홀수로 설정하는 것이 좋다. → 이는 동률(Tie)을 방지하기 위함이다.
+        - 클래스가 2개일 때 $K$가 짝수라면 결과가 모호해질 수 있다.
     - 성능 평가를 위한 테스트교차 검증(Cross Validation)
-        - 다양한 𝐾 값을 시도하면 서모델성능(정확도)을 비교하여 최적의 𝐾 값을 선택한다.
+        - 다양한 $K$ 값을 시도하면 서모델성능(정확도)을 비교하여 최적의 $K$ 값을 선택한다.
         - 과적합과 과소적합 사이에서 적절한 균형을 찾을 수 있다.
 
 #### K값 선택 실습 코드(사이킷런)
@@ -4181,14 +4183,14 @@ print(f"\n최적의 K 값: {best_k}, 정확도: {accuracies[best_k] * 100:.2f}%"
 
 - 모델의 성능 향상 및 하이퍼파라미터 튜닝
     - KNN 알고리즘의 성능은 다양한 요소에 의해 영향을 받는다.<br>
-        → 성능을 최적화하려면 데이터 전처리, 거리 계산 방식, 그리고 하이퍼파라미터(특히 𝐾 값과 거리 계산 방식)를 신중히 조정해야 한다.
+        → 성능을 최적화하려면 데이터 전처리, 거리 계산 방식, 그리고 하이퍼파라미터(특히 $K$ 값과 거리 계산 방식)를 신중히 조정해야 한다.
 - **모델 성능 향상 방법**
     - **데이터 전처리**<br>
         스케일링, 이상치 제거, 특성 선택.
     - **거리 계산 방식**<br>
         유클리드, 맨해튼, 민코프스키등을 데이터 특성에 맞게 선택한다.
     - **하이퍼파라미터 튜닝**<br>
-        최적의 𝐾 값을 교차 검증으로 선택한다. 가중치를 부여하여 더 나은 성능을 도출할 수 있다.
+        최적의 $K$ 값을 교차 검증으로 선택한다. 가중치를 부여하여 더 나은 성능을 도출할 수 있다.
 
 #### 모델의 성능 향상 및 하이퍼파라미터 튜닝 예제
 
@@ -4308,7 +4310,7 @@ print(f"\n새로운 데이터 {new_data}의 예측 결과: {predicted_class}")
         - 예를 들어, 사진 데이터에 "고양이", "강아지"라는 라벨이 붙어 있다.
         - 목적: 예측이 목적이다. 입력 데이터와 정답 사이의 관계를 학습하여, 새 데이터를 예측한다.
     - 비지도학습: **데이터에 레이블이 없다**.
-        - 데이터만 제공되고, 모델이 데이터를 스스로 분석하고 *숨겨진 패턴을 발견*한다.
+        - 데이터만 제공되고, 모델이 데이터를 스스로 분석하고 **숨겨진 패턴을 발견**한다.
         - 목적: 탐색이 목적이다. 입력 데이터의 구조나 그룹화를 파악한다.
 - 활용 관점에서 본 차이점
     | 구분 | 지도학습 | 비지도학습 |
@@ -4387,6 +4389,9 @@ Manifold Approximation and Projection)
         - 데이터 포인트와 클러스터 중심 사이의 거리는 일반적으로 유클리드 거리(Euclidean Distance)를 사용하여 계산한다.
     3. 클러스터 중심 재계산(Update)
         - 각 클러스터에 속한 데이터 포인트들의 평균 위치를 계산하여 새로운 클러스터 중심으로 설정한다.<br>
+        ```math
+        \text{새로운 중심} = \frac{1}{n} \sum_{i=1}^{n} x_i
+        ```
         여기서 $xi$는 클러스터 내 데이터 포인트, $n$은 데이터 포인트의 개수
     4. 반복
         - 데이터 포인트를 다시 가장 가까운 클러스터 중심에 할당하고, 클러스터 중심을 재계산한다.
@@ -4395,7 +4400,7 @@ Manifold Approximation and Projection)
     1. 데이터 준비
         - 군집화를 수행할 데이터 준비 및 정규화(데이터의 크기가 클 경우 정규화가 중요).
     2. K 값 선택
-        - 원하는 클러스터 개수 𝐾를 결정한다.
+        - 원하는 클러스터 개수 $K$를 결정한다.
     3. 알고리즘 실행
         - K-Means 알고리즘을 적용하여 데이터를 클러스터링한다.
     4. 결과 평가 및 시각화
@@ -4404,9 +4409,9 @@ Manifold Approximation and Projection)
 #### 클러스터 수(k) 선택 방법
 
 - **K 값 선택 방법**
-    - 엘보우 방법(Elbow Method)를통해최적의𝐾 값을선택
-        - 여러 𝐾 값에 대해 K-Means를 실행하고, 각 경우의 클러스터 내 데이터의 거리 합(WCSS, Within-Cluster Sum of Squares)을 계산한다.
-        - 𝐾 값에 따른 WCSS를 그래프로 그려, 그래프의 기울기가 급격히 완화되는 지점(엘보우 포인트)에서 최적의 𝐾를 선택한다.
+    - 엘보우 방법(Elbow Method)을 통해 최적의 $K$ 값을 선택한다.
+        - 여러 $K$ 값에 대해 K-Means를 실행하고, 각 경우의 클러스터 내 데이터의 거리 합(WCSS, Within-Cluster Sum of Squares)을 계산한다.
+        - $K$ 값에 따른 WCSS를 그래프로 그려, 그래프의 기울기가 급격히 완화되는 지점(엘보우 포인트)에서 최적의 $K$를 선택한다.
             - Inertia (군집 내 오차 제곱합)<br>
             » 각 데이터 포인트와 해당 군집의 중심점 간 거리를 제곱하여 모두 합산한 수치이다.
             - 군집 수 K가 커질수록 Inertia는 지속적으로 감소하지만, 군집이 데이터 구조에 비해 과도하게 쪼개지면 감소 폭이 둔화된다.
@@ -4484,3 +4489,605 @@ Manifold Approximation and Projection)
                 ![1795142884689](image/ml_dl/1795142884689.png)
                 ![1795142893281](image/ml_dl/1795142893281.png)
                 ![1795142898751](image/ml_dl/1795142898751.png)
+
+### 군집화 응용 및 성능 평가
+
+#### 클러스터링 결과의 해석
+
+##### 클러스터링 결과를 시각화
+
+- 클러스터링 결과를 해석하는 첫 단계는 데이터를 시각적으로 분석하는 것이다.
+- 2D 또는 3D 플롯 데이터가 2차원이나 3차원으로 변환 가능하다면 각 클러스터를 색으로 구분하여 시각화한다.
+    - 주로사용하는도구
+        - **Matplotlib** : 산점도(scatter plot)로 표현
+        - **Seaborn** : 페어 플롯(pair plot) 등
+        - **PCA** : 고차원 데이터를 2차원으로 축소하여 클러스터를 시각화
+- 클러스터 중심 확인
+    - 각 클러스터의 중심(centroid)을 확인한다.
+    - 중심점은 클러스터 내 데이터를 대표하는 점으로, 클러스터의 특성을 요약한다.
+
+##### 클러스터의 특징 이해
+
+- **클러스터 내 데이터의 평균, 분포를 확인한다.**
+    - 클러스터에 속한 데이터의 주요 속성(특징)의 평균값과 분포를 분석한다.<br>
+    예: 고객 세그먼트를 분류했다면, 각 클러스터의 평균 구매 금액, 구매 빈도 등을 비교한다.
+    - 이를 통해 각 클러스터가 어떤 특성을 가지고 있는지 이해할 수 있다.
+- **클러스터 간의 차이점을 파악한다.**
+    - 클러스터를 서로 비교하여 공통점과 차이점을 확인한다.<br>
+    예: 하나의 클러스터는 구매 빈도가 높고 금액이 낮은 고객, 다른 클러스터는 구매 빈도는 낮지만 금액이 높은 고객일 수 있다.
+
+##### 클러스터의 적절성 평가
+
+- **데이터 응집도**
+    - 클러스터 내의 데이터가 얼마나 가까이 모여있는지를 분석한다.<br>
+        → 가까이 모여 있을수록 해당 클러스터는 응집도가 높다고 평가한다.
+- **데이터 분리도**
+    - 다른 클러스터와 얼마나 잘 분리되어 있는지를 분석한다.<br>
+    → 클러스터 간의 거리가 멀수록 분리도가 높다고 평가한다.
+
+##### 실질적인 의미 부여
+
+- **도메인 지식을 활용한 해석**
+    - 클러스터링은 자동으로 클러스터를 나누지만, 해석은 도메인 지식이 필요하다.<br>
+    예: 의료 데이터에서 클러스터링을 했다면, 각 클러스터가 특정 질병에 걸린 환자 집단일 수 있다.
+- **이름 붙이기**
+    - 각 클러스터에 적절한 이름을 붙여준다.<br>
+    예: 고객 데이터 클러스터링에서 "고액 구매 고객", "저빈도 구매 고객" 등으로 명명한다.
+
+#### 클러스터 품질 평가: 실루엣 점수(Silhouette Score)
+
+- 클러스터 품질 평가는 클러스터링 결과가 얼마나 잘 나왔는지 평가하는 과정이다.<br>
+K-Means 알고리즘에서 클러스터 품질을 평가하려면<br>
+→ 클러스터 내 데이터 응집도와 클러스터 간 분리도를 확인해야 한다.
+- **실루엣점수(Silhouette Score)**
+    - 엘보우 기법보다 군집 내부와 외부의 구조를 더 정밀하게 평가하는 지표이다.
+    - 클러스터의 응집도와 분리도를 동시에 평가할 수 있는 강력한 지표이다.
+    - K-Means의 품질을 판단하는 데 유용하다.
+    - 실루엣 점수는 데이터 포인트가 자신의 클러스터와 얼마나 잘 응집되어 있고, 다른 클러스터와 얼마나 잘 분리되어 있는지를 나타낸다.
+    - 계산 공식(각 데이터 포인트 $i$에 대해)
+        ```math
+        s(i) = \frac{b(i) - a(i)}{\max(a(i), b(i))}
+        ```
+        - $a(i)$: 데이터 포인트 $i$와 같은 클러스터내 다른 포인트간의 평균 거리(응집도)
+        - $b(i)$: 데이터 포인트 $i$와 가장 가까운 다른 클러스터 포인트들 간의 평균 거리(분리도)
+        - $s(i)$의 값 범위: -1 ≤ $s(i)$ ≤ 1
+- 실루엣 점수(Silhouette Score)의 의미
+    - $s(i)$ 값해석
+        - **$s(i)$가 1에 수렴** : 데이터 포인트가 자신의 클러스터에 잘 속해있고, 다른 클러스터와 명확히 분리된다.
+        - **$s(i)$가 0에 수렴** : 데이터 포인트가 경계에 가까워져, 어느 클러스터에 속했어야 하는지 불확실하다.
+        - **$s(i)$가 음수** : 데이터 포인트가 잘못된 클러스터에 속했을 가능성이 높다.
+    - 전체 실루엣 점수
+        - 데이터셋 전체의 실루엣 점수는 모든 데이터 포인트의$s(i)$ 값 평균으로 계산된다.<br>
+        ```math
+        S = \frac{1}{n} \sum_{i=1}^{n} s(i)
+        ```
+        **$S$가 1에 가까울수록 클러스터링이 잘 되었다고 평가**한다.
+    - 실무에서는 25% ~ 50%만 되어도 좋은 결과라고 여긴다.
+- 실루엣 점수를 활용한 K 값 선택
+    - K-Means의 가장 큰 과제는 적절한 클러스터 수 $k$를 선택하는 것이다.<br>
+        → 실루엣 점수는 이를 돕는 데 매우 유용하다.
+    - 방법
+        1. 여러 $k$값에 대해 K-Means를 실행한다.
+        2. 각 $k$ 값에 대해 실루엣 점수를 계산한다.
+        3. 실루엣 점수를 시각화한다.
+        4. 실루엣 점수가 가장 높은 $k$ 값을 선택한다.
+
+##### 클러스터 품질 평가 예제
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans
+from sklearn.datasets import make_blobs
+from sklearn.metrics import silhouette_score, silhouette_samples
+
+# 1. 데이터 생성
+# - make_blobs를 사용하여 군집화에 적합한 샘플 데이터를 생성한다.
+# - centers: 생성할 클러스터의 수
+# - n_samples: 생성할 데이터 포인트 수
+data, _ = make_blobs(n_samples=300, centers=4, cluster_std=0.6, random_state=42)
+
+# 데이터 시각화(원본 데이터)
+plt.scatter(data[:,0], data[:,1], s=30 ,color='gray', label='Original Data')
+plt.title('Generated Data')
+plt.xlabel('Feature 1')
+plt.ylabel('Feature 2')
+plt.legend()
+plt.show()
+
+# 2. K-Means 알고리즘 적용
+# - n_clusters: 생성할 클러스터 수
+# - random_state: 결과 재현성을 위한 랜덤 시드
+kmeans = KMeans(n_clusters=3, random_state=42)
+
+# K-Means 모델 학습 및 클러스터 예측
+# - fit_predict: 데이터를 학습히키고 각 데이터 포인트의 클러스터 할당을 반환
+cluster_labels = kmeans.fit_predict(data)
+
+# 클러스터링 결과 시각화
+plt.scatter(data[:, 0], data[:,1], c=cluster_labels, cmap='viridis', s=30)
+plt.scatter(kmeans.cluster_centers_[:,0], kmeans.cluster_centers_[:,1],
+            s=200, c='red', marker='X', label='Centroids')  # 클러스터 중심
+plt.title("K-Means Clustering Results")
+plt.xlabel("Feature 1")
+plt.ylabel("Feature 2")
+plt.legend()
+plt.show()
+
+# 3. 클러스터 품질 평가 - 실루엣 점수 계산
+# - silhouette_score: 전체 데이터에 대한 평균 실루엣 점수를 계산
+silhouette_avg = silhouette_score(data, cluster_labels)
+print(f"Overall Silhouette Score: {silhouette_avg:.2f}")
+
+# Overall Silhouette Score: 0.80
+
+# 4. 실루엣 점수 시각화 - 각 데이터 포인트의 실루엣 점수를 계산
+silhouette_values = silhouette_samples(data, cluster_labels)
+
+# 시각화 준비
+y_lower = 10
+for i in range(4):      # 각 클러스터에 대해 반복
+    ith_cluster_silhouette_values = silhouette_values[cluster_labels == i]
+    ith_cluster_silhouette_values.sort()
+    size_cluster_i = ith_cluster_silhouette_values.shape[0]
+    y_upper = y_lower + size_cluster_i
+    # 클러스터별 막대 그리기
+    plt.fill_betweenx(np.arange(y_lower, y_upper), 0, ith_cluster_silhouette_values)
+    plt.text(-0.05, y_lower + 0.5 * size_cluster_i, str(i)) # 클러스터 번호
+    y_lower = y_upper + 10                                  # 다음 클러스터로 이동
+
+# 그래프 설정
+plt.axvline(x=silhouette_avg, color="red", linestyle="--")  # 평균 실루엣 점수
+plt.title("Silhouette Plot for K-Means Clustering")
+plt.xlabel("Silhouette Score")
+plt.ylabel("Cluster")
+plt.show()
+
+# 결과 요약
+print(f"Cluster Centers:\n{kmeans.cluster_centers_}")
+print(f"Silhouette Score for each point stored as silhouette_values array.")
+
+# Cluster Centers:
+# [[-5.7198651   8.11855424]
+#  [-6.85126211 -6.85031833]
+#  [ 4.68687447  2.01434593]]
+# Silhouette Score for each point stored as silhouette_values array.
+```
+
+![1795151115162](image/ml_dl/1795151115162.png)
+![1795151120190](image/ml_dl/1795151120190.png)
+![1795151127602](image/ml_dl/1795151127602.png)
+
+### 차원축소(Dimensionality Reduction) 기초
+
+#### 차원 축소의 필요성 (고차원의 문제, 시각화)
+
+- 차원 축소(Dimensionality Reduction)
+- 데이터가 고차원일수록(즉, 피처(feature)의 개수가 많을수록) 모델을 학습시키거나 분석할 때 여러 가지 문제가 발생할 수 있다. → 이 **문제들을 해결하기 위해 차원 축소가 필요**하다.
+1. 고차원의 문제 (Curse of Dimensionality)
+    - 데이터의 차원이 증가하면 데이터가 차지하는 공간이 기하급수적으로 커진다. → 이로 인해 발생하는 문제를 "차원의 저주"라고 한다.
+    - 데이터가 희소해진다.<br>
+    고차원 공간에서는 데이터 포인트들이 서로 멀리 떨어져 있고, 유사성을 찾기가 어려워 진다.
+    - 학습 속도 저하
+    고차원 데이터는 계산 비용이 증가하여 모델 학습이 느려진다.
+    - 과적합(Overfitting)<br>
+    피처가 너무 많으면 모델이 학습 데이터에 지나치게 맞춰져 일반화 능력이 떨어질 수 있다.
+2. 데이터 시각화
+    - 고차원의 데이터는 직관적으로 이해하거나 시각화하기 어렵다. → 10차원 이상의 데이터를 사람이 시각적으로 이해할 수 있을까？
+    - 차원 축소를 통해 데이터를 2차원 또는 3차원으로 변환한다. → 그래프를 통해 데이터의 분포나 패턴을 쉽게 분석할 수 있다.
+3. 노이즈 제거: 이는 학습 모델의 성능 향상과 안정성을 제공한다.
+    - 고차원 데이터에는 중요한 정보 뿐만 아니라 불필요한 정보(노이즈)가 포함될 수 있다.
+    - 차원 축소는 데이터의 가장 중요한 특징(Variance, 변동성)을 유지하면서 노이즈를 줄여준다.
+4. 모델 효율성 향상
+    - 데이터 차원을 줄이면 계산량이 줄어들어 모델 학습과 예측 속도가 빨라지고, 메모리 사용량도 감소한다.
+    - 차원이 줄어들면 중요하지 않은 피처가 제거되므로 모델이 학습에만 필요한 정보에 집중할 수 있다.
+
+##### 차원 축소(Dimensionality Reduction)의 필요성 사례
+
+- 이미지 데이터
+    - 이미지 한 장은 수천, 수만 개의 픽셀로 구성된다.
+    - 모든 픽셀을 사용하면 계산량이 너무 많아지므로, 중요한 정보만 추출하여 차원을 줄여야 한다.
+- 유전자 데이터
+    - 유전자 분석 데이터는 수천 개의 피처로 구성되지만, 실제로 중요한 것은 몇 가지 피처에 불과하다.
+- 추천 시스템
+    - 수천 명의 사용자가 수천 개의 상품에 대해 평가를 매겼다고 가정했을 때, 이 데이터를 모두 다루는 것은 비효율적이다.<br>
+    → 중요한 사용 패턴만 추출하여 차원을 줄일 필요가 있다.
+
+#### PCA(Principal Component Analysis) 개념 및 원리
+
+##### PCA(Principal Component Analysis, 주성분 분석)
+
+- 고차원 데이터를 저차원으로 축소하면서도 데이터의 중요한 정보를 최대한 보존하는 차원 축소 기법이다.<br>
+→ 데이터의 주요 특징을 파악하고, 노이즈를 제거하거나 시각화를 용이하게 한다.
+- PCA는 데이터를 선형 변환하여 새로운 축(Principal Components, 주성분)을 생성하는 과정이다.
+    - **주성분(Principal Components)** : 데이터의 분산을 가장 잘 설명하는 새로운 축이다.
+    - **데이터의 주요 패턴 찾기** : 데이터의 분산이 가장 큰 방향을 기준으로 데이터를 분석한다.
+    - **축 변경** : 기존의 좌표 축(특징 공간)을 새로운 주성분 축으로 변환한다.
+    - **차원 축소** : 중요하지 않은 주성분을 제거하여 데이터의 차원을 줄인다.
+##### PCA의 작동 원리
+
+- PCA의 원리는 데이터를 새로운 좌표축으로 변환하여 주요 특징을 유지하면서 차원을 줄이는 데 있다.
+1. 데이터는 처음에 여러 차원(피처)으로 구성한다.
+2. PCA는 각 차원의 분산(정보량)을 측정하고, 분산이 가장 큰 방향(축)을 찾는다.
+3. 분산이 가장 큰 방향으로 데이터를 정렬하여 새로운 축을 정의한다.
+4. 새로운 축을 기준으로 데이터를 변환(투영)하여, 적은 차원에서도 데이터를 잘 설명할 수 있도록 처리한다.
+
+##### PCA의 적용 단계
+
+1. 데이터 정규화(Standardization)
+    - PCA를 적용하기 전에 데이터를 정규화(Standardization) 하거나 스케일링(Scaling)한다.
+    - 각 피처의 값이 서로 다른 범위를 갖고 있으면 결과에 영향을 미치기 때문에, 평균이 0이고 분산이 1인 데이터로 변환한다.
+2. 주성분 축을 찾기 위한 공분산 행렬을 계산한다.
+    - 공분산 행렬(Covariance Matrix)은 각 피처 간의 상관관계를 나타낸다.
+    - 예를 들어, 두 피처가 양의 상관관계에 있으면 공분산 값이 양수이다.
+    - 공분산 행렬은 데이터의 분산 구조를 파악하는 데 필수적이다.
+3. 주성분 축을 찾기 위한 고유값(Eigenvalues)과 고유벡터(Eigenvectors) 계산
+    - 공분산 행렬을 분해하여 고유값과 고유벡터를 계산한다.
+        - 고유값: 주성분이 설명하는 분산의 크기(중요도)
+        - 고유벡터: 주성분의 방향(새로운 축).
+4. 주성분 선택
+    - 고유값이 큰 순서대로 주성분을 정렬한다.
+    - 중요한 정보를 설명하는 주성분(변동성을 많이 설명하는 축)만 선택한다.<br>
+    예: 전체 분산의 95% 이상을 설명하는 주성분만 사용한다.
+5. 데이터 투영(Projection)
+    - 원본 데이터를 선택된 주성분 축으로 투영한다.
+    - 이렇게 하면 데이터의 차원이 축소된다.
+
+#### 주성분의 의미와 데이터 투영
+
+##### 주성분의 의미
+
+- 주성분이란?
+    - 주성분(Principal Components)은 데이터의 분산(정보량)이 가장 큰 방향을 나타내는 축이다.
+    - 데이터를 분석할 때 중요한 정보는 데이터의 분산(변동성) 속에 포함되어 있다고 가정한다.
+    - PCA는 데이터의 분산을 최대화하는 방향을 찾아 새로운 좌표축을 정의하고 이를 주성분이라고 한다.
+- 주성분의 특징
+    - **첫 번째 주성분(PC1)**
+        - 데이터의 분산이 가장 큰 방향. 데이터의 변동성을 가장 잘 설명하는 축.
+    - **두 번째 주성분(PC2)**
+        - 첫 번째 주성분에 수직(직교)한 축. 두 번째로 큰 분산을 설명하는 방향
+    - 추가 주성분
+        - 이전 주성분들과 직교하면서 분산이 큰 방향을 순서대로 찾는다.
+    - 주성분의 수<br>
+    데이터의 차원 수와 동일한 수의 주성분이 존재. 예를 들어, 데이터가 4차원이라면 4개의 주성분이 있다.
+
+##### 데이터 투영(Projection)의 의미
+
+- PCA의 핵심 작업 중 하나는 데이터를 주성분 축으로 투영(Projection)하여 차원을 축소하는 것이다.
+- **데이터 투영**이란?
+    - 데이터를 기존의 좌표 축 대신 주성분 축으로 변환하는 과정이다.
+    - 투영 후 데이터는 새로운 축(주성분) 상에서 표현한다. 불필요한 차원(변동성이 적은 축)은 제거된다.
+- 왜 투영이 필요한가?
+    - **중요한 정보만 유지**
+        - 데이터의 분산이 큰 축(주성분)에 투영하면 정보량을 최대한 유지할 수 있다.
+        - 분산이 작은 축은 주로 노이즈로 간주되어 제거한다.
+    - **차원 축소** : 데이터가 주성분 축으로 투영되면, 더 적은 차원에서도 데이터를 잘 설명할 수 있다.
+    - **시각화**: 투영된 데이터를 2차원이나 3차원으로 변환하여 시각적으로 이해할 수 있다.
+
+##### PCA 예제
+
+```python
+# 필요한 라이브러리 import
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.decomposition import PCA
+from sklearn.datasets import load_iris
+from sklearn.preprocessing import StandardScaler
+
+# 1. Iris 데이터셋 로드
+# - Iris 데이터셋은 꽃잎 길이, 꽃잎 너비 등 4개의 피처를 가진 데이터로 구성
+iris = load_iris()
+X = iris.data   # 특성 데이터(4차원)
+y = iris.target # 타깃 데이터(0, 1, 2의 세 가지 클래스)
+
+# 2. 데이터 정규화(평균=0, 표준편차=1로 변환)
+# - PCA는 데이터의 스케일에 만감하므로 정규화가 필수
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+# 3. PCA 객체 생성 및 적합
+# - n_components=2로 설정하여 데이터를 2차원으로 축소
+pca = PCA(n_components=2)   # 2개의 주성분으로 축소
+X_pca = pca.fit_transform(X_scaled)
+
+# 4. PCA 결과 출력
+# - 각 주성분이 데이터의 분산을 얼마나 설명하는지 출력
+print("Explained variance ratio:", pca.explained_variance_ratio_)
+# - 첫 번째 주성분과 두 번째 주성분이 전체 분산의 약 95% 이상을 설명
+
+# Explained variance ratio: [0.72962445 0.22850762]
+
+# 5. PCA 결과 시각화
+# - 두 개의 주성분을 사용해 데이터를 2D 플롯으로 시각화
+plt.figure(figsize=(8, 6))
+for target, color, label in zip([0, 1, 2], ['red', 'blue', 'green'], iris.target_names):
+    plt.scatter(X_pca[y == target, 0],      # 첫 번째 주성분
+                X_pca[y == target, 1],      # 두 번째 주성분
+                color=color, label=label, alpha=0.7)
+plt.title('PCA on Iris Dataset')
+plt.xlabel('Principal Component 1')
+plt.ylabel('principal Component 2')
+plt.legend()
+plt.grid()
+plt.show()
+```
+
+![1795152250076](image/ml_dl/1795152250076.png)
+
+### 이상치탐지(Outlier Detection)
+
+#### 이상치 탐지의 개념과 중요성
+
+##### 이상치 탐지의 개념
+
+- 이상치 탐지(Outlier Detection)
+    - 데이터에서 일반적인 패턴과 크게 벗어나는 관측값(이상치, outlier)을 식별하는 과정이다.
+    - 데이터 분포와 동떨어져 있거나, 예상 범위를 벗어난 데이터 포인트를 나타낸다.<br>
+    → 다른 데이터와 비교했을 때 비정상적(다름)이고, 통계적으로 드문 데이터 포인트
+- 목적
+    - 이상치 탐지의 주된 목표는 데이터의 품질을 개선한다.
+    - 비정상적인 행동을 사전에 발견하여 문제를 예방한다.
+
+##### 이상치 탐지의 중요성
+
+- 금융
+    - 신용카드 사용 내역에서 사기 거래를 탐지한다.
+    - 일반적인 소비 패턴과 다른 과도한 결제 금액이나 지역 외 사용 패턴은 금융 사기의 징후로 간주한다.
+- 산업 장비 유지 보수
+    - 장비의 센서 데이터에서 비정상적인 동작을 탐지한다.
+    - 정상적인 동작과 다른 패턴을 가진 이상값은 기계 고장의 초기 신호일 수 있다.
+- 의료
+    - 환자의 건강 데이터에서 비정상적인 생체 신호를 탐지한다.
+    - 심박수, 혈압 등에서 극단적인 수치는 질병의 징후일 가능성이 있다.
+
+#### 비지도학습 기반 이상치 탐지 (Isolation Forest, DBSCAN)
+
+##### Isolation Forest
+
+- Isolation Forest는 이상치 탐지를 위해 설계된 비지도학습 알고리즘이다.
+    - 이 알고리즘은 데이터를 반복적으로 나누는 방식으로 이상치를 탐지한다.
+    - 이상치는 일반적인 데이터 보다 나누기 쉽다는 특징에 기반한다.
+    - 데이터 공간을 무작위로 분할하며, 나눌수록 나머지 데이터에서 이상치가 더 빠르게 분리되는 경향이 있다.
+- 작동 원리
+    1. **무작위 샘플링**<br>
+    데이터에서 임의의 특징(feature)을 선택하고, 임의의 분할값(split value)을 선택해 데이터를 나눈다.
+    2. **분리 깊이 계산**<br>
+    이상치 일수록 다른 데이터로부터 분리되는 데 필요한 단계(depth)가 작다.
+    3. **여러 트리 구축**<br>
+    데이터를 무작위로 분할하여 여러 개의 이진 트리(isolation tree)를 생성한다. → 각 데이터 포인트가 나뉘는 평균 깊이를 계산한다.
+    4. **이상치 점수 산출**<br>
+    이상치 점수는 분리 깊이에 따라 정해지며, 높은 점수를 받을수록 이상치일 가능성이 높다.
+- **장점**
+    - 효율성: 데이터 크기와 관계없이 선형 시간 복잡도($O(n)$)
+    - 확장성: 대규모 데이터 세트에서도 작동할 수 있다.
+    - 비지도학습: 레이블이 없어도 작동한다.
+- **단점**
+    - 고차원 데이터에서 효율이 떨어질 수 있다.
+    - 분포가 매우 복잡한 데이터에는 성능이 제한될 수 있다.
+    
+##### Isolation Forest 예제
+
+```python
+import numpy as np
+import pandas as pd
+from sklearn.ensemble import IsolationForest
+import matplotlib.pyplot as plt
+
+# 1. 데이터 생성
+# 시드 고정: 재현성을 위해 난수 시드를 고정
+np.random.seed(42)
+
+# 정상 트래픽 데이터 생성
+# 평균(loc=50), 표준편차(scale=10)를 따르는 정규분포에서 데이터 생성(100개의 샘플, 2차원)
+normal_traffic = np.random.normal(loc=50, scale=10, size=(100, 2))
+
+# 비정상 트래픽 데이터 생성
+# 일정 범위(low=100, high=150)에서 균등분포로 비정상적으로 높은 값 생성(10개의 샘플, 2차원)
+anomalous_traffic = np.random.uniform(low=100, high=150, size=(10, 2))
+
+# 정상 데이터와 비정상 데이터를 결합
+traffic_data = np.vstack((normal_traffic, anomalous_traffic))
+
+# 데이터를 pandas DataFrame으로 변환
+traffic_df = pd.DataFrame(traffic_data, columns=["Request Count", "Response Time"])
+
+# 2. Isolation Forest 모델 생성 및 학습
+# Isolation Forest 초기화
+# - n_estimators: 트리의 개수(모델 복잡도에 영향을 미친다.)
+# - contamination: 이상치로 간주할 데이터의 비율(10%로 설정)
+# - random_state : 난수 시드(재현성을 위해 설정)
+model = IsolationForest(n_estimators=100, contamination=0.1, random_state=42)
+
+# 모델 학습 후 예측 수행
+# - fit_predict:  데이터를 학습하면서 이상치를 탐지(-1: 이상치, 1: 정상)
+traffic_df['Anomaly Score'] = model.fit_predict(traffic_data)
+
+# 이상 탐지 결과를 해석하여 "Normal" 또는 "Anomaly"로 표시
+traffic_df['Anomaly'] = traffic_df['Anomaly Score'].apply(lambda x: "Normal" if x == 1 else "Anomaly")
+
+# 3. 비정상 데이터의 범위 확인 - 이상 데이터만 필터링
+anomalous_data = traffic_df[traffic_df['Anomaly'] == 'Anomaly']
+
+# 이상 범위를 출력
+min_request_count = anomalous_data["Request Count"].min()
+max_request_count = anomalous_data["Request Count"].max()
+min_response_time = anomalous_data["Response Time"].min()
+max_response_time = anomalous_data["Response Time"].max()
+print(f"비정상 데이터 범위:")
+print(f"- 요청 수(Request Count): {min_request_count:.2f} ~ {max_request_count:.2f}")
+print(f"- 응답 시간(Response Time): {min_response_time:.2f} ~ {max_response_time:.2f}")
+
+# 비정상 데이터 범위:
+# - 요청 수(Request Count): 23.80 ~ 144.50
+# - 응답 시간(Response Time): 58.22 ~ 145.66
+
+# 4. 시각화
+# 정상과 비정상을 다른 색으로 표시하여 트래픽 데이터 시각화
+# 한글 폰트 설정
+plt.rcParams['font.family'] = 'Malgun Gothic'
+plt.figure(figsize=(10, 6))
+plt.scatter(
+    traffic_df['Request Count'], traffic_df['Response Time'], c=traffic_df['Anomaly'].map({"Normal": "blue", "Anomaly": "red"}), label='Traffic'
+)
+plt.title("Traffic Data with Isolation Forest Anomaly Detection")
+plt.xlabel("Request Count (요청 수)")
+plt.ylabel("Response Time(응답 시간)")
+plt.legend(["Normal", "Anomaly"])
+plt.grid()
+plt.show()
+
+# 5. 결과 출력
+# 전체 데이터프레임을 출력하여 정상/비정상 데이터 확인
+print("전체 데이터와 이상 탐지 결과:")
+print(traffic_df)
+
+# 전체 데이터와 이상 탐지 결과:
+#      Request Count  Response Time  Anomaly Score  Anomaly
+# 0        54.967142      48.617357              1   Normal
+# 1        56.476885      65.230299              1   Normal
+# 2        47.658466      47.658630              1   Normal
+# 3        65.792128      57.674347              1   Normal
+# 4        45.305256      55.425600              1   Normal
+# ..             ...            ...            ...      ...
+# 105     125.567120     125.075815             -1  Anomaly
+# 106     139.914759     132.498197             -1  Anomaly
+# 107     135.098344     139.789633             -1  Anomaly
+# 108     144.500267     116.899758             -1  Anomaly
+# 109     118.779148     104.699097             -1  Anomaly
+```
+![1795157117512](image/ml_dl/1795157117512.png)
+
+##### 응용 분야 (금융 사기 탐지, 장비 이상 감지 등)
+
+- 금융 사기 탐지(예: 신용카드 이상 거래)
+- 네트워크 보안(예: 비정상 트래픽 탐지)
+
+##### DBSCAN (Density-Based Spatial Clustering of Applications with Noise)
+
+- DBSCAN
+    - **밀도 기반** 클러스터링 알고리즘
+    - 데이터를 밀도가 높은 영역(군집)과 밀도가 낮은 영역(이상치)으로 나눈다.
+    - 대부분의 군집 분석은 원형의 모양을 띠고 있지만, DBSCAN은 모양에 제약이 없다.
+- 기본 아이디어
+    - 데이터의 밀도가 충분히 높은 영역을 클러스터로 간주한다.
+    - 밀도가 낮은 데이터 포인트는 이상치로 분류한다.
+- 주요 개념
+    - Epsilon(ε) : 두 데이터 포인트가 같은 클러스터에 속하기 위해 허용되는 최대 거리이다.
+    - MinPts : 클러스터가 형성 되기 위해 필요한 최소 데이터 포인트 수
+    - Core Points : ε 반경 안에 MinPts 이상의 데이터가 포함된 포인트
+    - Border Points : ε 반경 내에 Core Point에 포함되지만 MinPts 조건을 만족하지 않는 포인트
+    - Noise(이상치) : Core Point나 Border Point에 속하지 않는 포인트
+- 작동 원리
+    - 각 데이터 포인트에서 ε 반경 내 데이터 밀도를 계산한다.
+    - 밀도가 높은 데이터 포인트(Core Point)를 중심으로 클러스터를 형성한다.
+    - 밀도가 낮은 포인트는 Noise(이상치)로 간주한다.
+- 장점
+    - 클러스터의 모양에 제약이 없다(비구조적 데이터에서도 사용할 수 있다).
+    - 사전 클러스터 개수 지정이 불필요하다.
+    - 이상치 탐지와 클러스터링을 동시에 수행한다.
+- 단점
+    - ε와 MinPts 파라미터의 선택이 성능에 크게 영향을 미친다.
+    - 고차원 데이터에 적용할 경우 효율성이 저하된다.
+
+##### DBSCAN 예제
+
+```python
+import numpy as np
+import pandas as pd
+from sklearn.cluster import DBSCAN
+import matplotlib.pyplot as plt
+
+# 1. 데이터 생성
+# 시드 고정: 재현성을 위해 난수 시드를 고정
+np.random.seed(42)
+
+# 정상 트래픽 데이터 생성
+# 평균(loc=50), 표준편차(scale=10)를 따르는 정규분포에서 데이터 생성(100개의 샘플, 2차원)
+normal_traffic = np.random.normal(loc=50, scale=10, size=(100, 2))
+
+# 비정상 트래픽 데이터 생성
+# 일정 범위(low=100, high=150)에서 균등분포로 비정상적으로 높은 값 생성(10개의 샘플, 2차원)
+anomalous_traffic = np.random.uniform(low=100, high=150, size=(10, 2))
+
+# 정상 데이터와 비정상 데이터를 결합
+traffic_data = np.vstack((normal_traffic, anomalous_traffic))
+
+# 데이터를 pandas DataFrame으로 변환
+traffic_df = pd.DataFrame(traffic_data, columns=["Request Count", "Response Time"])
+
+# 2. DBSCAN 모델 생성
+# eps: 클러스터의 반경(밀도를 정의)
+# min_samples: 한 클러스터를 구성하기 위한 최소 샘플 수
+dbscan = DBSCAN(eps=15, min_samples=5)
+
+# DBSCAN 모델 적용
+# fit_predict: 클러스터링 수행(-1은 이상치, 나머지는 클러스터 ID)
+traffic_df["Cluster"] = dbscan.fit_predict(traffic_data)
+
+# 3. 이상치 탐지
+# 이상치는 Cluster 값이 01인 데이터
+traffic_df['Anomaly'] = traffic_df['Cluster'].apply(lambda x: 'Anomaly' if x == -1 else 'Normal')
+
+# 이상치 범위 확인
+anomalous_data = traffic_df[traffic_df['Anomaly'] == 'Anomaly']
+min_request_count = anomalous_data['Request Count'].min()
+max_request_count = anomalous_data['Request Count'].max()
+min_request_time = anomalous_data['Response Time'].min()
+max_request_time = anomalous_data['Response Time'].max()
+
+print(f"비정상 데이터 범위:")
+print(f"- 요청 수(Request Count): {min_request_count:.2f} ~ {max_request_count:.2f}")
+print(f"- 응답 시간(Response Time): {min_response_time:.2f} ~ {max_response_time:.2f}")
+
+# 비정상 데이터 범위:
+# - 요청 수(Request Count): 117.97 ~ 144.50
+# - 응답 시간(Response Time): 58.22 ~ 145.66
+
+# 4. 시각화
+plt.rcParams['font.family'] = 'Malgun Gothic'
+plt.figure(figsize=(10,6))
+plt.scatter(
+    traffic_df['Request Count'], traffic_df['Response Time'],
+    c=traffic_df['Anomaly'].map({'Normal': 'blue', 'Anomaly':'red'}),
+    label='Traffic'
+)
+plt.title('Traffic Data with DBSCAN Anomaly Detection')
+plt.xlabel('Request Count(요청 수)')
+plt.ylabel("Response Time(응답 시간)")
+plt.legend(["Normal", "Anomaly"])
+plt.grid()
+plt.show()
+
+# 5. 결과 출력
+# 전체 데이터프레임 출력
+print("전체 데이터와 DBSCAN 이상 탐지 결과:")
+print(traffic_df)
+
+# 전체 데이터와 DBSCAN 이상 탐지 결과:
+#      Request Count  Response Time  Cluster  Anomaly
+# 0        54.967142      48.617357        0   Normal
+# 1        56.476885      65.230299        0   Normal
+# 2        47.658466      47.658630        0   Normal
+# 3        65.792128      57.674347        0   Normal
+# 4        45.305256      55.425600        0   Normal
+# ..             ...            ...      ...      ...
+# 105     125.567120     125.075815        1   Normal
+# 106     139.914759     132.498197        1   Normal
+# 107     135.098344     139.789633        1   Normal
+# 108     144.500267     116.899758       -1  Anomaly
+# 109     118.779148     104.699097       -1  Anomaly
+
+# [110 rows x 4 columns]
+```
+
+![1795158381134](image/ml_dl/1795158381134.png)
+
+##### Isolation Forest와 DBSCAN 비교
+
+| 특징 | Isolation Forest | DBSCAN |
+| :---: | :--- | :--- |
+| **기본 접근 방식** | (트리 형식) 데이터 분리를 통해 이상치 탐지 | 밀도 차이를 기반으로 클러스터와 이상치 탐지 |
+| **적용 데이터** | 대규모 데이터, 일반적인 분포 | 밀도 기반의 분포 데이터 |
+| **확장성** | 매우 높은 확장성 | 고차원 데이터에서 성능 저하 |
+| **설정 파라미터** | 최소 설정 필요 | ε와 MinPts 설정 필요 |
+| **응용 분야** | 금융, 보안, 장비 감지 | 지리 데이터, 이상 행동 탐지 |
