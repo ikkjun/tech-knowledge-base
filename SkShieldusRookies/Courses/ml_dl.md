@@ -2552,6 +2552,9 @@ data['Label Encoding'] = label_encoder.fit_transform(data['Fruits'])
 
 
 # Step 2: 원-핫 인코딩(OneHotEncoder 사용, sparse_output=False로 계산)
+# OneHotEncoder는 기본적으로 0은 저장하지 않고 
+# "몇 행 몇 열이 1"만 기록하는 희소 행렬(sparse matrix)을 돌려준다.
+# sparse_output=False면 일반 배열이 나온다.
 one_hot_encoder = OneHotEncoder(sparse_output=False)
 one_hot_encoded = one_hot_encoder.fit_transform(data[['Label Encoding']])
 
