@@ -3307,12 +3307,12 @@ df_mission
     print(f"평균 절대 오차(MAE): {mae:.2f}")
     print(f"평균 제곱 오차(MSE): {mse:.2f}")
     print(f"평균 제곱근 오차(RMSE): {rmse:.2f}")
-    print(f"결정계수(R2 Scrore): {r2:.4f} (설명력 {r2*100:.1f}%)")
+    print(f"결정계수(R2 Score): {r2:.4f} (설명력 {r2*100:.1f}%)")
 
     # 평균 절대 오차(MAE): 1774.03
     # 평균 제곱 오차(MSE): 5883295.62
     # 평균 제곱근 오차(RMSE): 2425.55
-    # 결정계수(R2 Scrore): 0.9446 (설명력 94.5%)
+    # 결정계수(R2 Score): 0.9446 (설명력 94.5%)
     ```
 
 #### 과적합(Overfitting)과 과소적합(Underfitting)
