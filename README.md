@@ -48,3 +48,5 @@ A personal archive of technical reading, system/security training, and engineeri
 | 2026.11.20 | `Vuln` | [PHP 치명적 결함 패치...특정 웹서버 설정 시 코드 실행 가능](/news/2026/11/php_fpm_request_smuggling.md) | 보안뉴스 | PHP-FPM, 요청 밀반입(CVE-2026-129289), 연결 재사용, 세션 결함 |
 | 2026.11.21 | `Policy` | [[전자금융감독규정 일부 개정안] 금융위, 대형 금융사 보안점검 '반기 1회'로...업무지원 시스템도 살핀다](/news/2026/11/fsc_electronic_finance_regulation_amendment.md) | 데일리시큐 | 전자금융감독규정, 취약점 분석·평가, 전자금융기반시설, IT 자산 관리 의무 |
 | 2026.11.22 | `Incident` | [국내 대학 해킹 파일 끝에 남은 중국어 한 줄…AI 침투도구 흔적 포착](/news/2026/11/korea_univ_ai_hacking_prtseek.md) | 아시아경제 | Prtseek, 아르텍스(ARTEX), AI 에이전트, rERP, UNIVais |
+| 2026.11.23 | `Incident` | [중국 연계 해커 AI 에이전트, 제로데이 찾아 대학 서버 장악](/news/2026/11/ai_agent_cairn_zeroday_univ.md) | 보안뉴스 | AI 에이전트, 케언(Cairn), 제로데이, 모나이 레이블(MONAI Label) |
+| 2026.11.23 | `Incident` | [중국 연계 해커 AI 에이전트, 제로데이 찾아 대학 서버 장악](/news/2026/11/ai_agent_cairn_zeroday_univ.md) | 보안뉴스 | AI 에이전트, 케언(Cairn), 제로데이, 모나이 레이블(MONAI Label) |
