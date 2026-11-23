@@ -3785,10 +3785,10 @@ print(df_results)
     - 재현율(Recall)
     - F1-Score
 - 혼동(오차) 행렬(Confusion Matrix)
-    | 항목 | 실제 Positive | 실제 Negative |
+    | 항목 | 예측 Negative | 예측 Positive |
     | --- | --- | --- |
-    | 예측 Positive | True Positive (TP) | False Positive (FP) |
-    | 예측 Negative | False Negative (FN) | True Negative (TN) |
+    | 실제 Negative | True Negative (TN) | False Positive (FP) |
+    | 실제 Positive | False Negative (FN) | True Positive (TP) |
     - 문제 상황
         - Positive: 암환자(실제 암환자)
         - Negative: 암이 아닌 환자(실제 암이 아닌 환자)
@@ -3799,10 +3799,10 @@ print(df_results)
         - False Positive (FP) : (Type I Error)모델이 암이 아닌 환자를 암이라고 잘못 예측한 경우
         - False Negative (FN): (Type II Error)모델이 암환자를 암이 아니라고 잘못 예측한 경우
 - 모델이 100명의 환자 데이터를 예측한 결과
-    | 항목 | 실제 Positive | 실제 Negative |
+    | 항목 | 예측 Negative | 예측 Positive |
     | --- | --- | --- |
-    | 예측 Positive | 30 (TP) | 10 (FP) |
-    | 예측 Negative | 10 (FN) | 50 (TN) |
+    | 실제 Negative | 50 (TN) | 10 (FP) |
+    | 실제 Positive | 10 (FN) | 30 (TP) |
     - 실제 암 환자(Positive): 40명
     - 실제 암이 아닌 사람(Negative): 60명
     - 모델의 예측 결과<br>
