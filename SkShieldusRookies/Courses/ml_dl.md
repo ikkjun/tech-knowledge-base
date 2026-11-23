@@ -1033,9 +1033,9 @@ A.
     - 계산 방법
         - 데이터를 오름차순으로 정렬한다.
         - Q1, Q2, Q3을 계산<br>
-            » 𝑄1= 하위25% 위치값.<br>
-            » 𝑄2= 중앙값.<br>
-            » 𝑄3= 상위25% 위치값.
+            » $Q1$= 하위25% 위치값.<br>
+            » $Q2$= 중앙값.<br>
+            » $Q3$= 상위25% 위치값.
     - 사례: 데이터가 75, 70, 85, 80, 90일 때
         1. 정렬된 데이터: 70, 75, 80, 85, 90
         2. Q1: 75(하위 25% 경계값)
@@ -2063,7 +2063,7 @@ sns.pairplot(data)
 - 수집한 데이터는 종종 불완전하고 오류가 있을 수 있다.<br>
     → 데이터 정제는 이런 **문제를 해결하여 데이터를 깨끗하게 만드는 단계**이다.
 - 데이터를 정제하지 않으면, 이후 단계에서 잘못된 결과를 얻을 가능성이 높아진다.
-- 주요작업
+- 주요 작업
     - **결측 값 처리** : 데이터에 비어 있는 값(NaN, Null 등)이 있을 경우, 이를 해결해야 한다.<br>
     예: 평균값, 중앙값으로 채우거나 해당 데이터를 삭제한다.
     - **오류 수정** : 잘못된 데이터(오타, 잘못된 값 등)를 수정한다.<br>
@@ -2111,12 +2111,12 @@ sns.pairplot(data)
         - 정규 분포를 띄고 있는 경우 → 평균값
         - 분포가 편향을 가지고 있는 경우 → 중간값
     - **모델 학습 방해 방지**: 머신러닝 모델은 결측값을 포함한 데이터를 처리하지 못하는 경우가 많이 발생한다.
-    - **데이터 품질 향상**: 결측치를 처리하면 데이터가 더 신뢰할 수 있게 된다.
+    - **데이터 품질 향상**: 결측치를 처리하면 데이터를 더 신뢰할 수 있게 된다.
 - 결측치 처리
     - 데이터 손실을 최소화하고 분석에 미치는 영향을 줄이려면
         - 결측치의 양, 데이터의 중요성, 그리고 분석목표를 고려해야 한다.
         - 간단한 데이터셋에서는 제거와 평균/중간값 대체가 유용하다.
-        - 하지만, 복잡한 데이터에서는 머신러닝 기반 대체를 활용해야 한다.
+        - 하지만 복잡한 데이터에서는 머신러닝 기반 대체를 활용해야 한다.
     - 결측치 제거
         - 사용 상황
             - 결측치가 데이터셋에서 차지하는 비율이 매우 적을 때.
@@ -2162,30 +2162,30 @@ sns.pairplot(data)
                 » 평균값으로 대체: 수치형 데이터에서 결측값을 해당 열의 평균으로 대체.<br>
                 » 중간값으로 대체: 평균이 극단값에 영향을 받는 경우, 중간값 사용.<br>
                 » 최빈값으로 대체: 범주형 데이터에서 가장 많이 등장한 값으로 결측치를 대체.<br>
-                - 예측 기반 대체: 머신러닝 모델을 사용해 결측치를 예측하여 채운다.
-                    ```python
-                    # 데이터프레임 생성
-                    data = {
-                        'Name': ['Alice', 'Bob', None],
-                        'Age': [25, None, 30],
-                        'Score': [85, 90, None]
-                    }
-                    df = pd.DataFrame(data)
+            - 예측 기반 대체: 머신러닝 모델을 사용해 결측치를 예측하여 채운다.
+                ```python
+                # 데이터프레임 생성
+                data = {
+                    'Name': ['Alice', 'Bob', None],
+                    'Age': [25, None, 30],
+                    'Score': [85, 90, None]
+                }
+                df = pd.DataFrame(data)
 
-                    # 평균으로 대체
-                    df['Age'] = df['Age'].fillna(df['Age'].mean())
-                    # 중간값으로 대체
-                    df['Score'] = df['Score'].fillna(df['Score'].median())
-                    # 최빈값으로 대체
-                    df['Name'] = df['Name'].fillna(df['Name'].mode()[0])
+                # 평균으로 대체
+                df['Age'] = df['Age'].fillna(df['Age'].mean())
+                # 중간값으로 대체
+                df['Score'] = df['Score'].fillna(df['Score'].median())
+                # 최빈값으로 대체
+                df['Name'] = df['Name'].fillna(df['Name'].mode()[0])
 
-                    print(df)
+                print(df)
 
-                    #     Name   Age  Score
-                    # 0  Alice  25.0   85.0
-                    # 1    Bob  27.5   90.0
-                    # 2  Alice  30.0   87.5
-                    ```
+                #     Name   Age  Score
+                # 0  Alice  25.0   85.0
+                # 1    Bob  27.5   90.0
+                # 2  Alice  30.0   87.5
+                ```
 
 #### 이상치 처리 (IQR, Z-Score)
 
@@ -2204,10 +2204,10 @@ sns.pairplot(data)
             - 극단값에 영향을 덜 받는다.
     - Q1(1사분위수): 하위25%의값.
     - Q3(3사분위수): 상위75%의값.
-    - IQR: 𝐼𝑄𝑅=𝑄3−𝑄1
+    - IQR: $IQR = Q3- Q1$
     - 이상치 기준
-        - 아래쪽: 𝑄1 - 1.5 × 𝐼𝑄𝑅 보다 작은 값.
-        - 위쪽: 𝑄3 + 1.5 × 𝐼𝑄𝑅 보다 큰 값.
+        - 아래쪽: $Q1 - 1.5 × IQR$ 보다 작은 값.
+        - 위쪽: $Q3 + 1.5 × IQR$ 보다 큰 값.
             ```python
             import numpy as np
             import pandas as pd
@@ -2374,8 +2374,10 @@ sns.pairplot(data)
 - 표준화는 데이터의 값을 평균이 0, 표준편차가 1이 되도록 변환하는 방법이다.
 - 데이터의 분포 모양을 바꾸지는 않고, 단위 차이를 없애 주는 것이다.
 - 수식
+
     $$z = \frac{x - \mu}{\sigma}$$
-    - x: 원래데이터값
+
+    - x: 원래 데이터 값
     - 𝜇: 평균값
     - 𝜎: 표준편차
 - 장점
@@ -2389,8 +2391,10 @@ sns.pairplot(data)
 - 정규화는 데이터를 0과 1 사이로 변환하는 방법이다.
 - 값의 크기를 줄이고, 데이터를 일정한 스케일로 맞춘다.
 - 수식(Min-Max Scaling)
+
     $$x' = \frac{x - \min(x)}{\max(x) - \min(x)}$$
-    - 𝑥: 원래 데이터 값
+
+    - $$ 원래 데이터 값
     - min(𝑥) : 데이터의 최소값
     - max(𝑥) : 데이터의 최대값
 - 장점
@@ -2550,7 +2554,6 @@ data = pd.DataFrame({'Fruits': ['사과', '배', '포도', '사과', '포도']})
 label_encoder = LabelEncoder()      # 가나다 순으로 순서를 부여한다.
 data['Label Encoding'] = label_encoder.fit_transform(data['Fruits'])
 
-
 # Step 2: 원-핫 인코딩(OneHotEncoder 사용, sparse_output=False로 계산)
 # OneHotEncoder는 기본적으로 0은 저장하지 않고 
 # "몇 행 몇 열이 1"만 기록하는 희소 행렬(sparse matrix)을 돌려준다.
@@ -2568,9 +2571,9 @@ data = pd.concat([data, one_hot_df], axis=1)
 # 출력
 print(data)
 
-#   Fruits  Label Encoding  Label Encoding_0  Label Encoding_1  Label Encoding_2
+#     Fruits  Label Encoding  Label Encoding_0  Label Encoding_1  Label Encoding_2
 # 0     사과               1               0.0               1.0               0.0
-# 1      배               0               1.0               0.0               0.0
+# 1       배               0               1.0               0.0               0.0
 # 2     포도               2               0.0               0.0               1.0
 # 3     사과               1               0.0               1.0               0.0
 # 4     포도               2               0.0               0.0               1.0
@@ -2659,12 +2662,12 @@ df = pd.DataFrame(data)
     df['AgeGroup'] = pd.cut(df['Age'], bins=bins, labels=labels)
     df[['Age', 'AgeGroup']]
 
-    #   Age	AgeGroup
-    # 0	19	Youth
-    # 1	45	MiddleAge
-    # 2	28	YoungAdult
-    # 3	37	YoungAdult
-    # 4	62	Senior
+    #       Age	  AgeGroup
+    # 0     19	     Youth
+    # 1	    45	 MiddleAge
+    # 2	    28	YoungAdult
+    # 3	    37	YoungAdult
+    # 4 	62	    Senior
     ```
 
 #### 교차 변수 생성 (Interaction Features)
@@ -2676,7 +2679,6 @@ df = pd.DataFrame(data)
     df['TotalSpending'] = df['PurchaseCount'] * df['AvgOrderValue']
 
     df[['PurchaseCount', 'AvgOrderValue', 'TotalSpending']]
-
 
     # PurchaseCount	AvgOrderValue	TotalSpending
     # 0	15	        25000	        375000
@@ -2768,9 +2770,9 @@ df_mission
 - 지도학습의 주요 알고리즘: **회귀(Regression)** 와 **분류(Classification)**
     - 지도학습의 알고리즘은 크게 회귀(Regression; 예측 - 숫자)와 분류(Classification)로 나누어진다.
         - 회귀<br>
-            » 집값, 주가, 매출 등 연속적인 수치(숫자)를 예측 문제를 해결한다.
+            » 집값, 주가, 매출 등 연속적인 수치(숫자)로 된 예측 문제를 해결한다.
         - 분류<br>
-            » 데이터를 미리 정의된 여러 범주(Category)로 나누는 문제를 해결한다.<br>
+            » 미리 정의된 여러 범주(Category)로 데이터를 나누는 문제를 해결한다.<br>
             » 이메일 스팸 여부(O/X), 과일 종류 등 **이산적인 범주(클래스)** 를 예측한다.
 - 회귀 알고리즘(Regression)
     - 회귀는 연속적인 숫자 값을 예측하는 알고리즘이다.
