@@ -6276,3 +6276,132 @@ Softmax 출력: [1.60282163e-10 2.90545596e-08 6.98679014e-06 6.09062008e-05
 6. **예측**
    - 훈련된 모델을 사용해 새로운 데이터의 클래스를 예측한다.
    - `Softmax` 출력은 각 클래스에 대한 확률값을 반환하고, `argmax`를 사용해 가장 높은 확률의 클래스를 선택한다.
+
+### 허깅페이스 라이브러리 활용
+
+#### 1. Hugging Face Hub 한눈에 보기
+
+- **Hugging Face Hub 핵심 3개**
+  - **Models**: 사전학습/파인튜닝된 모델 저장소 — https://huggingface.co/models
+  - **Datasets**: 학습/평가 데이터셋 저장소 — https://huggingface.co/datasets
+  - **Spaces**: 데모 앱(Gradio/Streamlit 등) — https://huggingface.co/spaces
+- **문제(태스크) 중심으로 시작할 때**
+  - **Tasks**: 태스크별 대표 모델/데이터/데모 모음 — https://huggingface.co/tasks
+
+---
+
+#### 2. Tasks에서 시작하는 방법 (태스크 → 모델로 연결)
+
+- **Tasks 페이지에서 목표 태스크 선택**: https://huggingface.co/tasks
+- **예시**
+  - Text Classification: https://huggingface.co/tasks/text-classification
+  - Question Answering: https://huggingface.co/tasks/question-answering
+  - Image Classification: https://huggingface.co/tasks/image-classification
+  - Text-to-Image: https://huggingface.co/tasks/text-to-image
+- **각 태스크 페이지에서 확인할 것**: 대표 모델 / 대표 데이터셋 / 데모(Spaces) 링크
+
+---
+
+#### 3. Models에서 검색/필터 쓰는 법
+
+- **Models 기본 페이지**: https://huggingface.co/models
+- **필터의 핵심**: `pipeline_tag` (태스크 필터)
+  - 텍스트 분류: https://huggingface.co/models?pipeline_tag=text-classification
+  - 질의응답(QA): https://huggingface.co/models?pipeline_tag=question-answering
+  - 텍스트→이미지: https://huggingface.co/models?pipeline_tag=text-to-image
+- **자주 같이 쓰는 추가 필터**
+  - 라이브러리(Transformers 등): `library=transformers`
+  - 정렬: `sort=trending` / `sort=downloads` (화면에서 선택)
+
+---
+
+#### 4. 모델 페이지 체크리스트 (Model Card)
+
+- 모델 페이지에서 가장 먼저 보는 곳: **Model Card (`README`)**
+  - 모델 목적, 학습 데이터, 사용법, 제한사항, 라이선스, 윤리 이슈가 정리되어 있다.
+- **Model Card 개념 문서**: https://huggingface.co/docs/hub/en/model-cards
+
+---
+
+#### 5. 사용 1단계: Use in Library + Pipeline
+
+- 모델 페이지 우측/상단의 **`Use in Library`** 버튼 확인 (`Transformers`/`Diffusers` 등으로 바로 쓰는 예제 제공)
+- **관련 문서**
+  - Transformers Pipeline 문서: https://huggingface.co/docs/transformers/en/main_classes/pipelines
+  - 튜토리얼: https://huggingface.co/docs/transformers/en/pipeline_tutorial
+- **실행 흐름**
+  1. `pipeline`으로 **추론** 먼저 성공
+  2. 그다음 **파인튜닝/전이학습**으로 확장
+
+---
+
+#### 6. 태스크별 주요 라이브러리 (Transformers vs Diffusers)
+
+- **NLP / 분류 / QA / 요약 / 임베딩 등 → `Transformers`**
+  - Text Classification 가이드: https://huggingface.co/docs/transformers/en/tasks/sequence_classification
+  - Image Classification 가이드: https://huggingface.co/docs/transformers/en/tasks/image_classification
+  - QA 태스크 가이드: https://huggingface.co/docs/transformers/en/tasks/question_answering
+- **텍스트→이미지 (Stable Diffusion 계열 등) → `Diffusers`**
+  - Text-to-Image 파이프라인 문서(예): https://huggingface.co/docs/diffusers/main/en/api/pipelines/stable_diffusion/text2img
+
+---
+
+#### 7. 코드로 Hub에서 검색하는 방법 (`huggingface_hub`)
+
+- 웹 UI 대신 파이썬 코드로 모델을 검색하고 목록화할 수 있다.
+- **`huggingface_hub` 검색 가이드(한글)**: https://huggingface.co/docs/huggingface_hub/main/ko/guides/search
+- **활용 예**
+  - 특정 태스크/라이선스/언어 조건으로 모델 후보 리스트 만들기
+  - 팀 프로젝트에서 "모델 선정 기준표" 자동 생성
+
+---
+
+#### 허깅페이스(Hugging Face) 핵심 구성
+
+| 구성 요소 | 설명 |
+| :---: | :--- |
+| **Datasets** | 학습/평가에 쓰는 "데이터 모음" |
+| **Models** | 학습된 "모델 가중치(결과물)" |
+| **Spaces** | 모델을 "웹 데모/앱"으로 보여주는 공간(배포) |
+| **Docs** | 위 기능들을 쓰는 "공식 문서/가이드" |
+
+##### 자주 쓰는 2대 라이브러리
+
+- **`Datasets`**: 데이터를 가져오고, 정리하고, 전처리해서 학습용으로 내보내는 라이브러리
+- **`Transformers`**: 토크나이저와 모델을 불러오고, 학습하고, 추론하는 라이브러리
+
+> `Datasets`로 데이터 준비 → `Transformers`로 토크나이즈 / 학습 / 추론
+
+---
+
+### Transformers 라이브러리
+
+#### 1. Transformers 설치
+
+- CPU만으로도 실행 가능하지만, 딥러닝 프레임워크(`torch`)가 필요하다.
+
+```bash
+pip install transformers torch
+```
+
+- `Trainer`(학습 도구)가 내 PC/환경(CPU, GPU, 멀티 GPU)을 알아서 효율적으로 활용하도록 돕는 보조 라이브러리:
+
+```bash
+pip install accelerate
+```
+
+#### 2. Pipeline
+
+- `Pipeline`은 가장 쉬운 추론 API로, 학습이나 미세조정 없이 이미 학습된 모델을 바로 사용할 수 있다.
+
+```python
+from transformers import pipeline
+
+clf = pipeline("sentiment-analysis")  # 기본 추천 모델 자동 선택
+print(clf("I love this movie!"))
+print(clf("This was terrible..."))
+```
+
+- `Pipeline`은 내부적으로 적절한 `tokenizer`와 `model`을 로드한 뒤 **전처리 → 추론 → 후처리**를 모두 자동으로 처리한다.
+    - **장점**: 빠르게 결과 확인 가능
+    - **단점**: 세밀한 커스터마이징(학습, 배치 제어, 특수 전처리)은 `Trainer`나 직접 구현 코드가 유리하다.
