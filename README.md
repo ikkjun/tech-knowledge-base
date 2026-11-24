@@ -50,3 +50,4 @@ A personal archive of technical reading, system/security training, and engineeri
 | 2026.11.22 | `Incident` | [국내 대학 해킹 파일 끝에 남은 중국어 한 줄…AI 침투도구 흔적 포착](/news/2026/11/korea_univ_ai_hacking_prtseek.md) | 아시아경제 | Prtseek, 아르텍스(ARTEX), AI 에이전트, rERP, UNIVais |
 | 2026.11.23 | `Incident` | [중국 연계 해커 AI 에이전트, 제로데이 찾아 대학 서버 장악](/news/2026/11/ai_agent_cairn_zeroday_univ.md) | 보안뉴스 | AI 에이전트, 케언(Cairn), 제로데이, 모나이 레이블(MONAI Label) |
 | 2026.11.23 | `Incident` | [중국 연계 해커 AI 에이전트, 제로데이 찾아 대학 서버 장악](/news/2026/11/ai_agent_cairn_zeroday_univ.md) | 보안뉴스 | AI 에이전트, 케언(Cairn), 제로데이, 모나이 레이블(MONAI Label) |
+| 2026.11.24 | `Incident` | [자동 승인 한 번에 비밀번호까지... 클로드 코드 설정 파일 1122개서 비밀 값 무더기 노출](/news/2026/11/claude_code_secret_exposure.md) | 보안뉴스 | 클로드 코드(Claude Code), 비밀 값 노출, .gitignore, 깃리크스(gitleaks) |
