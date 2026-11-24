@@ -7063,13 +7063,16 @@ print("Model saved successfully.")
 
 ```python
 import joblib
+import numpy as np
 
 # 모델 로드
 loaded_model = joblib.load('linear_model.pkl')
 print("Model loaded successfully.")
 
 # 모델 사용
+X = np.array([[0.5], [1.0], [-2.0]])        # 예측할 새 입력(shape: 3 x 1)
 y_pred = loaded_model.predict(X)
+print(y_pred)
 ```
 
 ---
@@ -7159,9 +7162,9 @@ print(f"Prediction for {sample_data}: {prediction}")
 
 ---
 
-## 2. Google Colab 개발 환경
+#### 2. Google Colab 개발 환경
 
-### Google Colab 개요
+##### Google Colab 개요
 
 - 구글에서 리서치 목적으로 만든 파이썬(Python) 언어 툴로, 현재 브라우저 기반 무료 호스팅 서비스로 제공된다.
 - Google Cloud 주피터(Jupyter) 노트북을 기반으로 머신러닝 교육 및 연구에 널리 사용된다.
@@ -7180,7 +7183,7 @@ print(f"Prediction for {sample_data}: {prediction}")
 
 ---
 
-### Google Colab의 주요 특징
+##### Google Colab의 주요 특징
 
 1. **No Installation, No Configuration (설치 및 설정 불필요)**
     - 브라우저를 통해 별도 설정 없이 무료로 코드 작성 및 실행 가능
@@ -7205,7 +7208,7 @@ print(f"Prediction for {sample_data}: {prediction}")
 
 ---
 
-### Google Colab 실행 방법
+##### Google Colab 실행 방법
 
 - Google 계정이 필요하다.
 - **Google Colab 파일 만들기**
