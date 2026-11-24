@@ -6357,6 +6357,349 @@ ANN ──> DNN ──┤                        ├──> Transformer
   - **YOLO** / SSD: 한 번에 빠르게 찾는 계열 → **실시간**에 강하다(카메라)
   - **Faster R-CNN**: 단계적으로 더 꼼꼼히 찾는 계열 → **정확도**에 강하다.
 
+##### Character Level 1D-CNN 구현 코드
+
+```python
+import numpy as np
+import pandas as pd
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Embedding, Conv1D, GlobalMaxPooling1D, Dense, Dropout
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report
+
+
+# 1. 가상 데이터셋 생성 (Synthetic Dataset)
+data = {
+    'payload': [
+        # 정상 패턴 (Benign)
+        'index.php?id=1', 'show.php?article=12&page=2', 'about-us.html', 'login.php', 'contact_us?email=user@example.com',
+        '/assets/logo.png', '/js/main.js', 'search?q=machine+learning', 'profile?user_id=883', '/products/category/electronics',
+        'submit?name=Yoo&age=30', 'index.html', 'blog/post-102', 'faq?category=general', 'settings?theme=dark',
+        # SQL Injection (SQLi)
+        "login.php?id=1' OR '1'='1", "admin' --", "union select null, username, password from users",
+        "SELECT * FROM members WHERE username = 'admin' AND password = '' OR '1'='1'", "1' or 1=1--",
+        "'; DROP TABLE users; --", "admin' AND 1=1", "id=5 UNION SELECT ALL", "1' ORDER BY 1--", "id=1' OR 'any'='any",
+        # XSS (Cross-Site Scripting)
+        "<script>alert(1)</script>", "<iframe src='javascript:alert(1)'>", "<img src=x onerror=alert('hack')>",
+        "<body onload=alert(document.cookie)>", "<svg/onload=alert(1)>", "<script src='http://evil.com/payload.js'></script>",
+        "javascript:alert('XSS')", "<a href='javascript:alert(1)'>Click me</a>", "<math><a xlink:href='javascript:alert(1)'>",
+        "<details open nontrigger=alert(1)>"
+    ],
+    'label': [
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  # 0: 정상 (15개)
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1,                  # 1: 악성 공격 (10개)
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1                   # 1: 악성 공격 (10개)
+    ]
+}
+
+df = pd.DataFrame(data)
+
+# 단순 학습 데모를 위해 데이터를 15배로 복제하여 미니 데이터셋 구축 (총 525행)
+df = pd.concat([df] * 15, ignore_index=True)
+print(f"총 데이터 수: {len(df)}개 (정상: {len(df[df['label']==0])}개, 공격: {len(df[df['label']==1])}개)")
+
+
+# 2. 문자 단위 전처리 (Character Tokenization)
+
+# 중복 문자 제거 후 ASCII 문자 사전 정의
+RAW_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.!@#$%^&*()_+={}[]|\\:;'\"<>,.?/~` "
+CHARS = "".join(dict.fromkeys(RAW_CHARS))
+
+char_dict = {char: idx + 2 for idx, char in enumerate(CHARS)}  # 0: 패딩, 1: 모르는 문자(OOV)
+char_dict['<PAD>'] = 0
+char_dict['<OOV>'] = 1
+
+vocab_size = len(char_dict)
+max_len = 100  # 고정할 최대 시퀀스 길이 (100글자)
+
+def text_to_char_indices(text):
+    """문자열을 사전에 정의된 정수 인덱스 리스트로 변환"""
+    return [char_dict.get(char, 1) for char in text]  # 사전에 없으면 OOV(1) 처리
+
+# 전처리 실행
+sequences = [text_to_char_indices(text) for text in df['payload']]
+
+# 패딩(Padding): 모든 데이터의 길이를 100자로 고정 (뒤를 0으로 채움)
+X = pad_sequences(sequences, maxlen=max_len, padding='post', truncating='post')
+y = df['label'].values
+
+# 실제 데이터 인덱스 최댓값을 반영해 input_dim 안전하게 설정
+max_idx_in_data = int(X.max())
+input_dim = max(vocab_size, max_idx_in_data + 1)
+
+# 학습 데이터와 테스트 데이터 분할 (8:2)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+print(f"문자 사전 크기 (Vocab Size): {vocab_size}, 최종 input_dim: {input_dim}, X 최대 인덱스: {max_idx_in_data}")
+print(f"학습 데이터 크기: {X_train.shape}, 테스트 데이터 크기: {X_test.shape}")
+
+
+# 3. 1D-CNN 모델 설계 (Model Architecture)
+
+model = Sequential([
+    # [임베딩 층] 각 문자 인덱스를 32차원의 고차원 수치 벡터로 조밀하게 정렬
+    Embedding(input_dim=input_dim, output_dim=32, input_length=max_len),
+
+    # [1차원 CNN 층] 5글자씩 훑어가는 필터(Kernel)를 64개 사용하여 악성 유형 패턴 추출
+    Conv1D(filters=64, kernel_size=5, activation='relu'),
+
+    # [글로벌 맥스 풀링] 훑어본 영역 중 가장 특징이 뚜렷한(점수가 가장 높은) 핵심 값들만 추림
+    GlobalMaxPooling1D(),
+
+    # [완전 연결 신경망] 학습된 패턴 정보를 조합하는 은닉층
+    Dense(32, activation='relu'),
+
+    Dropout(0.3),  # 과적합 방지를 위해 학습 중 일부 뉴런을 끔
+
+    # [출력층] 정상(0)과 공격(1)의 확률값을 결정하는 시그모이드 함수 적용
+    Dense(1, activation='sigmoid')
+])
+
+model.compile(optimizer='adam',
+              loss='binary_crossentropy',
+              metrics=['accuracy'])
+
+model.summary()
+
+
+# 4. 모델 학습 (Training)
+print("\n[4] 모델 학습 시작...")
+history = model.fit(X_train, y_train,
+                    epochs=10,
+                    batch_size=16,
+                    validation_split=0.1,
+                    verbose=1)
+
+
+# 5. 모델 평가 (Evaluation)
+loss, accuracy = model.evaluate(X_test, y_test, verbose=0)
+print(f"\n테스트 최종 정확도: {accuracy*100:.2f}%")
+
+# 오차 분석 리포트 출력
+y_pred_prob = model.predict(X_test, verbose=0)
+y_pred = (y_pred_prob > 0.5).astype(int)
+
+print("\n[평가 보고서]")
+print(classification_report(y_test, y_pred, target_names=['Normal (정상)', 'Attack (공격)']))
+
+
+# 6. 신종/미탐 페이로드 탐지 테스트 (Inference)
+print("\n[6] 신규 실시간 유입 트래픽 검사 수행...")
+new_payloads = [
+    "index.php?page=notice",                 # 정상 예상
+    "union select password from admin",      # SQLi 공격 예상
+    "<script>confirm('hacked')</script>",    # XSS 공격 예상
+    "safe_param=hello_world"                 # 정상 예상
+]
+
+# 신규 데이터 전처리
+new_seq = [text_to_char_indices(p) for p in new_payloads]
+new_pad = pad_sequences(new_seq, maxlen=max_len, padding='post', truncating='post')
+
+# 예측 수행
+predictions = model.predict(new_pad, verbose=0)
+
+print("\n====== 실시간 방화벽 차단 피드백 ======")
+for payload, prob in zip(new_payloads, predictions):
+    result = "🔴 [BLOCK] 악성 위협 페이로드 차단!" if prob[0] > 0.5 else "🟢 [PASS] 정상 트래픽 통과"
+    print(f"요청 페이로드 : {payload}")
+    print(f"공격 위험도   : {prob[0]*100:.2f}%")
+    print(f"보안 장비 조치: {result}")
+    print("-" * 55)
+```
+
+##### Character-level 1D-CNN _malicious_phish
+
+```python
+import numpy as np
+import pandas as pd
+import tensorflow as tf
+import re
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Embedding, Conv1D, GlobalMaxPooling1D, Dense, Dropout, BatchNormalization
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+from tensorflow.keras.callbacks import EarlyStopping
+from tensorflow.keras.optimizers import Adam
+from sklearn.model_selection import train_test_split
+
+# 1. 데이터 로드 및 데이터 증강 (Data Augmentation)
+
+# 캐글 Malicious URLs Dataset 로드
+DATA_PATH = 'malicious_phish.csv'
+
+import os
+# Check if the file exists. If not, prompt the user to upload it.
+if not os.path.exists(DATA_PATH):
+    print(f"Error: The file '{DATA_PATH}' was not found.")
+    print("Please upload the 'malicious_phish.csv' dataset file.")
+    from google.colab import files
+    uploaded = files.upload()
+    if DATA_PATH not in uploaded:
+        raise FileNotFoundError(f"The uploaded file is not named '{DATA_PATH}'. Please ensure the correct file is uploaded with the correct name.")
+    else:
+        print(f"Successfully uploaded '{DATA_PATH}'.")
+
+df = pd.read_csv(DATA_PATH)
+
+# 라벨 이진화: 'benign'(정상)은 0, 그 외 모든 악성 유형(phishing, malware 등)은 1로 변환
+df['label'] = df['type'].apply(lambda x: 0 if str(x).strip().lower() == 'benign' else 1)
+
+# 데이터 증강 (Data Augmentation)
+# 원인: 캐글 데이터셋은 서구권 URL 위주로 수집되어 있어, 'naver', 'daum' 같은 아시아권 정상 도메인을
+#       미학습 DGA(도메인 생성 알고리즘) 악성 도메인으로 오인하는 편향(Bias) 및 OOD 문제가 발생함.
+# 해결: 학습 단계에서 대표적인 한국/아시아 정상 도메인을 일부 수동 추가하여 1D-CNN이 안전한 알파벳 패턴으로 학습하도록 유도함.
+augmented_benign_urls = [
+    'https://www.naver.com', 'https://news.naver.com', 'https://blog.naver.com',
+    'https://www.daum.net', 'https://www.kakao.com', 'https://www.tistory.com',
+    'https://www.baidu.com', 'https://www.yandex.ru', 'https://www.yahoo.co.jp',
+    'https://www.coupang.com', 'https://www.gmarket.co.kr'
+] * 200  # 딥러닝 가중치 업데이트에 유의미한 비중으로 반영되도록 약 2,200개로 복제하여 가증강
+
+# 증강 데이터 프레임 생성 및 기존 캐글 데이터셋과 합치기
+df_aug = pd.DataFrame({'url': augmented_benign_urls, 'type': 'benign', 'label': 0})
+df = pd.concat([df, df_aug], ignore_index=True)
+
+print(f"[1] 데이터 증강 완료: 전체 데이터 수 {len(df):,}개")
+
+# 2. Character-level 토큰화 및 전처리
+
+# URL 및 웹 페이로드에서 등장할 수 있는 표준 ASCII 알파벳, 숫자, 특수기호 사전 정의
+CHARS = "abcdefghijklmnopqrstuvwxyz0123456789-_.!@#$%^&*()_+={}[]|\\:;'\"<>,.?/~` "
+CHARS = "".join(dict.fromkeys(CHARS))  # 혹시 남은 중복 제거 (순서 유지)
+
+# 각 문자에 고유 정수 ID 매핑 (0과 1은 특수 토큰용으로 예약)
+# 0 -> <PAD>: 길이를 맞추기 위한 빈 공간 패딩
+# 1 -> <OOV>: 사전에 정의되지 않은 생소한 문자(Out Of Vocabulary)
+char_dict = {char: idx + 2 for idx, char in enumerate(CHARS)}
+char_dict['<PAD>'] = 0
+char_dict['<OOV>'] = 1
+
+vocab_size = len(char_dict)
+max_len = 150  # 모든 URL의 입력을 통일시킬 고정 시퀀스 길이 (150글자)
+
+def clean_url_text(url_text):
+    """
+    URL의 소문자화 및 스키마/접두사 제거 정규화 함수
+    - 대소문자 차이로 인한 모르는 단어(OOV) 발생을 줄임
+    - http://, https://, www. 등 공통 접두사를 지워 핵심 도메인/파라미터 패턴에 집중하게 함
+    """
+    url = str(url_text).lower().strip()
+    url = re.sub(r'^https?://', '', url)
+    url = re.sub(r'^www\.', '', url)
+    return url
+
+def url_to_indices(url_text):
+    """문자열 URL을 정수 인덱스 리스트로 변환"""
+    cleaned = clean_url_text(url_text)
+    return [char_dict.get(char, 1) for char in cleaned]
+
+# 전체 URL 데이터 전처리 진행
+sequences = [url_to_indices(u) for u in df['url']]
+
+# pad_sequences: 150자보다 짧으면 뒤에 0(<PAD>)을 채우고, 길면 150자까지 잘라냄
+X = pad_sequences(sequences, maxlen=max_len, padding='post', truncating='post')
+y = df['label'].values
+
+# 학습 데이터(80%)와 테스트 데이터(20%) 분할 (stratify=y 적용으로 정상/악성 비율 동일 유지)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y
+)
+
+print(f"[2] 전처리 완료: 학습 데이터 {X_train.shape}, 테스트 데이터 {X_test.shape}")
+
+# 3. 순수 Character-level 1D-CNN 모델 설계 (Model Architecture)
+
+model = Sequential([
+
+    # [1] Embedding Layer
+    # 각 문자 정수 ID를 32차원의 실수 연속 벡터 공간으로 투영 (문자 간 연관성 학습)
+    Embedding(input_dim=vocab_size, output_dim=32),
+
+    # [2] 첫 번째 Conv1D Layer (5글자 패턴 스캔)
+    # kernel_size=5 : 5글자씩 슬라이딩 윈도우로 훑으며, 128개의 필터가 서로 다른 유해/안전 서브패턴 탐지
+    Conv1D(filters=128, kernel_size=5, padding='same', activation=None),
+    BatchNormalization(),  # 배치 정규화: 가중치 폭발 및 Sigmoid 포화(Saturation) 현상을 방지하여 100% 쏠림 억제
+    tf.keras.layers.Activation('relu'),
+
+    # [3] 두 번째 Conv1D Layer (3글자 패턴 스캔)
+    # kernel_size=3 : 이전 레이어의 추출 특징을 한 번 더 3글자 단위로 잘게 스캔하여 보다 정교한 패턴 조합 탐지
+    Conv1D(filters=64, kernel_size=3, padding='same', activation=None),
+    BatchNormalization(),
+    tf.keras.layers.Activation('relu'),
+
+    # [4] GlobalMaxPooling1D Layer
+    # 150자의 전체 스캔 영역 중 가장 강렬하게 반응한(위험 점수가 가장 높은) 핵심 특징만 위로 전달
+    GlobalMaxPooling1D(),
+
+    # [5] Fully Connected Layer (분류기)
+    Dense(64, activation='relu'),
+    Dropout(0.4),  # 과적합 방지: 학습 중 임의로 40% 뉴런 연결을 차단함
+
+    # [6] Output Layer
+    # Sigmoid 함수 사용: 출력을 0(정상)~1(악성) 사이의 위험도 확률값으로 변환
+    Dense(1, activation='sigmoid')
+])
+
+# [Label Smoothing 적용 이유]
+# label_smoothing=0.01: 라벨 정답(0 또는 1)을 0.005, 0.995 등으로 미세하게 완화함.
+# 이를 통해 모델이 극단적인 100% 또는 0% 확신을 가지는 오버콘피던스(Overconfidence) 및 포화 현상을 방지함.
+model.compile(
+    optimizer=Adam(learning_rate=0.001),
+    loss=tf.keras.losses.BinaryCrossentropy(label_smoothing=0.01),
+    metrics=['accuracy']
+)
+
+model.summary()
+
+# 4. EarlyStopping 콜백 정의 및 모델 학습
+
+# EarlyStopping: 검증 손실(val_loss)이 3 에포크 동안 개선되지 않으면 학습을 자동 중단하고,
+#                 가장 성능이 뛰어났던 에포크 시점의 최적 가중치로 자동 복원함.
+early_stopping = EarlyStopping(
+    monitor='val_loss',
+    patience=3,
+    verbose=1,
+    restore_best_weights=True
+)
+
+print("\n[4] 1D-CNN 모델 학습 시작...")
+history = model.fit(
+    X_train, y_train,
+    epochs=15,
+    batch_size=256,
+    validation_split=0.1,  # 학습 데이터 중 10%를 검증용으로 활용
+    callbacks=[early_stopping],
+    verbose=1
+)
+
+# 5. 실시간 신규 URL 검증 및 위협 탐지 (Inference)
+
+# 테스트할 실시간 입력 URL 샘플 (정상 2개, 악성 2개)
+sample_urls = [
+    "https://www.naver.com",                                        # 정상 (데이터 증강 효과 검증용)
+    "https://github.com/search?q=cnn",                              # 정상
+    "http://paypal.com.account-verification-service.top/login.php", # 악성 (서브도메인 위장 피싱)
+    "http://192.168.1.50/admin/download/payload.exe"               # 악성 (IP 기반 악성코드 다운로드)
+]
+
+# 신규 입력 데이터 전처리 (학습 시와 완전히 동일하게 처리)
+sample_seq = [url_to_indices(u) for u in sample_urls]
+sample_pad = pad_sequences(sample_seq, maxlen=max_len, padding='post', truncating='post')
+
+# 확률 추론 예측
+preds = model.predict(sample_pad)
+
+print("\n====== 순수 1D-CNN (데이터 증강 후) 실시간 탐지 결과 ======")
+for url, score in zip(sample_urls, preds):
+    prob = score[0] * 100  # 0~1 값을 백분율(%) 확률로 변환
+    status = "🔴 [위험] 악성 URL" if score[0] > 0.5 else "🟢 [안전] 정상 URL"
+    print(f"URL   : {url}")
+    print(f"위험도: {prob:.2f}% ({status})")
+    print("-" * 55)
+```
+
 ---
 
 #### RNN (Recurrent Neural Network)
