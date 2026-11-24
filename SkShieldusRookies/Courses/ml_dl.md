@@ -7,6 +7,7 @@
 - [4. 머신러닝 기초 - 지도학습](#machine-learning-basic-supervised)
 - [5. 머신러닝 기초 - 비지도학습](#machine-learning-basic-unsupervised)
 - [6. 딥러닝 기초](#deep-learning-basic)
+- [7. Colab, 모델 기반 애플리케이션 개발](#application_development)
 
 ## 📌 질문  모음
 1. [connect와 cursor 객체의 차이점은 무엇일까?](#q-cursor-connect-difference)
@@ -7024,3 +7025,189 @@ print(clf("This was terrible..."))
 - `Pipeline`은 내부적으로 적절한 `tokenizer`와 `model`을 로드한 뒤 **전처리 → 추론 → 후처리**를 모두 자동으로 처리한다.
     - **장점**: 빠르게 결과 확인 가능
     - **단점**: 세밀한 커스터마이징(학습, 배치 제어, 특수 전처리)은 `Trainer`나 직접 구현 코드가 유리하다.
+
+## <a id="application_development"></a>7. Colab, 모델 기반 애플리케이션 개발
+
+### 모델 파일로 저장과 활용
+
+#### `joblib`를 사용한 저장과 로드
+
+##### `joblib`를 사용한 저장
+
+- `joblib`은 특히 **큰 NumPy 배열을 포함하는 객체**를 저장하고 로드하는 데 효율적이다.
+    ```python
+    import joblib
+
+    joblib.dump(model, 'linear_model.pkl', compress=3)
+    ```
+- **`joblib.dump` 주요 옵션**
+    - **파일 경로**: 모델이 저장될 경로를 문자열로 지정
+    - **압축 옵션**: `compress=True` 또는 `compress=3`처럼 설정하면 저장 파일 크기를 줄인다(숫자가 클수록 압축률이 높아지지만 속도가 느려질 수 있다).
+
+```python
+from sklearn.linear_model import LinearRegression
+from sklearn.datasets import make_regression
+import joblib
+
+# 샘플 데이터 생성 및 모델 학습
+X, y = make_regression(n_samples=100, n_features=1, noise=0.1)
+model = LinearRegression()
+model.fit(X, y)
+
+# 모델 저장
+joblib.dump(model, 'linear_model.pkl')
+print("Model saved successfully.")
+```
+
+##### joblib 파일 로드
+
+```python
+import joblib
+
+# 모델 로드
+loaded_model = joblib.load('linear_model.pkl')
+print("Model loaded successfully.")
+
+# 모델 사용
+y_pred = loaded_model.predict(X)
+```
+
+---
+
+#### `pickle`을 사용한 저장과 로드
+
+- `pickle`은 Python 객체를 **직렬화(Serialization)** 하고 **역직렬화(Deserialization)** 하는 데 사용한다.
+    ```python
+    import pickle
+
+    # 모델 저장
+    with open('linear_model.pkl', 'wb') as f:
+        pickle.dump(model, f)
+    print("Model saved successfully.")
+    ```
+- **파일 열기 모드**
+    - `'wb'`: 쓰기 모드로 바이너리 형식 저장
+    - `'ab'`: 이미 존재하는 파일에 추가 모드로 데이터 저장
+    - `'rb'`: 읽기 모드로 바이너리 형식 로드
+- **프로토콜 버전**
+    - `pickle.dump(obj, file, protocol=pickle.HIGHEST_PROTOCOL)`처럼 설정하면 최신 프로토콜 버전을 사용한다.
+
+##### `pickle` 파일 로드
+
+```python
+# 모델 로드
+with open('linear_model.pkl', 'rb') as f:
+    loaded_model = pickle.load(f)
+print("Model loaded successfully.")
+
+# 모델 사용
+y_pred = loaded_model.predict(X)
+```
+
+---
+
+#### 딥러닝 모델 (TensorFlow/Keras) 저장과 로드
+
+##### 딥러닝 모델의 저장
+
+- **`.keras` 형식**: TensorFlow/Keras에서 제공하는 새로운 표준 저장 형식
+
+```python
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.utils import to_categorical
+import numpy as np
+
+# 데이터 생성
+np.random.seed(42)
+X = np.random.rand(100, 10)
+y = np.random.randint(0, 2, 100)
+y = to_categorical(y)
+
+# 모델 생성 및 학습
+model = Sequential([
+    Dense(32, activation='relu', input_shape=(10,)),
+    Dense(2, activation='softmax')
+])
+model.compile(
+    optimizer='adam',
+    loss='categorical_crossentropy',
+    metrics=['accuracy']
+)
+model.fit(X, y, epochs=5, batch_size=10, verbose=0)
+
+# 모델 저장 (.keras 형식)
+model.save('classification_model.keras')
+print("Model saved successfully in .keras format.")
+```
+
+#### 딥러닝 모델의 로드
+
+```python
+from tensorflow.keras.models import load_model
+import numpy as np
+
+# 모델 로드
+loaded_model = load_model('classification_model.keras')
+print("Model loaded successfully.")
+
+# 새로운 데이터에 대한 예측
+sample_data = np.random.rand(1, 10)  # 1개의 샘플 데이터
+prediction = loaded_model.predict(sample_data)
+print(f"Prediction for {sample_data}: {prediction}")
+```
+
+---
+
+## 2. Google Colab 개발 환경
+
+### Google Colab 개요
+
+- 구글에서 리서치 목적으로 만든 파이썬(Python) 언어 툴로, 현재 브라우저 기반 무료 호스팅 서비스로 제공된다.
+- Google Cloud 주피터(Jupyter) 노트북을 기반으로 머신러닝 교육 및 연구에 널리 사용된다.
+- **주요 기능**
+    - 파이썬(Python) 코드 실행
+    - 텍스트 작성
+    - 그래프로 데이터 시각화
+
+```text
+사용자 <──> 웹 브라우저 <──(HTTP)──> Colab <──> Google 클라우드
+                                      ▲
+                                      │
+                                      ▼
+                                 Google 드라이브
+```
+
+---
+
+### Google Colab의 주요 특징
+
+1. **No Installation, No Configuration (설치 및 설정 불필요)**
+    - 브라우저를 통해 별도 설정 없이 무료로 코드 작성 및 실행 가능
+    - 클라우드에서 완전히 실행되는 무료 주피터(Jupyter) 노트북 환경
+    - 기본적인 머신러닝 라이브러리가 사전 설치되어 있으며, 미설치 라이브러리도 쉽게 설치 가능
+        - **데이터 처리 패키지**: `Pandas`, `NumPy`
+        - **기계학습 패키지**: `TensorFlow`, `Scikit-learn (Sklearn)`
+        - **시각화 패키지**: `Matplotlib`, `Plotly`, `Seaborn`
+2. **Free Computation Power (무료 연산 자원)**
+    - 코드는 계정 전용 가상머신에서 실행
+    - GPU 무료 사용 가능 (Tesla K80 GPU, 총 12GB 램 제공)
+    - 최대 12시간 연속 사용 가능
+    - 암호화폐 채굴이나 장기 백그라운드 실행은 지원되지 않음
+3. **Easy Sharing and Collaboration (쉬운 공유와 협업)**
+    - 작성한 코드와 분석 내용을 Google 드라이브에 저장 및 공유 가능
+    - Google 문서·스프레드시트와 유사한 방식으로 공동 공유, 편집, 댓글 작성 지원
+    - AI 프로젝트 개발을 위한 팀워크에 적합
+4. **Integrated with GitHub (GitHub 통합)**
+    - Colab 환경에서 GitHub의 노트북을 쉽게 저장하고 로드 가능
+    - 공개(Public) GitHub 노트북은 추가 인증 없이 직접 로드 가능
+    - 비공개(Private) GitHub 노트북은 Colab이 파일에 접근할 수 있도록 추가 인증 단계 필요
+
+---
+
+### Google Colab 실행 방법
+
+- Google 계정이 필요하다.
+- **Google Colab 파일 만들기**
+    - `Google 드라이브 → 새로 만들기 → 더보기 → Google Colaboratory`
+    - 또는 https://colab.research.google.com 으로 직접 접속
