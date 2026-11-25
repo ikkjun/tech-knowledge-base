@@ -51,3 +51,4 @@ A personal archive of technical reading, system/security training, and engineeri
 | 2026.11.23 | `Incident` | [중국 연계 해커 AI 에이전트, 제로데이 찾아 대학 서버 장악](/news/2026/11/ai_agent_cairn_zeroday_univ.md) | 보안뉴스 | AI 에이전트, 케언(Cairn), 제로데이, 모나이 레이블(MONAI Label) |
 | 2026.11.23 | `Incident` | [중국 연계 해커 AI 에이전트, 제로데이 찾아 대학 서버 장악](/news/2026/11/ai_agent_cairn_zeroday_univ.md) | 보안뉴스 | AI 에이전트, 케언(Cairn), 제로데이, 모나이 레이블(MONAI Label) |
 | 2026.11.24 | `Incident` | [자동 승인 한 번에 비밀번호까지... 클로드 코드 설정 파일 1122개서 비밀 값 무더기 노출](/news/2026/11/claude_code_secret_exposure.md) | 보안뉴스 | 클로드 코드(Claude Code), 비밀 값 노출, .gitignore, 깃리크스(gitleaks) |
+| 2026.11.25 | `Policy` | [[2026 보안 이슈 결산-4] CISO는 총알받이? '처벌 만능주의' 논란](/news/2026/11/ciso_punishment_paradox_resilience.md) | 보안뉴스 | CISO, 처벌 만능주의, 규제의 역설, 사이버 회복탄력성 |
