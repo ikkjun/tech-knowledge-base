@@ -7743,7 +7743,7 @@ print("총 토큰:", response.usage.total_tokens)
         instructions=persona,
         input=task,
     )
-```
+    ```
 
 ##### 3. 대화 이어가기(Context 관리)
 
@@ -7883,8 +7883,10 @@ print("총 토큰:", response.usage.total_tokens)
     ```python
     # lesson3_markdown_json_structuring.py
     from pydantic import BaseModel
+    
+    raw_doc='''신문 기사 내용 입력'''
 
-    class Step1Output(BaseModel):
+    class Step1Output(BaseModel):           # BaseModel 상속 받음
         title: str
         keywords: list[str]
         summary_ko: str
@@ -7895,89 +7897,153 @@ print("총 토큰:", response.usage.total_tokens)
         text_format=Step1Output,
     )
     step1: Step1Output = res1.output_parsed
-    print(step1.title, step1.keywords)
+    print(step1.title)
+    print(step1.keywords)
+    print(step1.summary_ko)
     ```
 
     > **구현 포인트** Pydantic과 responses.parse()로 각 단계 출력을 JSON 규격화하면 파싱 에러 없는 다단계 프롬프트 체이닝을 구축할 수 있습니다.
 
 ---
 
-## MODULE 07. 생성 파라미터 제어와 미니 프로젝트 1 아이디어 스케치
+#### MODULE 07. 생성 파라미터 제어와 미니 프로젝트 1 아이디어 스케치
 
-### 1. 창의성 조절: Temperature 메커니즘
+##### 1. 창의성 조절하기(Temperature 메커니즘)
 
-- **작동 순서**: `Logits 채점 → ÷ Temperature(0.0~2.0) → Softmax 확률 정규화 → 토큰 샘플링`
+- 단어 오디션: Logits → Temperature → Softmax 메커니즘
+    - **작동 순서**
+        - `STEP 1`: **Logits 채점**<br>
+            후보 단어 원시 점수 산출: 먹었다(80) · 남겼다(50)
+        - `STEP 2`: **÷Temp 조절**<br>
+            원시 점수를 온도T로 나눔(0.0 ~ 2.0 범위 다이얼)
+        - `STEP 3`: **Softmax 변환**<br>
+            합이 100%인 확률 룰렛 판 분포로 정규화 변환
+        - `STEP 4`: **토큰 샘플링**<br>
+            확률 룰렛을 돌려 다음 단어 1개를 최종 선택
+    - **저온모드(T → 0, Sharp 뾰족한 분포)**
+        - **1등 독식**: 최고 점수 단어의 선택 확률이 100%에 가깝게 치솟음
+        - **일관성 확보**: 매번 정확하고 예측 가능한 모범 답안 출력
+    - **고온모드(T ≥ 1.0, Flat 평탄한 분포)**
+        - **기회 균등**: 하위권 후보 단어들의 선택 확률이 크게 상승
+        - **창의성 확산**: 의외성과 비유가 풍부한 참신한 문장 생성
+    > **아키텍처 핵심** Temperature는 모델이 다음 단어를 고르는 확률 룰렛 판의 뾰족함(일관성)과 평탄함(창의성)을 조절하는 핵심 다이얼입니다.
 
-| 구분 | 저온 (`0.0 ~ 0.3`) | 중간 (`0.5 ~ 0.7`) | 고온 (`0.8 ~ 1.5`) |
-| :--- | :--- | :--- | :--- |
-| **작동 모드** | 결정론적 출력 (1등 독식) | 균형 잡힌 출력 (Balanced) | 창의적 확산 (기회 균등) |
-| **확률 형태** | 1등만 치솟은 뾰족한 곡선 | 자연스러운 완만한 곡선 | 후보가 고른 평탄한 곡선 |
-| **출력 느낌** | 정확·예측 가능한 모범 답안 | 정확성과 표현 다양성 조화 | 의외성·비유가 풍부한 문장 |
-| **추천 작업** | 코딩, JSON 파싱, 사실 Q&A | 일반 챗봇, 이메일·보고서 요약 | 광고 카피, 브레인스토밍, 시 |
+    - 저온· 중간· 고온 구간별 특성 및 추천 작업
 
-### 2. 답변 길이 조절과 문장 잘림(Truncation) 방어
+        | 구분 | 저온 (`0.0 ~ 0.3`) | 중간 (`0.5 ~ 0.7`) | 고온 (`0.8 ~ 1.5`) |
+        | :--- | :--- | :--- | :--- |
+        | **작동 모드** | 결정론적 출력 (1등 독식) | 균형 잡힌 출력 (Balanced) | 창의적 확산 (기회 균등) |
+        | **확률 형태** | 1등만 치솟은 뾰족한 곡선 | 자연스러운 완만한 곡선 | 후보가 고른 평탄한 곡선 |
+        | **출력 느낌** | 정확·예측 가능한 모범 답안 | 정확성과 표현 다양성 조화 | 의외성·비유가 풍부한 문장 |
+        | **추천 작업** | 코딩, JSON 파싱, 사실 Q&A | 일반 챗봇, 이메일·보고서 요약 | 광고 카피, 브레인스토밍, 시 |
 
-- **소프트 룰 vs 하드 룰**: 프롬프트 부탁(소프트 룰)만 믿지 말고 `max_output_tokens`(하드 룰)로 비용 폭탄·응답 지연·UI 붕괴 방어
-- **한글 토큰 특성**: 영문 1단어 $\approx 1 \sim 1.3$ 토큰 vs 한글 1글자 $\approx 1.5 \sim 3$ 토큰 → 충분한 여유 한도 설정 필수
-- **추가 제어**: `reasoning.effort`(`low`/`medium`/`high`)로 추론 깊이 조절, `stream=True`로 체감 속도 개선
+##### 2. 추론 수준 및 답변 길이 조절하기
 
-```python
-# lesson2_reasoning_and_length.py (Truncation 예외 처리)
-response = client.responses.create(
-    model=model,
-    input="양자역학과 슈뢰딩거의 고양이를 상세히 설명해줘.",
-    max_output_tokens=100,  # 생성 토큰을 100개로 억제
-)
+- 소프트 vs 하드 룰, 토큰 미제한 리스크와 한글 특성
+    - **소프트룰vs 하드룰**
+        - **소프트룰**: '한 줄 요약' 자연어 부탁(부연 설명 가능)
+        - **하드룰**: `max_output_tokens` 물리적1 상한선1 강제
+        - **API 명칭**: Chat API max_tokens → max_output_tokensㅁ
+    - **토큰 미제한 3대 리스크**
+        - **비용 폭탄**: 출력 토큰 수 비례 과금으로 요금 급증
+        - **응답 지연**: 순차 생성 특성상 사용자 대기시간 폭증
+        - **UI 붕괴**: 모바일·고정카드 레이아웃 텍스트 넘침
+        - **실무 원칙**: 모든 서비스 API 호출에 상한선 필수 적용
+    - **한글 토큰& 추가 제어**
+        - **토큰 차이**: 영문 1단어 $\approx 1 \sim 1.3$ vs 한글 1글자 $ \approx 1.5 \sim 3$ 토큰
+        - **한글 설계**: 영문 대비 충분한 여유 토큰 한도 설정 필수
+        - **reasoning effort**: low/medium/high로 추론 깊이 조절
+        - **stream=True**: 실시간 토큰 델타 출력으로 체감                                                                          속도 개선
+    > **핵심 포인트** 프롬프트(소프트룰)만 믿지 말고 max_output_tokens(하드룰)로 비용·지연·UI붕괴를 방어하며 한글 토큰 특성을 반영하세요.
+    
+- Truncation 문제와 response.status == 'incomplete' 감지
+    - Truncation 위험과 대처 패턴
+        - **발생 원인**: `max_output_tokens` 한도 도달로 문장 중간 강제 종료
+        - **JSON 파괴**: 닫는 괄호(}) 누락으로 json.loads() 치명적 에러
+        - **신뢰도 하락**: 목록이나 답변 핵심이 끊겨 미완성 정보 노출
+        - **코드 방어**: status == 'incomplete' 확인후 한도 증설·안내
+        ```python
+        # lesson2_reasoning_and_length.py (Truncation 예외 처리)
+        model = 'gpt-5.5'
+        response = client.responses.create(
+            model=model,
+            input="양자역학과 슈뢰딩거의 고양이를 상세히 설명해줘.",
+            max_output_tokens=100,  # 생성 토큰을 100개로 억제
+        )
 
-if response.status == "incomplete":
-    reason = getattr(response.incomplete_details, "reason", "알 수 없음")
-    print(f"[경고] 응답 중단! 사유: {reason}")
-    print("조치: max_output_tokens 증설 또는 요약 재요청")
-elif response.status == "completed":
-    print("[성공] 문장이 끝까지 정상 생성되었습니다.")
-```
+        print()
+        print(response)
+        print()
 
-### 3. 단일 전문 특화형 생성기 설계 및 코어 엔진
+        if response.status == "incomplete":
+            reason = getattr(response.incomplete_details, "reason", "알 수 없음")
+            print(f"[경고] 응답 중단! 사유: {reason}")
+            print("조치: max_output_tokens 증설 또는 요약 재요청")
+        elif response.status == "completed":
+            print("[성공] 문장이 끝까지 정상 생성되었습니다.")
+        ```
+            
+        **🖥️ 실행 결과**
+        
+        ```text
+        Response(id='resp_075...', access_programs=None, created_at=1795570053.0, error=None, incomplete_details=IncompleteDetails(reason='max_output_tokens'), ...)
 
-| 생성기 유형 | 프로젝트 예시 | HOW (톤앤매너) | WHAT (산출물) | 권장 Temp |
-| :--- | :--- | :--- | :--- | :--- |
-| **코드/품질 검증** | 깐깐한 시니어 개발자 봇 | 냉철·직설적, 칭찬 금지 | 취약점 2개 + 리팩토링 | `0.1 ~ 0.3` |
-| **문학/감성 창작** | 조선 한양 풍류 시인 봇 | 고어투(`~하오`), 자연 은유 | 초·중·종장 3행 시조 | `0.9 ~ 1.2` |
-| **정보/교육 요약** | 초등 눈높이 뉴스 해설사 | 쉬운 실생활 비유, 다정함 | 핵심 딱 3문장 요약 | `0.1 ~ 0.3` |
+        [경고] 응답 중단! 사유: max_output_tokens
+        조치: max_output_tokens 증설 또는 요약 재요청
+        ```
+    ##### 3. 미니 프로젝트 1 아이디어 스케치
 
-```python
-# lesson3_mini_project_skeleton.py
-def generate_custom_text(
-    client,
-    model: str,
-    instructions: str,
-    user_input: str,
-    temperature: float,
-) -> str:
-    """페르소나와 temperature로 텍스트를 생성하는 코어 엔진."""
-    response = client.responses.create(
-        model=model,
-        instructions=instructions,  # 시스템 영역 격리
-        input=user_input,           # 사용자 요청/가변 데이터
-        temperature=temperature,    # 목적별 창의성 제어
-    )
-    return response.output_text
-```
+    - **단일 전문 특화형 생성기 3종과 Temperature 매핑**
+        | 생성기 유형 | 프로젝트 예시 | HOW (톤앤매너) | WHAT (산출물) | 권장 Temp |
+        | :--- | :--- | :--- | :--- | :--- |
+        | **코드/품질 검증** | 깐깐한 시니어 개발자 봇 | 냉철·직설적, 칭찬 금지 | 취약점 2개 + 리팩토링 | `0.1 ~ 0.3` |
+        | **문학/감성 창작** | 조선 한양 풍류 시인 봇 | 고어투(`~하오`), 자연 은유 | 초·중·종장 3행 시조 | `0.9 ~ 1.2` |
+        | **정보/교육 요약** | 초등 눈높이 뉴스 해설사 | 쉬운 실생활 비유, 다정함 | 핵심 딱 3문장 요약 | `0.1 ~ 0.3` |
 
----
+        > **핵심 비교 요약** 성공적인AI 서비스는 만능 챗봇이 아니라 명확한 타깃과 단 하나의 전문 과제를 해결하는 '단일 전문 특화형' 생성기입니다.
 
-## MODULE 08. 미니 프로젝트 1: 프롬프트 템플릿과 모듈화 챗봇 완성
+    - **프롬프트 고도화 3원칙과 generate_custom_text () 엔진**
+        - **고도화 3원칙과 엔진 구조**
+            - **위계 격리**: WHO·WHY·HOW는 instructions, WHAT은 input 배치
+            - **구조화·제약**: 마크다운 섹션 분리 + 말미 부정 제약 재강조
+            - **Few-Shot 모방**: 엄격한 산출물1일수록 1~2개 입출력 예시 주입
+            - **단일 엔진 재사용**: 페르소나·Temp만 바꿔 다양한 봇 즉시 생성
+                ```python
+                # lesson3_mini_project_skeleton.py
+                def generate_custom_text(
+                    client,
+                    model: str,
+                    instructions: str,
+                    user_input: str,
+                    temperature: float,
+                ) -> str:
+                    """페르소나와 temperature로 텍스트를 생성하는 코어 엔진."""
+                    response = client.responses.create(
+                        model=model,
+                        instructions=instructions,  # 시스템 영역 격리
+                        input=user_input,           # 사용자 요청/가변 데이터
+                        temperature=temperature,    # 목적별 창의성 제어
+                    )
+                    return response.output_text
+                ```
+                > **구현 포인트** 4단계페르소나+ instructions/input 위계격리+ 목적별Temperature를하나의코어엔진으로묶어파일모듈화로확장합니다
 
-### 1. 역할별 파이썬 파일 모듈화 아키텍처
+    ---
 
-| 교안 기본 파일 | 실습 대응 모듈 | 담당 역할 및 설계 포인트 |
-| :--- | :--- | :--- |
-| `config.py` | `prompts.py` | 대문자 상수 컨벤션으로 목적별 시스템 지시문·입력 템플릿 관리 |
-| `utils.py` | `prompts.py` / `common` | 터미널 화면 정리(`clear_terminal`), 헤더 출력 등 공통 유틸리티 |
-| `agent.py` | `chatbot_engine.py` | Responses API 통신, 대화 상태(`_last_response_id`) 및 예외 처리 |
-| `main.py` | `lesson2_chatbot_complete.py` | CLI 메뉴 분기, `.format()`/`split()` 데이터 바인딩, 대화 루프 실행 |
+#### MODULE 08. 미니 프로젝트 1: 프롬프트 템플릿과 모듈화 챗봇 완성
 
-### 2. 인젝션 방어 템플릿 및 Stateful 통신 엔진 구현
+##### 1. 프롬프트 템플릿과 프로젝트 모듈화 설계
+
+- 역할별파이썬파일모듈화아키텍처
+
+    | 교안 기본 파일 | 실습 대응 모듈 | 담당 역할 및 설계 포인트 |
+    | :--- | :--- | :--- |
+    | `config.py` | `prompts.py` | 대문자 상수 컨벤션으로 목적별 시스템 지시문·입력 템플릿 관리 |
+    | `utils.py` | `prompts.py` / `common` | 터미널 화면 정리(`clear_terminal`), 헤더 출력 등 공통 유틸리티 |
+    | `agent.py` | `chatbot_engine.py` | Responses API 통신, 대화 상태(`_last_response_id`) 및 예외 처리 |
+    | `main.py` | `lesson2_chatbot_complete.py` | CLI 메뉴 분기, `.format()`/`split()` 데이터 바인딩, 대화 루프 실행 |
+
+##### 2. 파이썬 코드 완성 및 단위 테스트
 
 ```python
 # prompts.py (대문자 상수 + 플레이스홀더)
@@ -8014,7 +8080,7 @@ def get_reply(inst: str, user_text: str) -> str:
         return f"오류 발생: {e}"
 ```
 
-### 3. 단위 테스트, CLI 조립 및 서비스 진화 로드맵
+##### 3. 기타 프로젝트로 발전시키기
 
 - **단위 테스트 (`__main__`)**: CLI 조립 전 1턴("내 사물함 비밀번호는 7788이야") → 2턴("비밀번호가 뭐라고 했었지?")으로 문맥 기억 검증
 - **입력 파싱 & 안전 종료**: 다중 입력은 `user_input.split(",", 1)`로 2등분(추가 쉼표 보존), `exit` 종료 및 `KeyboardInterrupt` 처리, `reset_memory()`로 세션 초기화
@@ -8027,9 +8093,9 @@ def get_reply(inst: str, user_text: str) -> str:
 
 ---
 
-## MODULE 09. 멀티모달(Multimodal) AI와 이미지 분석·영수증 OCR
+#### MODULE 09. 멀티모달(Multimodal) AI와 이미지 분석·영수증 OCR
 
-### 1. 이미지 데이터 전달 방식 비교 (URL vs Base64)
+##### 1. 이미지 데이터 전달 방식 비교 (URL vs Base64)
 
 | 구분 | 이미지 URL 전달 방식 | Base64 인코딩 방식 |
 | :--- | :--- | :--- |
@@ -8065,7 +8131,7 @@ res = client.responses.create(
 )
 ```
 
-### 2. 시각 분석 프롬프트 3가지 역할과 실무 주의사항
+##### 2. 시각 분석 프롬프트 3가지 역할과 실무 주의사항
 
 | 역할 | 실전 패턴 | 핵심 목적 | 구체적 프롬프트 예시 |
 | :--- | :--- | :--- | :--- |
@@ -8077,7 +8143,7 @@ res = client.responses.create(
     - **사진 품질 확보**: 밝고 뚜렷한 조명, 글자 잘림·구겨짐 방지, 20MB 이내 적정 압축
     - **환각 교차 검증**: 의료·안전·회계 영역은 담당자 검수 필수, `품목 소계 합 == 총결제금액` 등 코드 자동 검증 결합
 
-### 3. MLLM + Pydantic Structured Outputs 영수증 OCR
+##### 3. MLLM + Pydantic Structured Outputs 영수증 OCR
 
 - **고전적 OCR 한계 극복**: 구겨짐·필기체에서도 주변 단어(`Tax`, `Total`) 공간 관계로 시멘틱 추론, 디코딩 레이어 제어로 스키마 불일치 원천 차단
 - **5단계 파이프라인**: `이미지 준비 → Base64 변환 → Pydantic 스키마 설계 → responses.parse() → 합계 검증 및 DB·CSV 연동`
@@ -8112,135 +8178,206 @@ receipt = res.output_parsed
 
 ---
 
-## MODULE 10. RAG(검색 증강 생성)와 `file_search` 도구 활용
+#### MODULE 10. RAG(검색 증강 생성)와 `file_search` 도구 활용
 
-### 1. Responses API 에이전트 루프와 RAG vs 파인튜닝
+##### 1. RAG와 파인튜닝의 차이 & Responses API 에이전트 루프
 
-- **Agentic Loop 5단계**: `요청 분석 → 상황 판단 → 도구 호출(file_search 등) → 결과 평가(부족 시 재탐색) → 출처 포함 최종 답변`
-- **패러다임 전환**: 에이전트 루프 내장 + `previous_response_id` 서버 캐싱으로 토큰 비용 40~80% 절감
+- **수동 파이프라인에서 Responses API 에이전트 루프로의 진화**
+    - **Agentic Loop 5단계**
+        - `요청 분석`: 사용자 질문 의도와 필요 지식 범위 파악
+        - `상황 판단`: 파일 검색·웹 검색 등 실행 계획 자율 수립
+        - `도구 호출`: file_search 등 내장 도구 다중 호출 수행
+        - `결과 평가`: 근거 충분성 검증 후 부족 시 2단계 재탐색
+        - `최종 답변`: 확보된 근거를 종합해 출처 포함 응답 생성
+    - 과거 수동 3단계 파이프라인의 부담
+        - **직접 청킹·임베딩**: 문서 분할과 외부 벡터 DB 구축·운영 필수
+        - **매 턴 재전송**: 전체 대화 기록과 검색 결과를 매 번 포장해 전송
+    - Responses API 패러다임 전환
+        - **에이전트 루프 내장**: 모델이 스스로 도구 호출과 재탐색을 반복
+        - **`previous_response_id`** : 서버 자동 캐싱으로 비용 40~80% 절감
+    > **아키텍처 핵심** 에이전트 루프 내장과 `previous_response_id` 서버 캐싱으로 개발 복잡도와 토큰 비용을 동시에 낮춥니다.
 
-| 비교 항목 | RAG (오픈북 테스트) | 파인튜닝 (암기식 학습) |
-| :--- | :--- | :--- |
-| **지식 저장 방식** | 신경망 유지, 외부 DB에 지식 저장 | AI 신경망 가중치를 직접 업데이트 |
-| **정보 업데이트** | 즉각 반영 (문서 교체만으로 완료) | 훈련 시점 고정 (변경 시 재학습 필수) |
-| **출처 (Citation)** | 특정 문서 기반 출처 추적·환각 방지 | 역추적 불가 (블랙박스 신뢰성 한계) |
-| **속도·비용 구조** | 초기 훈련비 0원, 검색·토큰 비용 발생 | 막대한 초기 훈련비, 건당 추론은 빠름 |
-| **주력 활용처** | 사내 규정, 주간 매뉴얼, 최신 지식 Q&A | 고정된 말투(어조)·출력 형식 일관 유지 |
+- **RAG(오픈북 테스트) vs 파인튜닝(암기식 학습) 핵심 비교**
 
-### 2. 수동 컨텍스트 주입과 가드레일 설계
+    | 비교 항목 | RAG (오픈북 테스트) | 파인튜닝 (암기식 학습) |
+    | :--- | :--- | :--- |
+    | **지식 저장 방식** | 신경망 유지, 외부 DB에 지식 저장 | AI 신경망 가중치를 직접 업데이트 |
+    | **정보 업데이트** | 즉각 반영 (문서 교체만으로 완료) | 훈련 시점 고정 (변경 시 재학습 필수) |
+    | **출처 (Citation)** | 특정 문서 기반 출처 추적·환각 방지 | 역추적 불가 (블랙박스 신뢰성 한계) |
+    | **속도·비용 구조** | 초기 훈련비 0원, 검색·토큰 비용 발생 | 막대한 초기 훈련비, 건당 추론은 빠름 |
+    | **주력 활용처** | 사내 규정, 주간 매뉴얼, 최신 지식 Q&A | 고정된 말투(어조)·출력 형식 일관 유지 |
 
-- **적합한 실무**: 방금 끝난 회의록 요약, 오늘 발행된 외신 분석, 소량 비공개 사내 규정 Q&A
-- **구조화 2대 공식**: `instructions`에 "제공된 `<문서>` 안에서만 답하고 없으면 모른다고 답하라" 가드레일 선언 + `input`에 XML 태그(`<문서>...</문서>`)로 배경지식과 질문 분리
+    > **핵심 비교 요약** 기업 AI 시스템의 70% 이상은 업데이트가 쉽고 출처 추적이 명확한 RAG를 주력으로 선택합니다.
 
-```python
-# lesson2_manual_context_injection.py
-system_prompt = (
-    "당신은 사내 규정 안내 봇입니다. 반드시 <문서> "
-    "안에서만 답하고, 없는 내용은 '모른다'고 답하세요."
-)
-user_prompt = """<문서>
-세종사이버대학교 원격근무 지침:
-화·목요일은 필수 재택근무일이며,
-핵심 코어 타임은 오전 10시~오후 3시입니다.
-</문서>
-질문: 코어 타임과 필수 재택 요일은?"""
+##### 2. 텍스트 복사 기반 수동 컨텍스트 주입과 가드레일 설계
 
-response = client.responses.create(
-    model=model,
-    instructions=system_prompt,
-    input=user_prompt,
-)
-```
+- **수동 컨텍스트 주입의 원리와 프롬프트 구조화 공식**
+    - **주입 전(실패) vs 주입 후(성공)**
+        - **주입 전**: 사내 복지 포인트 질문 시 모름 응답 또는 환각 발생
+        - **주입 후**: [정보] 문단을 질문과 함께 제공해 정확한 답변 유도
+        - **핵심 장점**: 벡터 DB·검색 엔진 없이 코드 몇 줄로 즉시 구현
+    - **프롬프트 구조화 2대 공식**
+        - **System Prompt**: 역할 부여 및 '문서 외 모른다' 가드레일 선언
+        - **환각 통제**: `instructions` 영역이 허위 답변 차단에 가장 효과적
+        - **User Prompt**: ---, ###, <문서> 구분자로 배경 지식·질문 분리
+    - **수동 주입이 가장 적합한 실무**
+        - **내부 회의록**: 방금 끝난 회의 텍스트 요약 및 마감일 추출
+        - **최신 외신 기사**: 오늘 발행된 영문 기사 번역과 핵심 분석
+        - **단기 사내 규정**: 외부 비공개 소량 문서 기반 즉석 질의 응답
+    > **핵심 포인트** 구분자(`<문서>...</문서>`)로 문맥 혼동을 막고, System Prompt 가드레일로 환각을 원천 차단합니다.
+- **가드레일과 구분자를 적용한 수동 컨텍스트 주입 구현**
+    - **코드 설계 핵심 포인트**
+        - **instructions**: '제공된 <문서> 안에서만 답변' 절대 규칙 지정
+        - **모름 처리 유도**: 문서에 없는 질문에 추측 대신'모른다' 응답
+        - **XML 스타일 태그**: <문서> 블록과 '질문:' 영역을 명확히 분리
+        - **한계 인지**: 문서가 수십 개로 커지면 토큰 폭증과 핵심 누락 발생
+            ```python
+            # lesson2_manual_context_injection.py
+            system_prompt = (
+                "당신은 사내 규정 안내 봇입니다. 반드시 <문서> "
+                "안에서만 답하고, 없는 내용은 '모른다'고 답하세요."
+            )
+            user_prompt = """<문서>
+            세종사이버대학교 원격근무 지침:
+            화·목요일은 필수 재택근무일이며,
+            핵심 코어 타임은 오전 10시~오후 3시입니다.
+            </문서>
+            질문: 코어 타임과 필수 재택 요일, 복지요금은?"""
 
-### 3. 완전 관리형 Vector Store와 `file_search` Agentic RAG
+            response = client.responses.create(
+                model=model,
+                instructions=system_prompt,
+                input=user_prompt,
+            )
 
-| 설정 / 옵션 | 동작 방식 및 기본값 | 실무 활용 및 제어 효과 |
-| :--- | :--- | :--- |
-| **자동 청킹 (Auto)** | 최대 800토큰 분할, 400토큰 겹침 | 일반 사내 문서·매뉴얼·보고서에 최적 |
-| **정적 청킹 (Static)** | 최대 4,096토큰까지 크기·겹침 지정 | 재무제표·긴 코드 블록의 문맥 단절 방지 |
-| **File Batches** | 최대 2,000개 파일 일괄 업로드 지원 | 부서·문서유형 메타데이터 필터링 활용 |
-| **`max_num_results`** | 참고할 최대 문서 조각 수 (1~50개) | 과도한 컨텍스트 유입·토큰 비용 방어 |
-| **`score_threshold`** | 문서 유사도 하한선 (`0.0 ~ 1.0`) | 관련 없는 조각 원천 차단 (환각 방지) |
+            print(response.output_text)
 
-```python
-# lesson3_file_search_agentic_rag.py
-# 1~2단계: 벡터 스토어 생성 및 색인 완료 대기
-vs = client.vector_stores.create(name="사내규정")
-client.vector_stores.file_batches.upload_and_poll(
-    vector_store_id=vs.id,
-    files=[doc_stream],
-)
+            # 코어 타임은 오전 10시~오후 3시입니다.
+            # 필수 재택근무일은 화요일과 목요일입니다.
+            # 복지요금은 문서에 내용이 없어 모른다.
+            ```
+            > **구현 포인트** 소량 비공개 문서는 수동 주입으로 빠르게 검증하고, 문서량이 늘어나면 file_search로 확장합니다.
 
-# 3~4단계: file_search 바인딩 + 스트리밍 출력
-rag_tool = {
-    "type": "file_search",
-    "vector_store_ids": [vs.id],
-    "max_num_results": 5,
-    "ranking_options": {"score_threshold": 0.5},
-}
+##### 3. Vector Store & file_search 기반 Agentic RAG 구축
 
-stream = client.responses.create(
-    model=model,
-    input=q,
-    tools=[rag_tool],
-    stream=True,
-)
-for ev in stream:
-    if ev.type == "response.output_text.delta":
-        print(ev.delta, end="", flush=True)
-```
+- **완전 관형 Vector Store 청킹 전략과 검색 튜닝 옵션**
 
+    | 설정 / 옵션 | 동작 방식 및 기본값 | 실무 활용 및 제어 효과 |
+    | :--- | :--- | :--- |
+    | **자동 청킹 (Auto)** | 최대 800토큰 분할, 400토큰 겹침 | 일반 사내 문서·매뉴얼·보고서에 최적 |
+    | **정적 청킹 (Static)** | 최대 4,096토큰까지 크기·겹침 지정 | 재무제표·긴 코드 블록의 문맥 단절 방지 |
+    | **File Batches** | 최대 2,000개 파일 일괄 업로드 지원 | 부서·문서유형 메타데이터 필터링 활용 |
+    | **`max_num_results`** | 참고할 최대 문서 조각 수 (1~50개) | 과도한 컨텍스트 유입·토큰 비용 방어 |
+    | **`score_threshold`** | 문서 유사도 하한선 (`0.0 ~ 1.0`) | 관련 없는 조각 원천 차단 (환각 방지) |
+    
+    > **핵심 비교 요약** 자동 쿼리 재작성(용어 최적화→질문 분해→병렬 검색)과 expires_after 설정으로 품질과 저장 비용을 함께 관리합니다.
+
+- **file_search 작동 4단계와 실시간 스트리밍 응답 구현**
+    - **Agentic RAG 4단계흐름**
+        - **1단계 저장소 생성**: vector_stores.create()로 지식 저장소 준비
+        - **2단계 청킹·폴링**: upload_and_poll로 색인 완료까지 안전 대기
+        - **3단계 지능적 검색**: max_num_results·score_threshold로 정밀 필터
+        - **4단계 스트리밍**: stream=True에서 output_text.delta 실시간 출력
+        ```python
+        # lesson3_file_search_agentic_rag.py
+        # 1~2단계: 벡터 스토어 생성 및 색인 완료 대기
+        vs = client.vector_stores.create(name="사내규정")
+        client.vector_stores.file_batches.upload_and_poll(
+            vector_store_id=vs.id,
+            files=[doc_stream],
+        )
+
+        # 3~4단계: file_search 바인딩 + 스트리밍 출력
+        rag_tool = {
+            "type": "file_search",
+            "vector_store_ids": [vs.id],
+            "max_num_results": 5,
+            "ranking_options": {"score_threshold": 0.5},
+        }
+
+        stream = client.responses.create(
+            model=model,
+            input=q,
+            tools=[rag_tool],
+            stream=True,
+        )
+        for ev in stream:
+            if ev.type == "response.output_text.delta":
+                print(ev.delta, end="", flush=True)
+        ```
+        > **구현 포인트** 별도 외부 벡터 DB 없이 OpenAI 호스팅 Vector Store만으로 엔터프라이즈급 스트리밍 RAG를 구현합니다.
 ---
 
-## MODULE 11. Responses API 도구(Tools)와 Function Calling 활용
+#### MODULE 11. Responses API 도구(Tools)와 Function Calling 활용
 
-### 1. Function Calling 5단계 통신 루프와 JSON Schema 계약서
+##### 1. Function Calling 5단계 통신 루프와 JSON Schema API 계약서
 
-1. **명세·질문 전달**: JSON Schema 도구 명세와 질문을 API로 전송
-2. **호출 요청 수신**: `function_call` 항목과 `call_id`, `arguments` 수신
-3. **로컬 함수 실행**: `json.loads()` 파싱 후 개발자 앱에서 파이썬 함수 직접 실행 (AI는 논리적 라우터 역할만 수행)
-4. **실행 결과 반환**: `function_call_output`과 `call_id`, `previous_response_id` 전송
-5. **최종 응답 생성**: 실행 결과를 종합해 자연어 답변 완성
+- 외부시스템과 연결하는 Function Calling 5단계 통신 루프.
+    - FUNCTION CALLING LOOP
+        1. **명세·질문 전달**: JSON Schema 도구 명세와 질문을 API로 전송
+        2. **호출 요청 수신**: `function_call` 항목과 `call_id`, `arguments` 수신
+        3. **로컬 함수 실행**: `json.loads()` 파싱 후 개발자 앱에서 파이썬 함수 직접 실행 (AI는 논리적 라우터 역할만 수행)
+        4. **실행 결과 반환**: `function_call_output`과 `call_id`, `previous_response_id` 전송
+        5. **최종 응답 생성**: 실행 결과를 종합해 자연어 답변 완성
+    - **논리적 라우터(Logical Router) 원리**
+        - **비직접 실행**: AI가 로컬 코드를 원격 실행하지 않고 **호출 요청**만 전달
+        - **클라이언트 제어**: 실제DB 조회·외부API 호출 권한은 개발자앱이 보유
 
-| JSON Schema 속성 | 핵심 역할 | 작성 예시 |
-| :--- | :--- | :--- |
-| `name` / `description` | 함수 식별자 및 호출 시점 판단 기준 | `"get_weather"` / `"도시 날씨 조회"` |
-| `parameters` / `properties` | 매개변수 JSON 틀과 필드별 타입·설명 | `{"location": {"type": "string"}}` |
-| `enum` | 허용 값 선택지를 명시적으로 제한 | `["USD", "JPY", "EUR", "KRW"]` |
-| `required` | 반드시 채워야 하는 필수 인자 목록 | `["location"]` |
-| `strict` / `additionalProperties` | 스키마 엄격 준수 및 임의 속성 차단 | `strict: True`, `additionalProperties: False` |
+    - **실무 구현 필수주의 사항**
+        - **문자열 파싱**: item.arguments는 JSON 문자열→ json.loads() 필수
+        - **ID 매칭**: 2차 호출 시 1차의 call_id와 previous_response_id 정확 일치
+    > **아키텍처 핵심** Function Calling은 AI의 호출 의도를 클라이언트가 안전하게 실행·반환하는 비동기 통신 루프입니다.
 
-### 2. 사용자 정의 도구 vs OpenAI 호스팅 4대 내장 도구
+- 모델과 시스템 간의 API 계약서 - JSON Schema 핵심 속성
+    | JSON Schema 속성 | 핵심 역할 | 작성 예시 |
+    | :--- | :--- | :--- |
+    | `name` / `description` | 함수 식별자 및 호출 시점 판단 기준 | `"get_weather"` / `"도시 날씨 조회"` |
+    | `parameters` / `properties` | 매개변수 JSON 틀과 필드별 타입·설명 | `{"location": {"type": "string"}}` |
+    | `enum` | 허용 값 선택지를 명시적으로 제한 | `["USD", "JPY", "EUR", "KRW"]` |
+    | `required` | 반드시 채워야 하는 필수 인자 목록 | `["location"]` |
+    | `strict` / `additionalProperties` | 스키마 엄격 준수 및 임의 속성 차단 | `strict: True`, `additionalProperties: False` |
+    > **핵심 비교 요약** 명확한 description과 strict: True + additionalProperties: False 설정이 인자 오류를 원천 방지합니다.
+    
 
-| 도구 구분 | 핵심 특징 및 보안·인프라 | 실무 프로덕션 권장 케이스 |
-| :--- | :--- | :--- |
-| **사용자 정의 도구** | 개발자가 스키마·실행·보안·왕복 전담 | 사내 전용 DB 조회, 자체 결제·재고 API |
-| **`web_search`** | 실시간 검색·페이지 열기·문서 내 탐색 | 뉴스 모니터링, 환율·주가, 경쟁사 동향 |
-| **`code_interpreter`** | 클라우드 샌드박스 파이썬 실행·자가 치유 | 비정형 회계 정산, CSV 통계, 차트 시각화 |
-| **`file_search`** | 관리형 Vector Store 고속 벡터 RAG 검색 | 사내 취업규칙 Q&A, 대용량 계약서 검토 |
-| **`mcp`** | Model Context Protocol 원격 표준 연동 | 사내 ERP, CRM, 협업 툴 외부 서비스 연결 |
+##### 2. OpenAI 호스팅 4대 내장 도구(web_search · code_interpreter)
 
-```python
-# lesson2_builtin_tools.py
-# 1) Web Search: 원본 URL·제목 메타데이터 포함
-res_web = client.responses.create(
-    model=model,
-    tools=[{"type": "web_search"}],
-    include=["web_search_call.results"],
-    input="한국 주요 IT 트렌드 3가지만 요약해줘.",
-)
+- **사용자 정의 도구 vs OpenAI 호스팅 4대 내장 도구 매핑**
+    | 도구 구분 | 핵심 특징 및 보안·인프라 | 실무 프로덕션 권장 케이스 |
+    | :--- | :--- | :--- |
+    | **사용자 정의 도구** | 개발자가 스키마·실행·보안·왕복 전담 | 사내 전용 DB 조회, 자체 결제·재고 API |
+    | **`web_search`** | 실시간 검색·페이지 열기·문서 내 탐색 | 뉴스 모니터링, 환율·주가, 경쟁사 동향 |
+    | **`code_interpreter`** | 클라우드 샌드박스 파이썬 실행·자가 치유 | 비정형 회계 정산, CSV 통계, 차트 시각화 |
+    | **`file_search`** | 관리형 Vector Store 고속 벡터 RAG 검색 | 사내 취업규칙 Q&A, 대용량 계약서 검토 |
+    | **`mcp`** | Model Context Protocol 원격 표준 연동 | 사내 ERP, CRM, 협업 툴 외부 서비스 연결 |
 
-# 2) Code Interpreter: 샌드박스 무오차 파이썬 연산
-ci_tool = {"type": "code_interpreter", "container": {"type": "auto"}}
-res_calc = client.responses.create(
-    model=model,
-    tools=[ci_tool],
-    instructions="계산 시 반드시 파이썬 도구를 실행하세요.",
-    input="15423 * 8974를 25로 나눈 정확한 값은?",
-)
-```
+- **web_search와 code_interpreter 핵심 선언 및 옵션 활용**
+    - **내장 도구 실무 제어 포인트**
+        - **출처 확보**: include=["web_search_call.results"]로 URL·제목 수신
+        - **샌드박스 컨테이너**: container={"type": "auto"}로 클라우드 자동 할당
+        - **무오차 연산**: instructions로 파이썬 도구 사용을 명시해 암산 오차 제거
+        - **자가 치유(Self-healing)**: 실행 오류 시 모델이 코드를 수정해 자동 재실행
+        ```python
+        # lesson2_builtin_tools.py
+        # 1) Web Search: 원본 URL·제목 메타데이터 포함
+        res_web = client.responses.create(
+            model=model,
+            tools=[{"type": "web_search"}],
+            include=["web_search_call.results"],
+            input="한국 주요 IT 트렌드 3가지만 요약해줘.",
+        )
 
-### 3. 커스텀 RSS + 내장 도구 통합 '최신 뉴스 요약봇'
+        # 2) Code Interpreter: 샌드박스 무오차 파이썬 연산
+        ci_tool = {"type": "code_interpreter", "container": {"type": "auto"}}
+        res_calc = client.responses.create(
+            model=model,
+            tools=[ci_tool],
+            instructions="계산 시 반드시 파이썬 도구를 실행하세요.",
+            input="15423 * 8974를 25로 나눈 정확한 값은?",
+        )
+        ```
+        > **구현 포인트** 실시간 웹 검증은 web_search에, 정밀 수치 계산은 code_interpreter에 맡겨 LLM의 약점을 보완합니다.
+
+##### 3. 커스텀 RSS 함수 + 내장 도구 통합 '최신 뉴스 요약봇' 구현
 
 - **3단계 오케스트레이션**: 커스텀 `get_news`(Google News RSS 최신 3건, `json.dumps(..., ensure_ascii=False)`) + `web_search`(실시간 환율) + `code_interpreter`(정밀 환산 계산)를 하나의 `tools` 리스트로 통합
 
@@ -8271,55 +8408,77 @@ NEWS_BOT_TOOLS = [
 
 ---
 
-## MODULE 12. 챗봇 프론트엔드 서버와 Streamlit 프레임워크 활용
+#### MODULE 12. 챗봇 프론트엔드 서버와 Streamlit 프레임워크 활용
 
-### 1. 프론트엔드 서버 역할과 웹 챗봇 UI 5대 구성 요소
+##### 1. 프론트엔드 서버 역할과 웹 챗봇 UI 5대 구성 요소
 
-- **프론트엔드 서버 2대 역할**: HTML·CSS·JS 화면 렌더링 + REST API(JSON)로 백엔드와 데이터 교환 후 결과 표시
-- **Streamlit 특징**: 순수 파이썬으로 웹앱 구축, 자체 서버 내장, SPA 유사 방식 실시간 업데이트 (`pip install streamlit`, `streamlit hello`, `python -m streamlit run app.py`)
+- 프론트엔드 서버의 2대 역할과 Streamlit 동작 원리
+    - 프론트엔드서버2대역할
+        - **페이지 제공**: 브라우저 접속 시 HTML·CSS·JS 화면과 UI 렌더링
+        - **데이터 교환**: REST API(또는 GraphQL)로 백엔드에 데이터 요청
+        - **결과 반영**: 받아온 AI 응답 데이터를 사용자 화면에 즉시 표시
+    - Streamlit 프론트엔드 특징
+        - **순수 파이썬**: JS 없이 파이썬 코드만으로 데이터·AI 웹앱 구축
+        - **자체 서버 내장**: 별도 웹 서버 없이 프론트엔드 서버 역할 수행
+        - **SPA 유사 방식**: 전체 새로고침 없이 입력에 반응해 실시간 업데이트
+    - 설치 및 동작 확인 명령
+        - **패키지 설치**: pip install streamlit 으로 간편하게 환경 구성
+        - **데모 검증**: streamlit hello 실행으로 로컬 서버 정상 구동 확인
+        - **실행 대안**: PATH 오류 시`python -m streamlit run` 패턴 사용
+    > **핵심 포인트** Streamlit은 파이썬 개발자가 프론트엔드 서버와 실시간 반응형 챗봇 UI를 가장 빠르게 구축하는 도구입니다.
+- 사용자 경험을 완성하는 웹 기반 챗봇 UI 5대 구성 요소
+    | UI 구성 요소 | 핵심 역할 | 화면 배치 및 시각 설계 특징 |
+    | :--- | :--- | :--- |
+    | **1. 메인 채팅 창** | 전체 대화 기록을 시간순으로 표시 | 화면 중심 영역, 스크롤 기반 대화 흐름 유지 |
+    | **2. 사용자 메시지** | 사용자가 전송한 질문 텍스트 표시 | 주로 오른쪽 배치, 고유 배경색으로 시각 구분 |
+    | **3. 챗봇 응답 메시지** | AI가 생성한 답변·마크다운 표시 | 주로 왼쪽 배치, AI 아바타 아이콘 함께 제공 |
+    | **4. 텍스트 입력 필드** | 사용자가 새 질문을 작성하는 공간 | 화면 하단 고정, 글자 수 제한 안내 문구 지원 |
+    | **5. 메시지 전송 버튼** | 작성한 질문을 서버로 제출 실행 | 입력창 우측 배치, 엔터·클릭 이벤트 트리거 |
 
-| UI 구성 요소 | 핵심 역할 | 화면 배치 및 시각 설계 특징 |
-| :--- | :--- | :--- |
-| **1. 메인 채팅 창** | 전체 대화 기록을 시간순으로 표시 | 화면 중심 영역, 스크롤 기반 대화 흐름 유지 |
-| **2. 사용자 메시지** | 사용자가 전송한 질문 텍스트 표시 | 주로 오른쪽 배치, 고유 배경색으로 시각 구분 |
-| **3. 챗봇 응답 메시지** | AI가 생성한 답변·마크다운 표시 | 주로 왼쪽 배치, AI 아바타 아이콘 함께 제공 |
-| **4. 텍스트 입력 필드** | 사용자가 새 질문을 작성하는 공간 | 화면 하단 고정, 글자 수 제한 안내 문구 지원 |
-| **5. 메시지 전송 버튼** | 작성한 질문을 서버로 제출 실행 | 입력창 우측 배치, 엔터·클릭 이벤트 트리거 |
+##### 2. Streamlit 핵심 API와 st.form 기반 챗 봇 입력창
 
-### 2. Streamlit 핵심 API 5대 카테고리 및 `st.form()` 패턴
+- Streamlit 프레임워크 핵심 API 5대 카테고리 총정리
+    | 카테고리 | 대표 함수 | 주요 용도 및 특징 |
+    | :--- | :--- | :--- |
+    | **콘텐츠 표시** | `st.write()`, `st.write_stream()`, Magic | 텍스트·표·차트 자동 표시, LLM 타자기 스트리밍 |
+    | **텍스트 요소** | `st.title()`, `markdown()`, `code()`, `latex()` | 계층 제목, 마크다운, 구문 강조 코드, 수식·구분선 |
+    | **입력 위젯** | `st.button()`, `checkbox()`, `radio()`, `slider()` | 클릭(`True` 반환)·선택·수치·텍스트 입력 수집 |
+    | **미디어 요소** | `st.image()`, `st.audio()`, `st.video()` | 로컬 파일 또는 URL 기반 멀티미디어 렌더링 |
+    | **폼 & 상태** | `st.form()`, `form_submit_button()`, `session_state` | 위젯 일괄 제출(입력 초기화) 및 세션 상태 보존 |
+    > **핵심 비교 요약** st.write_stream()으로 LLM 스트리밍 UX를 높이고, st.session_state로 재실행 시 데이터 유실을 막습니다.
+- st.form()과 st.session_state 기반 챗봇 입력창 구현
+    - 입력 폼 구현 핵심 원리
+        - 일괄 제출: st.form()으로 입력창과 버튼을 하나의 트랜잭션으로 묶음
+        - 자동 비우기: clear_on_submit=True로 전송 직후 입력 칸 자동 초기화
+        - 깔끔한 UI: label_visibility='collapsed'로 불필요한 라벨 숨김
+        - 상태 유지: 제출된 질문과 응답을 st.session_state 리스트에 누적
 
-| 카테고리 | 대표 함수 | 주요 용도 및 특징 |
-| :--- | :--- | :--- |
-| **콘텐츠 표시** | `st.write()`, `st.write_stream()`, Magic | 텍스트·표·차트 자동 표시, LLM 타자기 스트리밍 |
-| **텍스트 요소** | `st.title()`, `markdown()`, `code()`, `latex()` | 계층 제목, 마크다운, 구문 강조 코드, 수식·구분선 |
-| **입력 위젯** | `st.button()`, `checkbox()`, `radio()`, `slider()` | 클릭(`True` 반환)·선택·수치·텍스트 입력 수집 |
-| **미디어 요소** | `st.image()`, `st.audio()`, `st.video()` | 로컬 파일 또는 URL 기반 멀티미디어 렌더링 |
-| **폼 & 상태** | `st.form()`, `form_submit_button()`, `session_state` | 위젯 일괄 제출(입력 초기화) 및 세션 상태 보존 |
+        ```python
+        # lesson2_streamlit_basics_app.py
+        import streamlit as st
 
-```python
-# lesson2_streamlit_basics_app.py
-import streamlit as st
+        st.title("Math Tutor Chatbot")
+        st.subheader("대화 기록 (오래된 순)")
+        st.divider()
 
-st.title("Math Tutor Chatbot")
-st.subheader("대화 기록 (오래된 순)")
-st.divider()
+        if "history" not in st.session_state:
+            st.session_state.history = []
 
-if "history" not in st.session_state:
-    st.session_state.history = []
+        with st.form("myform", clear_on_submit=True):
+            user_q = st.text_input(
+                "질문 입력:",
+                max_chars=200,
+                label_visibility="collapsed",
+            )
+            submit = st.form_submit_button(label="Send")
 
-with st.form("myform", clear_on_submit=True):
-    user_q = st.text_input(
-        "질문 입력:",
-        max_chars=200,
-        label_visibility="collapsed",
-    )
-    submit = st.form_submit_button(label="Send")
+        if submit and user_q.strip():
+            st.session_state.history.append(user_q)
+        ```
+        > **구현포인트** st.form() 패턴은 입력 중 불필요한 스크립트 재실행을 방지해 안정적인 챗봇 입력 경험을 제공합니다.
+        
+##### 3. Client–Frontend–REST–Backend 웹 챗봇 서비스 구조 기획
 
-if submit and user_q.strip():
-    st.session_state.history.append(user_q)
-```
-
-### 3. 웹 기반 챗봇 4계층 구조와 REST API(JSON) 계약
 
 - **통신 흐름**: `Client(브라우저) → Frontend Server(Streamlit) → REST API(JSON) → Backend · OpenAI(AI 추론·DB)`
 
