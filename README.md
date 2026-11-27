@@ -53,3 +53,4 @@ A personal archive of technical reading, system/security training, and engineeri
 | 2026.11.24 | `Incident` | [자동 승인 한 번에 비밀번호까지... 클로드 코드 설정 파일 1122개서 비밀 값 무더기 노출](/news/2026/11/claude_code_secret_exposure.md) | 보안뉴스 | 클로드 코드(Claude Code), 비밀 값 노출, .gitignore, 깃리크스(gitleaks) |
 | 2026.11.25 | `Policy` | [[2026 보안 이슈 결산-4] CISO는 총알받이? '처벌 만능주의' 논란](/news/2026/11/ciso_punishment_paradox_resilience.md) | 보안뉴스 | CISO, 처벌 만능주의, 규제의 역설, 사이버 회복탄력성 |
 | 2026.11.26 | `Vuln` | [인증 없이 루트 권한 탈취... 리눅스 'NFS2ROOT' 제로클릭 경보](/news/2026/11/linux_nfs2root_zeroclick.md) | 보안뉴스 | NFS2ROOT, CVE-2026-99362, 리눅스 커널, nfsd, 제로클릭 |
+| 2026.11.27 | `Malware` | [새로 산 폰에 이미 들어 있었다... 펌웨어 악성코드 '키나두', 10개월 새 22만 대 감염](/news/2026/11/android_firmware_malware_keenadu.md) | 보안뉴스 | 키나두(Keenadu), 트리아다(Triada), 펌웨어 악성코드, 공급망 보안 |
